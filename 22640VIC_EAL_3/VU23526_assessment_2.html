@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VU23526 Assessment 2 Writing Assessment</title>
+<style>
+:root{
+  --navy:#0B3F47; --navy-2:#14555F; --teal:#2E808E; --teal-d:#236A76; --teal-t:#E7F7F9;
+  --amber:#8CDBE5; --amber-t:#EBEBEB; --amber-l:#8CDBE5; --panel:#F4F5F5; --line:#C9CFD2;
+  --grey:#495054; --ink:#22272B; --red:#8B0000; --red-t:#F7E6E6; --white:#fff; --bg:#EBEBEB;
+  --display:Calibri,Carlito,"Segoe UI",Candara,"Helvetica Neue",Arial,sans-serif;
+  --body:Calibri,Carlito,"Segoe UI",Candara,"Helvetica Neue",Arial,sans-serif;
+  --mono:Calibri,Carlito,"Segoe UI",Candara,"Helvetica Neue",Arial,sans-serif;
+  --ipa:Calibri,Carlito,"Charis SIL","Doulos SIL","Gentium Plus","Segoe UI","Lucida Sans Unicode","Arial Unicode MS","DejaVu Sans",sans-serif;
+  --fs:18px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.modal.big{max-width:640px;text-align:center;padding:1.6rem 1.6rem 1.4rem;border-top:8px solid var(--red)}
+#ovWelcome .modal.big{border-top-color:var(--teal)}
+.modal.big h2{font-size:1.6rem;margin:.4rem 0 .6rem}
+.bigtext{font-size:1.15rem;line-height:1.5;margin:0 0 1.1rem}
+.bigicon{width:64px;height:64px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;background:var(--red);color:#fff;font-family:var(--display);font-weight:900;font-size:2.2rem}
+.bigicon.ok{background:var(--teal)}
+.bigbtns{display:flex;flex-direction:column;gap:.6rem;align-items:stretch;max-width:380px;margin:0 auto}
+.bigbtns .btn{min-height:56px;font-size:1.08rem}
+.ex-l{font-weight:700;color:var(--navy);min-width:110px}
+@media (min-width:701px){#sec5 .ex-l{min-width:17rem}}
+/* Step 6: each label and its two buttons on one line; all buttons the same size */
+#sec5 .exgrid{display:grid;grid-template-columns:max-content minmax(0,15rem) minmax(0,15rem);gap:.6rem .6rem;align-items:center}
+#sec5 .exgrid .exports{display:contents}
+#sec5 .exgrid .ex-l{min-width:0!important;margin-right:.6rem}
+#sec5 .exgrid .btn{width:100%;min-width:0;justify-content:center;text-align:center;padding:.55rem .5rem;white-space:normal;line-height:1.15;min-height:48px;height:100%}
+@media (max-width:640px){#sec5 .exgrid{grid-template-columns:1fr 1fr}#sec5 .exgrid .ex-l{grid-column:1/-1;margin:.3rem 0 0}}
+.pr-one + .pr-one{break-before:page;page-break-before:always}
+main .card{scroll-margin-top:80px}
+.bar h1{font-size:1.3rem}
+.bar .unit{background:rgba(255,255,255,.14);border-radius:999px;padding:.2rem .7rem;font-size:.85rem;font-weight:700}
+.steps{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;padding:.6rem 1rem 0;max-width:1500px;margin:0 auto}
+.steps a{display:inline-flex;align-items:center;gap:.4rem;text-decoration:none;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:999px;padding:.3rem .8rem .3rem .35rem;font-weight:700;font-size:.92rem;min-height:40px}
+.steps a b{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;border-radius:50%;background:var(--teal);color:#fff;font-size:.85rem}
+.stepn{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:50%;background:var(--amber);color:var(--navy);font-family:var(--display);font-weight:900;font-size:1.05rem;flex:0 0 auto}
+details.more{margin-top:.8rem}
+details.more summary{cursor:pointer;color:var(--teal-d);font-weight:700;min-height:40px;display:flex;align-items:center}
+.more-body{display:flex;flex-direction:column;gap:.5rem;padding:.6rem .8rem;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.helplist{padding-left:1.4rem}.helplist li{margin-bottom:.5rem}
+
+html{font-size:var(--fs)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.45;font-variant-numeric:tabular-nums}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+h1,h2,h3{font-family:var(--display);font-weight:900;margin:0}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;display:flex;align-items:center;gap:.6rem;padding:.55rem 1rem;flex-wrap:wrap}
+.bar h1{font-size:1.15rem;letter-spacing:.2px}
+.bar .eyebrow{color:var(--amber-l);font-family:var(--display);font-weight:900;font-size:.72rem;letter-spacing:1.4px;text-transform:uppercase}
+.bar .grow{flex:1}
+.topfix{position:sticky;top:0;z-index:20;background:var(--bg);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.topfix .bar{position:static}
+.topfix .steps{padding:.45rem 1rem .5rem}
+.topfix .steps a{min-height:34px;font-size:.86rem;padding:.2rem .7rem .2rem .3rem}
+main .card{scroll-margin-top:calc(var(--topH,170px) + 12px)!important}
+@media (max-width:760px){.topfix .steps{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}.topfix .steps a{flex:0 0 auto}.asmt h2{font-size:1.05rem!important}}
+.asmt{background:#E7F7F9;border-bottom:3px solid #2E808E;padding:.45rem 1rem .5rem}
+.asmt .ey{font-family:var(--display);font-weight:900;color:#2E808E;font-size:.8rem;letter-spacing:1.2px;text-transform:uppercase}
+.asmt h2{font-family:var(--display);font-weight:900;color:#0B3F47;font-size:1.25rem;line-height:1.2;margin:.1rem 0 0}
+.bar button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:10px;padding:.4rem .75rem;min-height:44px}
+.bar button:hover{background:rgba(255,255,255,.22)}
+.bar .sz button{min-width:44px;padding:.4rem .5rem}
+.bar .sz button[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:var(--navy)}
+/* slim header with smaller text */
+.bar{padding:.3rem 1rem;gap:.45rem;min-height:0}
+.bar h1{font-size:.95rem;letter-spacing:.2px}
+.bar .unit{font-size:.72rem;padding:.1rem .55rem}
+.bar button{min-height:32px;padding:.15rem .6rem;font-size:.78rem;border-radius:8px}
+.bar .sz button{min-width:34px;padding:.15rem .35rem}
+
+/* layout */
+.wrap{display:grid;grid-template-columns:270px 1fr;gap:1rem;padding:1rem;max-width:1500px;margin:0 auto}
+@media (max-width:980px){.wrap{grid-template-columns:1fr}}
+.side{align-self:start;position:sticky;top:76px}
+@media (max-width:980px){.side{position:static}}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin-bottom:1rem}
+.sec-h{display:flex;align-items:center;gap:.7rem;margin:-1rem -1.1rem 1rem;padding:.6rem 1.1rem;background:var(--navy);color:#fff;border-radius:13px 13px 0 0}
+.sec-h .n{font-family:var(--display);font-weight:900;color:var(--amber-l);font-size:.75rem;letter-spacing:1.3px;text-transform:uppercase;white-space:nowrap}
+.sec-h h2{font-size:1.02rem}
+.sec-h .grow{flex:1}
+.sec-h .phase{font-size:.78rem;background:rgba(255,255,255,.14);padding:.15rem .55rem;border-radius:999px}
+.hint{color:var(--grey);font-size:.86rem}
+.row{display:flex;gap:.8rem;flex-wrap:wrap;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:.25rem;flex:1;min-width:180px}
+.field label{font-weight:700;color:var(--navy);font-size:.9rem}
+.field input,.field select{border:1.5px solid var(--line);border-radius:10px;padding:.5rem .65rem;min-height:46px;background:#fff}
+.field input:focus,.field select:focus,textarea:focus{outline:3px solid rgba(46,128,142,.35);border-color:var(--teal)}
+#studentName,#teacherName{font-size:1rem;font-weight:400}
+#sec1 .row{align-items:flex-end}
+#sec1 .field input{height:48px;min-height:48px;box-sizing:border-box}
+#studentName::placeholder,#teacherName::placeholder{font-style:italic;font-weight:400;font-size:1rem;color:#6B7378;opacity:1}
+.needname{outline:3px solid var(--amber)!important}
+
+/* buttons */
+.btn{border:0;border-radius:12px;padding:.6rem 1rem;min-height:48px;font-weight:700;display:inline-flex;align-items:center;gap:.45rem;justify-content:center}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.b-teal{background:var(--teal);color:#fff}.b-teal:hover:not(:disabled){background:var(--teal-d)}
+.b-navy{background:var(--navy);color:#fff}.b-navy:hover:not(:disabled){background:var(--navy-2)}
+.b-amber{background:var(--amber);color:var(--navy)}.b-amber:hover:not(:disabled){filter:brightness(.92)}
+.b-ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line)}.b-ghost:hover:not(:disabled){border-color:var(--teal);color:var(--teal-d)}
+.b-red{background:#fff;color:var(--red);border:1.5px solid #D9A3A3}.b-red:hover:not(:disabled){background:var(--red-t)}
+.b-rec{background:var(--red);color:#fff;font-size:1.1rem;min-width:190px;min-height:58px}
+.b-rec.on{animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(139,0,0,.45)}50%{box-shadow:0 0 0 10px rgba(139,0,0,0)}}
+@media (prefers-reduced-motion:reduce){.b-rec.on{animation:none}*{transition:none!important}}
+.dot{width:.8em;height:.9em;background:currentColor;display:inline-block;clip-path:polygon(0 0,100% 50%,0 100%)}
+.ic{display:inline-block;flex:0 0 auto}
+.ic-stop{width:.75em;height:.75em;background:currentColor;border-radius:2px}
+.ic-pause{width:.75em;height:.85em;border-left:.26em solid currentColor;border-right:.26em solid currentColor;box-sizing:border-box}
+.ic-play{width:.75em;height:.85em;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%)}
+.ic-again{width:1.05em;height:1.05em}
+#btnStop{background:var(--red);color:#fff;border:0}
+#btnStop:hover:not(:disabled){background:#6E0000}
+#btnPause{background:#F2C12E;color:#22272B;border:1.5px solid #F2C12E}
+#btnPause:hover:not(:disabled){background:#E3AE12;border-color:#E3AE12;color:#22272B}
+
+/* side list */
+.side h2{font-size:.95rem;color:var(--navy);margin-bottom:.5rem}
+.slist{list-style:none;margin:0 0 .7rem;padding:0;display:flex;flex-direction:column;gap:.4rem}
+.slist li button.pick{width:100%;text-align:left;background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:.5rem .65rem;min-height:48px}
+.slist li button.pick[aria-current="true"]{border-color:var(--teal);background:var(--teal-t)}
+.slist .nm{font-weight:700;display:block}
+.slist .tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.2rem}
+.tag{font-size:.7rem;padding:.05rem .45rem;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--grey);font-weight:700}
+.tag.ok{background:var(--teal-t);border-color:#8CDBE5;color:var(--teal-d)}
+.tag.warn{background:var(--amber-t);border-color:var(--amber-l);color:#8B0000}
+.tag.bad{background:var(--red-t);border-color:#D9A3A3;color:var(--red)}
+.side .btn{width:100%;margin-bottom:.45rem}
+.side .siderow{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.45rem}
+.side .siderow .btn{margin-bottom:0;line-height:1.15;text-align:center;min-width:0;white-space:normal;padding:.45rem .35rem;font-size:.88rem}
+@media (min-width:981px){.side .siderow{gap:.35rem}.side .siderow .btn{font-size:.82rem;padding:.4rem .25rem}}
+@media (max-width:520px){.side .siderow{gap:.35rem}.side .siderow .btn{font-size:.85rem;padding:.45rem .4rem}}
+.clearinfo{background:#FBECEC;border:1px solid #E7B9B9;border-radius:10px;padding:.6rem .8rem;margin:.2rem 0 .8rem;text-align:left}
+.clearinfo b{color:var(--red)}
+.clearinfo ul{margin:.35rem 0 0;padding-left:1.2rem}
+
+/* recorder */
+.rec-zone{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:center}
+@media (max-width:700px){.rec-zone{grid-template-columns:1fr}}
+.timer{font-family:var(--mono);font-size:2rem;color:var(--navy);font-weight:700}
+.meter{height:14px;background:var(--panel);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--amber));transition:width .06s}
+.status{padding:.55rem .8rem;border-radius:10px;background:var(--panel);border-left:5px solid var(--teal);font-size:.92rem;margin-top:.7rem}
+.status.err{border-left-color:var(--red);background:var(--red-t)}
+.status.warn{border-left-color:#8B0000;background:var(--amber-t)}
+.ctrls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
+/* Record step: 1 Allow, 2 Start, 3 Stop/Pause/Start again */
+.rstep{display:grid;grid-template-columns:2.1rem 1fr;gap:.7rem;padding:.75rem 0;border-bottom:1px solid var(--line)}
+.rstep:first-of-type{padding-top:.2rem}
+.rstep .rn{width:2.1rem;height:2.1rem;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;font-size:1.05rem;display:flex;align-items:center;justify-content:center}
+.rstep.done .rn{background:var(--navy)}
+.rstep .rt{font-weight:700;color:var(--navy);font-size:1.02rem;line-height:2.1rem}
+.rstep .micbar,.rstep .ctrls{margin-top:.25rem}
+.rstep .spk{margin-top:.7rem}
+.rstep + .status{margin-top:.8rem}
+.player{margin-top:.8rem;display:none;align-items:center;gap:.7rem;flex-wrap:wrap;background:var(--teal-t);border-radius:12px;padding:.6rem .8rem}
+.player.show{display:flex}
+.player audio{flex:1;min-width:240px;display:block}
+.player .meta{font-size:.85rem;color:var(--teal-d);font-weight:700}
+
+/* transcripts */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media (max-width:860px){.dual{grid-template-columns:1fr}}
+.tbox{display:flex;flex-direction:column;gap:.35rem}
+.tbox .th{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.tbox .th b{color:var(--navy)}
+.tbox .th .grow{flex:1}
+textarea.tx{width:100%;min-height:260px;resize:vertical;border:1.5px solid var(--line);border-radius:12px;padding:.7rem .8rem;line-height:1.6;background:#fff}
+textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
+.interim{min-height:1.6em;color:var(--teal-d);font-style:italic;font-size:.9rem}
+.small-btn{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:.25rem .6rem;min-height:38px;font-size:.85rem;font-weight:700;color:var(--navy)}
+.small-btn:hover{border-color:var(--teal)}
+.ipasw{display:inline-flex;align-items:center;gap:.5rem;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:.2rem .7rem .2rem .3rem;min-height:40px;font-weight:700;font-size:.9rem;color:var(--grey);cursor:pointer}
+.ipasw{white-space:nowrap;flex:0 0 auto}
+.ipasw .knob{width:2.6rem;height:1.45rem;border-radius:999px;background:#C9CFD2;position:relative;flex:0 0 auto;transition:background .15s}
+.ipasw .knob::after{content:"";position:absolute;top:.15rem;left:.15rem;width:1.15rem;height:1.15rem;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:left .15s}
+.ipasw[aria-checked="true"]{border-color:var(--teal);color:var(--navy)}
+.ipasw[aria-checked="true"] .knob{background:var(--teal)}
+.ipasw[aria-checked="true"] .knob::after{left:1.3rem}
+.ipasw:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+body.no-ipa .ipa-part{display:none!important}
+body.no-ipa .dual{grid-template-columns:1fr}
+.sec-h .ipasw.onbar{min-height:36px;padding:.1rem .65rem .1rem .25rem;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.35);color:#fff}
+.sec-h .ipasw.onbar[aria-checked="true"]{border-color:#8CDBE5;color:#fff}
+.sec-h .ipasw.onbar[aria-checked="true"] .knob{background:#2E808E}
+.legend{font-size:.82rem;color:var(--grey)}
+.micbar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:.7rem}
+.micbar select{border:1.5px solid var(--line);border-radius:10px;padding:.45rem .6rem;min-height:46px;background:#fff;max-width:360px}
+.micstate{font-weight:700;font-size:.92rem;color:var(--grey)}
+.micstate.ok{color:var(--teal-d)}.micstate.warn{color:#495054}.micstate.err{color:var(--red)}
+.spk{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.7rem;padding:.5rem .7rem;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.spk-l{font-weight:700;color:var(--navy)}
+.spkbtn{border:2px solid var(--line);background:#fff;border-radius:10px;min-height:48px;min-width:120px;font-weight:700;color:var(--grey)}
+.spkbtn[data-spk="S"][aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.spkbtn[data-spk="T"][aria-pressed="true"]{background:#495054;border-color:#495054;color:#fff}
+.linetools{display:flex;gap:.35rem;flex-wrap:wrap}
+.lt-s{border-color:var(--teal);color:var(--teal-d)}
+.lt-t{border-color:#495054;color:#495054}
+.subs{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.45rem}
+.subbtn{border:1.5px solid var(--line);background:#fff;border-radius:9px;min-height:40px;padding:.2rem .6rem;font-size:.84rem;color:var(--grey);text-align:left}
+.subbtn::before{content:"\2610  ";font-size:1rem}
+.subbtn[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-t);color:var(--teal-d);font-weight:700}
+.subbtn[aria-pressed="true"]::before{content:"\2611  "}
+.subbtn.auto[aria-pressed="true"]{border-style:dashed}
+.srstate{font-size:.88rem;font-weight:700;padding:.35rem .6rem;border-radius:9px;background:var(--panel);color:var(--grey);border-left:4px solid var(--line)}
+.srstate.ok{background:var(--teal-t);color:var(--teal-d);border-left-color:var(--teal)}
+.srstate.warn{background:var(--amber-t);color:#8B0000;border-left-color:#8B0000}
+.srstate.err{background:var(--red-t);color:var(--red);border-left-color:var(--red)}
+.trtools{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;background:var(--amber-t);border:1px solid var(--amber-l);border-radius:12px;padding:.6rem .75rem;margin-bottom:.9rem}
+.trtools select{border:1.5px solid var(--line);border-radius:10px;padding:.45rem .6rem;min-height:46px;background:#fff}
+.trtools .msg{flex:1 1 260px;font-size:.88rem;color:#22272B}
+.trtools .meter{flex:1 1 100%;display:none}
+.trtools .meter.show{display:block}
+.btn.glow{box-shadow:0 0 0 4px rgba(46,128,142,.45)}
+
+/* evaluation */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin:.8rem 0}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.55rem .7rem}
+.tile .k{font-size:.78rem;color:var(--grey);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.tile .v{font-family:var(--mono);font-size:1.35rem;color:var(--navy);font-weight:700}
+.tile .s{font-size:.8rem;color:var(--grey)}
+.tile.ipatile{grid-column:1/-1;background:var(--amber-t);border-color:var(--amber-l)}
+.ipalist{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.45rem}
+.ipaw{display:inline-flex;flex-direction:column;align-items:flex-start;border:1.5px solid var(--amber-l);background:#fff;border-radius:10px;padding:.3rem .6rem;min-height:44px;line-height:1.2}
+.ipaw:hover{border-color:var(--teal)}
+.ipaw .w{font-weight:700;color:var(--navy)}
+.ipaw .p{font-family:var(--ipa);color:#8B0000;font-size:.92rem}
+.chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.5rem}
+.chipset{border:1px solid var(--line);border-radius:12px;padding:.5rem .65rem}
+.chipset b{display:block;color:var(--navy);font-size:.85rem;margin-bottom:.25rem}
+.chip{display:inline-block;margin:.12rem;padding:.1rem .5rem;border-radius:999px;background:var(--teal-t);color:var(--teal-d);font-size:.82rem;font-weight:700}
+.chip.none{background:var(--amber-t);color:#495054}
+
+/* grid */
+.crit{border:1px solid var(--line);border-radius:12px;padding:.7rem .8rem;margin-bottom:.6rem;display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem;align-items:start}
+@media (max-width:900px){.crit{grid-template-columns:1fr}}
+.crit .lbl{font-weight:700;color:var(--navy)}
+.crit .det{font-size:.85rem;color:var(--grey)}
+.crit .src{font-size:.72rem;font-weight:700;padding:.05rem .45rem;border-radius:999px;margin-left:.4rem;vertical-align:middle}
+.src.auto{background:var(--amber);color:var(--navy)}
+.src.obs{background:#8B0000;color:#fff}
+.seg{display:flex;gap:.3rem;flex-wrap:wrap}
+.seg button{border:1.5px solid var(--line);background:#fff;border-radius:10px;min-height:46px;min-width:78px;padding:.25rem .45rem;font-size:.8rem;font-weight:700;line-height:1.1;color:var(--grey)}
+.seg button b{display:block;font-family:var(--mono);font-size:1.05rem}
+.seg button[aria-pressed="true"][data-l="1"]{background:var(--red);border-color:var(--red);color:#fff}
+.seg button[aria-pressed="true"][data-l="2"]{background:#495054;border-color:#495054;color:#fff}
+.seg button[aria-pressed="true"][data-l="3"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.seg button[aria-pressed="true"][data-l="4"]{background:var(--navy);border-color:var(--navy);color:#fff}
+/* 1 to 4 slider scale */
+.lvs{width:360px;max-width:100%;padding:.15rem .9rem .1rem;user-select:none;-webkit-user-select:none;touch-action:none;cursor:pointer;border-radius:12px}
+@media (max-width:900px){.lvs{width:100%}}
+.lvs:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lvs .zl{display:flex;justify-content:space-between;font-size:.72rem;font-weight:700;letter-spacing:.4px;margin-bottom:.15rem}
+.lvs .zl span:first-child{color:var(--red)}.lvs .zl span:last-child{color:var(--teal)}
+.lvs .rail{position:relative;height:46px}
+.lvs .trk{position:absolute;left:0;right:0;top:19px;height:8px;border-radius:999px;background:linear-gradient(90deg,#F0D9D9 0 50%,#D5EEF1 50% 100%)}
+.lvs .mid{position:absolute;left:50%;top:11px;width:2px;height:24px;margin-left:-1px;background:#C9CFD2}
+.lvs .fill{position:absolute;left:0;top:19px;height:8px;border-radius:999px;background:var(--teal)}
+.lvs .stop{position:absolute;top:10px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:#fff;border:2px solid #C9CFD2;font-family:var(--mono);font-weight:700;font-size:.85rem;color:var(--grey);display:flex;align-items:center;justify-content:center}
+.lvs .thumb{position:absolute;top:2px;width:42px;height:42px;margin-left:-21px;border-radius:50%;display:none;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:1.25rem;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.28);transition:left .12s}
+.lvs.has .thumb{display:flex}
+.lvs.dragging .thumb{transition:none}
+.lvs .thumb.l1{background:var(--red)}.lvs .thumb.l2{background:#495054}.lvs .thumb.l3{background:var(--teal)}.lvs .thumb.l4{background:var(--navy)}
+.lvs.auto .thumb{outline:3px dashed var(--amber);outline-offset:2px}
+.lvs .names{position:relative;height:1.2rem;font-size:.78rem;font-weight:700;color:var(--grey)}
+.lvs .names span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.lvs .names span:first-child{transform:none;left:0!important}
+.lvs .names span:last-child{transform:none;left:auto!important;right:0}
+.lvs .names span.on{color:var(--navy)}
+.lvs .hintl{font-size:.75rem;color:var(--grey);text-align:center;min-height:1rem}
+.crit .ev{grid-column:1/-1;display:flex;gap:.5rem;align-items:center}
+.crit .ev input{flex:1;border:1.5px solid var(--line);border-radius:9px;padding:.4rem .6rem;min-height:42px;font-size:.92rem}
+.su{font-family:var(--display);font-weight:900;font-size:.8rem;padding:.25rem .55rem;border-radius:8px;min-width:48px;text-align:center}
+.su.s{background:var(--teal-t);color:var(--teal-d)}
+.su.u{background:var(--red-t);color:var(--red)}
+.su.n{background:var(--panel);color:var(--grey)}
+.overall{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;background:var(--navy);color:#fff;border-radius:12px;padding:.8rem 1rem;margin-top:.8rem}
+.overall .res{font-family:var(--display);font-weight:900;font-size:1.25rem}
+.overall .res.s{color:#8CDBE5}.overall .res.u{color:#FFB3B3}.overall .res.n{color:var(--amber-l)}
+.scale{font-size:.82rem;color:var(--grey);margin-bottom:.6rem}
+
+/* feedback */
+.fb{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media (max-width:860px){.fb{grid-template-columns:1fr}}
+.fb .fbh{padding:.45rem .7rem;border-radius:10px 10px 0 0;font-weight:700;color:#fff}
+.fb .well .fbh{background:var(--teal)}
+.fb .impr .fbh{background:#495054}
+.fb textarea{width:100%;min-height:190px;border:1.5px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:.7rem;resize:vertical;line-height:1.55}
+
+.exports{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.check{display:flex;align-items:center;gap:.45rem;min-height:44px}
+.check input{width:22px;height:22px;accent-color:var(--teal)}
+
+/* overlay */
+.ov{position:fixed;inset:0;background:rgba(10,20,32,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:1rem}
+.ov.show{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:760px;width:100%;max-height:90vh;overflow:auto;padding:1.2rem 1.3rem}
+.modal h2{color:var(--navy);font-size:1.15rem;margin-bottom:.6rem}
+.modal table{border-collapse:collapse;width:100%;font-size:.9rem;margin:.6rem 0}
+.modal td{border-bottom:1px solid var(--line);padding:.3rem .4rem}
+.modal td:first-child{font-weight:700;color:var(--navy);width:45%}
+.modal ul{padding-left:1.2rem}
+.modal li{margin-bottom:.35rem}
+
+.toast{position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:.6rem .9rem;display:none;align-items:center;gap:.8rem;z-index:60;max-width:92vw}
+.toast.show{display:flex}
+.toast button{background:var(--amber);border:0;color:#fff;border-radius:9px;padding:.35rem .8rem;font-weight:700;min-height:40px}
+
+/* consistent type: one size for section headings, one smaller size under them */
+:root{--h-sec:1.2rem;--h-sub:1rem}
+.rstep .rn{font-size:var(--h-sub)}
+.sec-h h2,.side h2{font-size:var(--h-sec);line-height:1.25}
+.side h2{margin-bottom:.6rem}
+.sec-h .stepn{width:2rem;height:2rem;font-size:1rem}
+.rstep .rt,.tbox .th b,.fbh,.ex-l,.spk-l,.crit .lbl,.more summary,.field label,.chipset b{font-size:var(--h-sub);font-weight:700}
+.rstep .rt,.tbox .th b,.ex-l,.spk-l,.crit .lbl,.field label,.chipset b{color:var(--navy)}
+.spk .spk-l{font-size:.9rem;font-style:italic;font-weight:400;color:var(--grey)}
+/* expand arrow before More settings and the other expanders */
+details.more > summary{font-size:.9rem;gap:.4rem;list-style:none}
+details.more > summary::-webkit-details-marker{display:none}
+details.more > summary::before{content:"";width:.5em;height:.5em;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translate(-2px,-2px);transition:transform .15s;flex:0 0 auto;margin:0 .2rem}
+details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2px)}
+/* smaller text inside More settings */
+.more-body{font-size:.85rem}
+.more-body .check{min-height:30px;margin:0}
+.more-body{gap:.25rem!important}
+.more-body .check input{width:1.05rem;height:1.05rem}
+.more-body .field label{font-size:.85rem}
+.more-body select{font-size:.85rem;min-height:38px}
+.spk{padding:.35rem .6rem}
+.spk .spkbtn{min-height:36px;min-width:88px;font-size:.9rem;border-radius:8px;padding:.15rem .7rem}
+
+/* print */
+#printArea{display:none}
+@page{size:A4;margin:12mm 12mm 13mm}
+@media print{
+  html{font-size:10pt}
+  body{background:#fff}
+  .bar,.asmt,.steps,.wrap,.ov,.toast{display:none!important}
+  #printArea{display:block;font-family:var(--body);color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+/* print report: 11px body text, never scaled down */
+#printArea{font-size:11px;line-height:1.45}
+/* report laid out like the official marking guide */
+.pr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:4mm;margin-bottom:2.5mm}
+.pr-top .ev{font-family:var(--display);font-weight:900;color:#0B3F47;font-size:19px;line-height:1.2}
+.pr-top .tk{font-family:var(--display);font-weight:900;color:#2E808E;font-size:14px;line-height:1.25;margin-top:.8mm}
+.pr-res{font-family:var(--display);font-weight:900;font-size:12px;padding:1.4mm 3mm;border-radius:1.5mm;border:.4mm solid currentColor;white-space:nowrap;background:#fff}
+.pr-res.s{color:#236A76}.pr-res.u{color:#8B0000}.pr-res.n{color:#8B0000}
+.pr-lab{font-weight:700;color:#2E808E;font-size:11px;margin:2mm 0 .7mm}
+.pr-fld{border:.3mm solid #2E808E;padding:.9mm 2mm;font-size:11px;min-height:5mm}
+.pr-h2{font-family:var(--display);font-weight:900;color:#22272B;font-size:14px;margin:4mm 0 1mm}
+.pr-sd{display:grid;grid-template-columns:repeat(4,1fr);column-gap:3mm}
+.pr-sd .w2{grid-column:span 2}
+.pr-cap{font-size:9.5px;color:#495054;margin:1.5mm 0 .8mm}
+.pr-ck{width:100%;border-collapse:collapse;font-size:11px;border:.3mm solid #2E808E}
+.pr-ck th{background:#2E808E;color:#fff;text-align:left;padding:1.4mm 2mm;font-size:10.5px;font-weight:700;vertical-align:top;border:.3mm solid #2E808E}
+.pr-ck td{border:.3mm solid #2E808E;padding:1.4mm 2mm;vertical-align:top}
+.pr-ck .n{width:6%;text-align:center;font-family:var(--mono)}
+.pr-ck .cr{width:31%}
+.pr-ck .tk2{width:6%;text-align:center;font-size:13px;line-height:1.1}
+.pr-ck th.tk2{font-size:10.5px}
+.pr-ck .on{color:#0B3F47;font-weight:700}
+.pr-ck .lv{display:block;margin-top:1mm;font-size:10px;color:#495054}
+.pr-ck .lv b{font-family:var(--mono)}
+.pr-ck .lv.S b{color:#236A76}.pr-ck .lv.US b{color:#8B0000}
+.pr-ck .sb{margin-bottom:.8mm}
+.pr-ck .sb span{font-size:12.5px;margin-right:1mm}
+.pr-ck .ev2{margin-top:.6mm}
+.pr-ck .ev2 i{font-style:normal;color:#22272B}
+.pr-ck .ev2{margin-top:1mm}
+.pr-ck ul.bl{margin:.6mm 0 0;padding-left:4.5mm}
+.pr-ck ul.bl li{margin-bottom:.4mm}
+.pr-ck .sbl{margin:.8mm 0 0 1mm}
+.pr-ck .tn{width:8%;font-family:var(--body);font-weight:700;text-align:left;line-height:1.3}
+.pr-ck .cr{width:36%}
+.pr-ck .bk{margin-bottom:.8mm}
+.pr-ck ul.bl.tk{list-style:none;padding-left:1mm}
+.pr-ck ul.bl.tk li span{font-size:12.5px;margin-right:1mm}
+.pr-ck th .thn{font-weight:400;font-size:9px;margin-top:.6mm;line-height:1.3}
+.pr-ck .sb.ind{margin-left:5mm}
+.pr-p{font-size:11px;margin:.6mm 0 1.2mm}
+.pr-ck .lv{display:none}
+.pr-h{font-family:var(--display);font-weight:900;color:#2E808E;font-size:13px;margin:4mm 0 1.5mm;border-bottom:.4mm solid #2E808E;padding-bottom:.6mm}
+.pr-box{font-size:11px;line-height:1.5;white-space:pre-wrap;border:.3mm solid #C9CFD2;border-radius:1.5mm;padding:2mm 2.5mm;background:#FBFCFD}
+.pr-box.ipa{font-family:var(--ipa);font-size:11.5px;line-height:1.6}
+.pr-fb{display:grid;grid-template-columns:1fr 1fr;gap:3mm}
+.pr-fb .h{font-weight:700;color:#fff;padding:1mm 2.5mm;border-radius:1.5mm 1.5mm 0 0;font-size:11.5px}
+.pr-fb .w .h{background:#2E808E}.pr-fb .i .h{background:#495054}
+.pr-fb .b{border:.3mm solid #C9CFD2;border-top:0;border-radius:0 0 1.5mm 1.5mm;padding:2mm 2.5mm;font-size:11px;white-space:pre-wrap;line-height:1.45;min-height:16mm}
+.pr-sign{display:grid;grid-template-columns:1fr 1fr;gap:8mm;margin-top:9mm;font-size:11px}
+.pr-sign div{border-top:.3mm solid #495054;padding-top:1.2mm;color:#495054}
+.pr-subs{font-size:10px;color:#495054;margin-bottom:.6mm}
+.pr-box .spS{color:#236A76}.pr-box .spT{color:#495054}
+.pr-note{font-size:10px;color:#495054;margin-top:1mm}
+/* page flow: keep each block whole; long transcripts run onto the next page */
+.pr-top,.pr-sd,.pr-fb > div,.pr-end{break-inside:avoid;page-break-inside:avoid}
+.pr-ck tr{break-inside:avoid;page-break-inside:avoid}
+.pr-ck thead{display:table-header-group}
+.pr-h{break-after:avoid;page-break-after:avoid}
+.pr-box{box-decoration-break:clone;-webkit-box-decoration-break:clone;orphans:3;widows:3}
+
+/* ===== writing app ===== */
+.stabs{display:flex;gap:.4rem;flex-wrap:wrap;margin:.2rem 0 .8rem}
+.stab{border:1.5px solid var(--line);background:#fff;border-radius:10px;min-height:46px;padding:.3rem 1rem;font-weight:700;color:var(--navy);font-size:1rem;display:inline-flex;align-items:center;gap:.5rem;cursor:pointer}
+.stab[aria-selected="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.stab .sdot{width:.6rem;height:.6rem;border-radius:50%;background:var(--line);display:inline-block}
+.stab.has .sdot{background:var(--teal)}
+.stab[aria-selected="true"].has .sdot{background:var(--amber)}
+.stab .cnt{font-weight:400;font-size:.8rem;opacity:.85}
+.stage-top{display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:.3rem}
+.stage-top .hint{margin:0 0 .5rem;flex:1;min-width:220px}
+.rbody{min-width:0}
+.photos{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.6rem}
+.photo{position:relative;width:120px;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.photo img{display:block;width:100%;height:120px;object-fit:cover;cursor:zoom-in}
+.photo .pl{font-size:.75rem;color:var(--grey);padding:.15rem .4rem}
+.photo .px{position:absolute;top:4px;right:4px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(139,0,0,.92);color:#fff;font-weight:700;font-size:1rem;line-height:1;cursor:pointer}
+.typewrap{display:grid;grid-template-columns:1fr;gap:.7rem}
+.typewrap.withimg{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:900px){.typewrap.withimg{grid-template-columns:1fr}}
+.typeimgs{display:none;max-height:520px;overflow:auto;border:1.5px solid var(--line);border-radius:12px;background:var(--panel);padding:.4rem}
+.typewrap.withimg .typeimgs{display:block}
+.typeimgs img{display:block;width:100%;border-radius:8px;margin-bottom:.4rem;cursor:zoom-in}
+textarea.wtx{min-height:300px;font-size:1.02rem}
+.markview{border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:.8rem .9rem;line-height:2.2;font-size:1.05rem;min-height:120px;max-height:560px;overflow:auto;user-select:none;-webkit-user-select:none}
+.markview .empty{color:var(--grey);font-style:italic;line-height:1.5}
+.markview .tk{cursor:pointer;border-radius:4px;padding:.05rem 0}
+.markview .pgap{display:block;height:.5rem}
+.pr-wr .pgap{display:block;height:1.5mm}
+.markview .tk:hover{background:var(--teal-t)}
+.markview .tk.sel{background:var(--amber);color:var(--ink)}
+.markview .tk.me{text-decoration:underline;text-decoration-color:#8B0000;text-decoration-thickness:2px;text-underline-offset:4px;background:#F7E6E6}
+.markview .tk.mg{text-decoration:underline;text-decoration-color:#2E808E;text-decoration-thickness:2px;text-underline-offset:4px;background:var(--teal-t)}
+.markview .tk.msel{outline:2px solid var(--navy);outline-offset:1px}
+.markview .cd{display:inline-block;font-size:.72rem;font-weight:700;line-height:1.2;padding:.05rem .3rem;border-radius:6px;margin:0 .15rem;vertical-align:super;cursor:pointer;color:#fff;background:#8B0000}
+.markview .cd.g{background:var(--teal)}
+.markview .fx{font-size:.82rem;color:var(--teal-d);font-style:italic;margin-right:.15rem}
+.selbar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:.45rem .6rem;margin-top:.5rem;font-size:.92rem}
+.selbar #selInfo{color:var(--navy);font-weight:700}
+.selbar input{border:1.5px solid var(--line);border-radius:9px;padding:.35rem .6rem;min-height:38px;font-size:.92rem;width:16rem;max-width:100%}
+.selbar input:disabled{background:#F4F5F5}
+.small-btn.b-x{color:var(--red);border-color:#D9A3A3}
+.palette{margin-top:.6rem}
+.pal-h{font-weight:700;color:var(--navy);font-size:.9rem;margin:.5rem 0 .3rem}
+.pal{display:flex;flex-wrap:wrap;gap:.35rem}
+.cbtn{border:1.5px solid #D9A3A3;background:#fff;border-radius:9px;min-height:42px;padding:.15rem .55rem;display:inline-flex;align-items:center;gap:.35rem;cursor:pointer;color:var(--ink);font-size:.8rem}
+.cbtn b{font-size:.95rem;color:#8B0000;min-width:1.6rem;text-align:center}
+.cbtn.g{border-color:#9FCFD6}
+.cbtn.g b{color:var(--teal-d)}
+.cbtn:hover{background:var(--panel)}
+.cbtn:disabled{opacity:.45;cursor:default}
+.cbtn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.cbtn.on b{color:#fff}
+.tally{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.7rem;font-size:.85rem;align-items:center}
+.tally .tc{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.1rem .55rem}
+.tally .tc b{color:#8B0000}
+.tally .tc.g b{color:var(--teal-d)}
+.tally .tsum{font-weight:700;color:var(--navy);margin-right:.3rem}
+.codekey{width:100%;border-collapse:collapse;font-size:.95rem}
+.codekey td{border-bottom:1px solid var(--line);padding:.3rem .5rem}
+.codekey td:first-child{font-weight:700;color:#8B0000;width:4.5rem}
+.codekey tr.g td:first-child{color:var(--teal-d)}
+.modal.photomodal{max-width:min(96vw,1100px)}
+.photomodal img{display:block;max-width:100%;max-height:78vh;margin:0 auto;border-radius:8px}
+.gpart{font-weight:700;color:var(--navy);font-size:var(--h-sub,1.05rem);margin:1rem 0 .5rem;padding-bottom:.25rem;border-bottom:2px solid var(--teal)}
+.gpart:first-child{margin-top:.3rem}
+.overall .pp{font-size:.88rem}
+#sec5 .exgrid{display:grid;grid-template-columns:max-content minmax(0,15rem) minmax(0,15rem);gap:.6rem .6rem;align-items:center}
+#sec5 .exgrid .exports{display:contents}
+#sec5 .exgrid .ex-l{min-width:0!important;margin-right:.6rem}
+#sec5 .exgrid .btn{width:100%;min-width:0;justify-content:center;text-align:center;padding:.55rem .5rem;white-space:normal;line-height:1.15;min-height:48px;height:100%}
+@media (max-width:640px){#sec5 .exgrid{grid-template-columns:1fr 1fr}#sec5 .exgrid .ex-l{grid-column:1/-1;margin:.3rem 0 0}}
+
+/* print: student writing */
+.pr-ck .sb.ind{margin-left:4mm}
+.pr-part{font-family:var(--display);font-weight:900;color:#0B3F47;font-size:12.5px;margin:3.5mm 0 1.2mm}
+.pr-outc{margin-top:4mm;font-size:11.5px;display:flex;gap:6mm;align-items:center;break-inside:avoid}
+.pr-outc b{font-family:var(--display)}
+.pr-outc span.on{color:#0B3F47;font-weight:700}
+.pr-wrstart{break-before:page;page-break-before:always}
+.pr-stage{margin-bottom:3mm}
+.pr-stage .meta{font-size:10px;color:#495054;margin:.5mm 0 1mm}
+.pr-wr{font-size:11.5px;line-height:1.95;white-space:normal;border:.3mm solid #C9CFD2;border-radius:1.5mm;padding:2mm 2.5mm;background:#fff}
+.pr-wr .e{text-decoration:underline;text-decoration-color:#8B0000;text-decoration-thickness:.35mm;text-underline-offset:.8mm}
+.pr-wr .g{text-decoration:underline;text-decoration-color:#2E808E;text-decoration-thickness:.35mm;text-underline-offset:.8mm}
+.pr-wr sup{font-size:8px;font-weight:700;color:#8B0000;margin:0 .4mm;line-height:0}
+.pr-wr sup.g{color:#236A76}
+.pr-wr .fx{font-size:9.5px;color:#236A76;font-style:italic}
+.pr-tally{font-size:10px;color:#22272B;margin-top:1mm}
+.pr-tc{font-size:10.5px;margin-top:1mm}
+.pr-photos{display:flex;flex-wrap:wrap;gap:3mm;margin-top:2mm}
+.pr-photos figure{margin:0;width:88mm;break-inside:avoid}
+.pr-photos img{display:block;width:100%;max-height:120mm;object-fit:contain;border:.3mm solid #C9CFD2}
+.pr-photos figcaption{font-size:9px;color:#495054}
+.pr-key{width:100%;border-collapse:collapse;font-size:9.5px;margin-top:1mm}
+.pr-key td{border:.3mm solid #C9CFD2;padding:.6mm 1.5mm}
+.pr-key td.c{font-weight:700;color:#8B0000;width:9mm}
+.pr-key td.c.g{color:#236A76}
+.pr-one + .pr-one{break-before:page;page-break-before:always}
+
+/* marking on the photo */
+.mmode{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;margin:.3rem 0 .4rem}
+.mm-l{font-weight:700;color:var(--navy);font-size:.92rem;margin-right:.2rem}
+.mmbtn{border:1.5px solid var(--line);background:#fff;border-radius:9px;min-height:40px;padding:.2rem .8rem;font-weight:700;color:var(--navy);font-size:.92rem;cursor:pointer}
+.mmbtn[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.mmbtn:disabled{opacity:.45;cursor:default}
+.pmbar{display:flex;gap:.35rem;align-items:center;flex-wrap:wrap;margin-bottom:.4rem}
+.pmpages{display:flex;gap:.3rem;flex-wrap:wrap}
+.small-btn[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.pmbox{border:1.5px solid var(--line);border-radius:12px;background:var(--panel);max-height:68vh;overflow:auto;padding:.4rem}
+.pmstage{position:relative;width:100%;margin:0 auto;line-height:0}
+.pmstage img{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;pointer-events:none}
+.pmstage svg{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.pmstage.move svg{touch-action:auto;cursor:grab}
+.pmstage .empty{line-height:1.5;padding:1.2rem;color:var(--grey);font-style:italic}
+svg .pml{cursor:pointer}
+.photo .pc{position:absolute;left:4px;top:4px;background:#8B0000;color:#fff;font-size:.72rem;font-weight:700;border-radius:999px;padding:.05rem .45rem}
+.pr-photos figure.big{width:100%}
+.pr-ph{position:relative;line-height:0}
+.pr-ph img{width:100%}
+.pr-ph svg{position:absolute;inset:0;width:100%;height:100%}
+.pr-photos figure.big img{max-height:none}
+
+</style>
+</head>
+<body>
+
+<div class="topfix" id="topFix">
+<header class="bar">
+  <h1>Writing Assessment</h1>
+  <span class="unit">VU23526 Assessment 2</span>
+  <div class="grow"></div>
+  <div class="sz" role="group" aria-label="Text size">
+    <button type="button" data-fs="16" aria-pressed="false" title="Smaller text">A-</button>
+    <button type="button" data-fs="18" aria-pressed="true" title="Normal text">A</button>
+    <button type="button" data-fs="21" aria-pressed="false" title="Larger text">A+</button>
+  </div>
+  <button type="button" id="btnCodes">Error codes</button>
+  <button type="button" id="btnHelp">Help</button>
+</header>
+
+<section class="asmt" aria-label="Assessment">
+  <div class="ey" id="asmtEy">VU23526 | Assessment event 2 of 3</div>
+  <h2 id="asmtTitle">Project, Complaint email (goods ordered online not received)</h2>
+</section>
+
+<nav class="steps" aria-label="Steps">
+  <a href="#sec1"><b>1</b> Student</a><a href="#sec2"><b>2</b> Writing</a><a href="#sec3"><b>3</b> Checklist</a><a href="#sec4"><b>4</b> Feedback</a><a href="#sec5"><b>5</b> Print or save</a>
+</nav>
+</div>
+
+<div class="wrap">
+  <aside class="side">
+    <div class="card">
+      <h2>Students being assessed</h2>
+      <ul class="slist" id="studentList"></ul>
+      <button type="button" class="btn b-red" id="btnDeleteOne">Delete this student</button>
+      <div class="siderow">
+        <button type="button" class="btn b-teal" id="btnNewStudent">+ Next student</button>
+        <button type="button" class="btn b-ghost" id="btnSaveAllSide">Save all students</button>
+        <button type="button" class="btn b-red" id="btnClearAll">Clear all students</button>
+      </div>
+      <button type="button" class="btn b-ghost" id="btnOpenSide" style="margin-top:.45rem">Open saved work</button>
+      <p class="hint" id="sessionNote">Your work is kept on this computer while you work. Save each student to keep a copy you can open again later.</p>
+    </div>
+  </aside>
+
+  <main>
+    <section class="card" id="sec1">
+      <div class="sec-h"><span class="stepn">1</span><h2>Student</h2></div>
+      <div class="row">
+        <div class="field" style="flex:2;min-width:220px">
+          <label for="studentName">Student name</label>
+          <input id="studentName" type="text" autocomplete="off" placeholder="Type student name first">
+        </div>
+        <div class="field" style="max-width:200px">
+          <label for="assessDate">Date</label>
+          <input id="assessDate" type="date">
+        </div>
+        <div class="field" style="max-width:230px">
+          <label for="teacherName">Teacher</label>
+          <input id="teacherName" type="text" autocomplete="off" placeholder="Teacher name">
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="sec2">
+      <div class="sec-h"><span class="stepn">2</span><h2>Writing</h2><span class="grow"></span><span class="phase" id="stageTag">Plan</span></div>
+      <div class="stabs" role="tablist" aria-label="Stages" id="stageTabs"></div>
+      <div class="stage-top">
+        <div class="field" style="max-width:200px">
+          <label for="stageDate">Date of this stage</label>
+          <input id="stageDate" type="date">
+        </div>
+        <div class="field" style="max-width:200px" id="wordsField">
+          <label for="stageWords">Number of words</label>
+          <input id="stageWords" type="number" min="0" step="1" inputmode="numeric" placeholder="If not typed">
+        </div>
+        <p class="hint" id="stageHint"></p>
+      </div>
+
+      <div class="rstep">
+        <span class="rn" aria-hidden="true">a</span>
+        <div class="rbody">
+          <div class="rt">Add a photo of the handwritten work</div>
+          <div class="row" style="gap:.5rem;align-items:center">
+            <button type="button" class="btn b-teal" id="btnCamera">Take a photo</button>
+            <button type="button" class="btn b-ghost" id="btnPhotoFile">Add a photo from files</button>
+            <span class="hint">You can add several pages. Photos stay on this computer.</span>
+          </div>
+          <input type="file" id="inCamera" accept="image/*" capture="environment" hidden>
+          <input type="file" id="inPhoto" accept="image/*" multiple hidden>
+          <div class="photos" id="photoList"></div>
+        </div>
+      </div>
+
+      <div class="rstep">
+        <span class="rn" aria-hidden="true">b</span>
+        <div class="rbody">
+          <div class="rt">Type the student's text <span class="hint" style="font-weight:400">(exactly as written, including errors)</span></div>
+          <div class="row" style="gap:.5rem;align-items:center;margin-bottom:.4rem">
+            <button type="button" class="small-btn" id="btnHeadings" hidden>Add the headings</button>
+            <button type="button" class="small-btn" id="btnFromDraft" hidden>Copy the draft text to edit</button>
+            <span class="grow"></span><span class="hint" id="wordCount">0 words</span>
+          </div>
+          <div class="typewrap" id="typeWrap">
+            <div class="typeimgs" id="typeImgs" aria-label="Photos of the writing"></div>
+            <textarea class="tx wtx" id="stageText" spellcheck="false" aria-label="Student's text"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="rstep">
+        <span class="rn" aria-hidden="true">c</span>
+        <div class="rbody">
+          <div class="rt">Mark with error codes</div>
+          <div class="mmode" role="group" aria-label="Where to mark">
+            <span class="mm-l">Mark on:</span>
+            <button type="button" class="mmbtn" data-mm="photo" aria-pressed="true">The photo</button>
+            <button type="button" class="mmbtn" data-mm="text" aria-pressed="false">The typed text</button>
+          </div>
+          <p class="hint" id="markHint" style="margin:.1rem 0 .5rem"></p>
+          <div id="photoMark">
+            <div class="pmbar">
+              <span id="pmPages" class="pmpages"></span>
+              <span class="grow"></span>
+              <button type="button" class="small-btn" id="pmDraw" aria-pressed="true" title="Draw on the photo">✎ Draw</button>
+              <button type="button" class="small-btn" id="pmMove" aria-pressed="false" title="Scroll the photo without drawing">✥ Move</button>
+              <button type="button" class="small-btn" id="pmZoomOut" title="Smaller" aria-label="Zoom out">−</button>
+              <span id="pmZoom" class="hint">100%</span>
+              <button type="button" class="small-btn" id="pmZoomIn" title="Bigger" aria-label="Zoom in">+</button>
+            </div>
+            <div class="pmbox" id="pmBox"><div class="pmstage" id="pmStage"></div></div>
+          </div>
+          <div class="markview" id="markView" aria-live="polite"></div>
+          <div class="selbar" id="selBar">
+            <span id="selInfo">Nothing selected.</span>
+            <span class="grow"></span>
+            <input type="text" id="fixIn" placeholder="Correction (optional)" autocomplete="off" disabled>
+            <button type="button" class="small-btn b-x" id="btnMarkDel" hidden>Remove code</button>
+            <button type="button" class="small-btn" id="btnSelClear">Clear</button>
+          </div>
+          <div class="palette">
+            <div class="pal-h">Error codes</div>
+            <div class="pal" id="palErr"></div>
+            <div class="pal-h">Good use <span class="hint" style="font-weight:400">(optional: ticks these features in the checklist)</span></div>
+            <div class="pal" id="palGood"></div>
+          </div>
+          <div class="tally" id="tally"></div>
+        </div>
+      </div>
+
+      <div class="rstep">
+        <span class="rn" aria-hidden="true">d</span>
+        <div class="rbody">
+          <div class="rt">Teacher comment on this stage <span class="hint" style="font-weight:400">(optional)</span></div>
+          <textarea class="tx" id="stageComment" style="min-height:70px" placeholder="For example: Good structure. Check your past tense."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="sec3">
+      <div class="sec-h"><span class="stepn">3</span><h2>Checklist</h2></div>
+      <div class="row" style="align-items:center;gap:.8rem">
+        <button type="button" class="btn b-amber" id="btnEvaluate">Check against criteria</button>
+        <span class="hint">Levels are suggested from the error codes and the typed text. Review and adjust each criterion as required.</span>
+      </div>
+      <div id="evalOut"></div>
+      <div class="scale">Tap or slide along the scale on each row. Tap a suggested level to confirm it. <b>3</b> or <b>4</b> is S. <b>1</b> or <b>2</b> is U/S. Every row needs S to pass.</div>
+      <div id="grid"></div>
+      <div class="overall" id="overall"></div>
+    </section>
+
+    <section class="card" id="sec4">
+      <div class="sec-h"><span class="stepn">4</span><h2>Feedback</h2></div>
+      <div class="row" style="align-items:center;gap:.8rem">
+        <button type="button" class="btn b-ghost" id="btnRebuildFb">Generate feedback</button>
+        <span class="hint" id="fbHint">Complete the checklist first, then press Generate feedback.</span>
+      </div>
+      <div class="fb">
+        <div class="well"><div class="fbh">What Was Done Well</div><textarea id="fbWell" placeholder="What the student did well"></textarea></div>
+        <div class="impr"><div class="fbh">What Needs Improvement</div><textarea id="fbImprove" placeholder="What the student can do better"></textarea></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec5">
+      <div class="sec-h"><span class="stepn">5</span><h2>Print or save</h2></div>
+      <div class="exgrid">
+        <div class="exports">
+          <span class="ex-l">Current student:</span>
+          <button type="button" class="btn b-navy" id="btnPrint">Print / Save as PDF</button>
+          <button type="button" class="btn b-teal" id="btnSave">Save to this computer</button>
+        </div>
+        <div class="exports">
+          <span class="ex-l">All students assessed in this session:</span>
+          <button type="button" class="btn b-navy" id="btnPrintAll">Print / Save all as PDF</button>
+          <button type="button" class="btn b-teal" id="btnSaveAll">Save all students</button>
+        </div>
+        <div class="exports">
+          <span class="ex-l">Saved work:</span>
+          <button type="button" class="btn b-ghost" id="btnOpen">Open saved work</button>
+          <span aria-hidden="true"></span>
+        </div>
+      </div>
+      <input type="file" id="inOpen" accept=".zip,.json,application/zip,application/json" multiple hidden>
+      <p class="hint" style="margin:.6rem 0 0"><b>Print / Save as PDF</b> opens the print window. Choose a printer, or choose <b>Save as PDF</b>. <b>Save to this computer</b> makes one ZIP file with the photos, a text report and an assessment file. Use <b>Open saved work</b> to open that ZIP again later (for example to add the final copy), on any computer.</p>
+      <div class="status" id="saveStatus" style="display:none"></div>
+    </section>
+  </main>
+</div>
+
+<!-- print-only report -->
+<div id="printArea"></div>
+
+<!-- overlays -->
+<div class="ov" id="ovHelp" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="modal">
+    <h2 id="helpTitle">Help</h2>
+    <ol class="helplist">
+      <li><b>Student.</b> Type the name.</li>
+      <li><b>Writing.</b> Choose the stage (Plan, Draft or Final). Take or add a photo of the student's writing. Mark on the photo: draw under or around an error with your finger, pen or mouse, then tap an error code. A single tap adds a ^ for a missing word. Type the number of words so the app can count errors per 100 words. You can also type the text and mark it there instead, which lets the app check the language as well.</li>
+      <li><b>Checklist.</b> Press Check against criteria. Levels are suggested from your codes and the typed text. Review and adjust each criterion.</li>
+      <li><b>Feedback.</b> Press Generate feedback. Review and edit the text as required.</li>
+      <li><b>Print or save.</b> Press Print / Save as PDF, or Save to this computer. Next lesson, press Open saved work and choose the ZIP to keep going.</li>
+    </ol>
+    <p class="hint">Nothing is sent anywhere. Your work is kept on this computer for up to 30 days, until you press Clear all students. The saved ZIP is the safe copy you can open on any computer.</p>
+    <div class="row" style="justify-content:flex-end"><button type="button" class="btn b-navy" data-close>Close</button></div>
+  </div>
+</div>
+
+<div class="ov" id="ovCodes" role="dialog" aria-modal="true" aria-labelledby="codesTitle">
+  <div class="modal">
+    <h2 id="codesTitle">Error correction code</h2>
+    <table class="codekey" id="codeKey"></table>
+    <div class="row" style="justify-content:flex-end;margin-top:.8rem"><button type="button" class="btn b-navy" data-close>Close</button></div>
+  </div>
+</div>
+
+<div class="ov" id="ovPhoto" role="dialog" aria-modal="true" aria-label="Photo">
+  <div class="modal photomodal">
+    <img id="photoBig" alt="Student writing">
+    <div class="row" style="justify-content:flex-end;margin-top:.6rem"><button type="button" class="btn b-navy" data-close>Close</button></div>
+  </div>
+</div>
+
+<div class="ov" id="ovLeave" role="alertdialog" aria-modal="true" aria-labelledby="leaveTitle">
+  <div class="modal big">
+    <div class="bigicon" aria-hidden="true">!</div>
+    <h2 id="leaveTitle">Wait! Please save your work first</h2>
+    <p class="bigtext" id="leaveText">Some students have not been saved. If you close this page, you can still find the work here on this computer, but the ZIP file is the safe copy.</p>
+    <div class="bigbtns">
+      <button type="button" class="btn b-teal" id="btnLeaveSave">Save all students</button>
+      <button type="button" class="btn b-navy" id="btnLeavePrint">Print / Save all as PDF</button>
+      <button type="button" class="btn b-ghost" data-close>Back to the page</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ovWelcome" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+  <div class="modal big">
+    <h2 id="welcomeTitle">Welcome back</h2>
+    <p class="bigtext" id="welcomeText"></p>
+    <div class="bigbtns">
+      <button type="button" class="btn b-teal" data-close>Continue</button>
+      <button type="button" class="btn b-ghost" id="btnWelcomeFresh">Start fresh</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ovClear" role="alertdialog" aria-modal="true" aria-labelledby="clearTitle">
+  <div class="modal big">
+    <div class="bigicon" aria-hidden="true">!</div>
+    <h2 id="clearTitle">Delete all students?</h2>
+    <p class="bigtext">This deletes every photo, text, code and result on this computer. You cannot undo this. Save them first if you need them.</p>
+    <div class="clearinfo" id="clearInfo"></div>
+    <div class="bigbtns">
+      <button type="button" class="btn b-teal" id="btnClearSave">Save all students first</button>
+      <button type="button" class="btn b-rec" id="btnClearYes">Delete everything</button>
+      <button type="button" class="btn b-ghost" data-close>Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ovDelOne" role="alertdialog" aria-modal="true" aria-labelledby="delOneTitle">
+  <div class="modal big">
+    <div class="bigicon" aria-hidden="true">!</div>
+    <h2 id="delOneTitle">Delete this student?</h2>
+    <p class="bigtext" id="delOneText"></p>
+    <div class="bigbtns">
+      <button type="button" class="btn b-teal" id="btnDelOneSave">Save first</button>
+      <button type="button" class="btn b-rec" id="btnDelOneYes">Delete</button>
+      <button type="button" class="btn b-ghost" data-close>Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ovTwo" role="alertdialog" aria-modal="true" aria-labelledby="twoTitle">
+  <div class="modal big">
+    <div class="bigicon" aria-hidden="true">!</div>
+    <h2 id="twoTitle">This page is open in another tab</h2>
+    <p class="bigtext">Please use only one tab, so your work is not mixed up. Close the other tab, then continue here.</p>
+    <div class="bigbtns"><button type="button" class="btn b-navy" data-close>OK</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span><button type="button" id="toastBtn">Undo</button></div>
+
+<script>
+"use strict";
+/* =========================================================
+   0. HELPERS
+   ========================================================= */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad2 = n => String(n).padStart(2, "0");
+const todayISO = () => { const d = new Date(); return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); };
+const fmtDateAU = iso => { if (!iso) return ""; const p = iso.split("-"); return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso; };
+const uid = () => Math.random().toString(36).slice(2, 10);
+function safeName(n) {
+  let s = String(n || "").trim().replace(/\s+/g, "_");
+  try { s = s.normalize("NFD").replace(/[̀-ͯ]/g, ""); } catch (e) {}
+  s = s.replace(/[^A-Za-z0-9_\-]/g, "");
+  return s || "Student";
+}
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+const uniq = arr => Array.from(new Set(arr));
+const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+
+/* =========================================================
+   1. ASSESSMENT DETAILS (from the VU23526 assessment event 2 guide)
+   ========================================================= */
+const UNIT_NAME = "VU23526 | Read and write straightforward transactional texts";
+const QUAL_NAME = "22640VIC | Certificate III in EAL (Access)";
+const EVENT_NAME = "Assessment event 2 of 3: Project";
+const TASK_NAME = "Complaint email: goods ordered online not received";
+const FILE_TAG = "VU23526_Assessment_2";
+const APP_ID = "eal_writing_vu23526_ae2";
+const DB_NAME = APP_ID;
+const STO = "eal26w_";
+
+const LEVELS = [
+  {l:1, t:"Not yet"}, {l:2, t:"Developing"}, {l:3, t:"Meets"}, {l:4, t:"Strong"}
+];
+
+const STAGES = [
+  {id:"plan",  t:"Plan",       part:1, hint:"Part 1, Task 1: the Planning table. Type the student's notes for each stage.",
+   head:"To:\nSubject:\nAppropriate greeting:\nParagraph 1 (Why are you writing the email?):\nParagraph 2 (What is the problem?):\nParagraph 3 (What do you want them to do about it?):\nAppropriate closing including your name:\n"},
+  {id:"draft", t:"Draft",      part:1, hint:"Part 1, Task 2: the draft email. Type it exactly as written, then mark it with the error correction code. Leave a blank line between paragraphs.",
+   head:"To:\nSubject:\nMessage:\n"},
+  {id:"final", t:"Final copy", part:2, hint:"Part 2: the final copy, written after your feedback on the draft. Type it exactly as written. Mark any errors that are left.",
+   head:"To:\nSubject:\nMessage:\n"}
+];
+const stageById = id => STAGES.find(s => s.id === id) || STAGES[0];
+
+/* error correction code (appendix to the assessment) */
+const ERR_CODES = [
+  {c:"WW", n:"Wrong word"}, {c:"WT", n:"Wrong tense"}, {c:"WF", n:"Wrong form"}, {c:"WO", n:"Word order"},
+  {c:"MW", n:"Missing word (^)"}, {c:"Pr", n:"Wrong pronoun"}, {c:"X", n:"Extra word"}, {c:"A", n:"Article"},
+  {c:"SV", n:"Subject verb agreement"}, {c:"#", n:"Number"}, {c:"Sp", n:"Spelling"}, {c:"P", n:"Punctuation"},
+  {c:"C", n:"Capitalisation"}, {c:"RW", n:"Try re-writing"}, {c:"Par", n:"Incorrect paragraphing"}, {c:"Ro", n:"Run on sentence"}
+];
+/* good-use ticks: optional, they tick features in the checklist */
+const GOOD_CODES = [
+  {c:"gPol",  l:"✓Pol",  n:"Politeness marker",               crit:"polite",   sub:"pol"},
+  {c:"gAdj",  l:"✓Adj",  n:"Adjective",                       crit:"describe", sub:"adj"},
+  {c:"gAdv",  l:"✓Adv",  n:"Adverb",                          crit:"describe", sub:"adv"},
+  {c:"gPrep", l:"✓Prep", n:"Preposition or phrase",           crit:"describe", sub:"prep"},
+  {c:"gCS",   l:"✓CS",   n:"Compound or complex sentence",    crit:"grammar",  sub:"cs"},
+  {c:"gTen",  l:"✓Ten",  n:"Perfect, conditional or passive", crit:"grammar",  sub:"tense"},
+  {c:"gDM",   l:"✓DM",   n:"Discourse marker",                crit:"grammar",  sub:"dm"},
+  {c:"gMod",  l:"✓Mod",  n:"Modal",                           crit:"grammar",  sub:"mod"}
+];
+const CODE = {};
+ERR_CODES.forEach(x => { CODE[x.c] = {c:x.c, l:x.c, n:x.n, good:false}; });
+GOOD_CODES.forEach(x => { CODE[x.c] = Object.assign({good:true}, x); });
+const codeLabel = c => CODE[c] ? CODE[c].l : c;
+const isGood = c => !!(CODE[c] && CODE[c].good);
+const GRAM_CODES = ["WT","WF","WO","MW","Pr","X","A","SV","#","Ro","RW"];
+const VOC_CODES = ["WW"];
+const MECH_CODES = ["Sp","P","C"];
+
+/* checklist rows, in the guide's words */
+const CRITERIA = [
+  {id:"plan", part:1, task:"1.", stage:"draft", auto:"plan",
+   label:"Plan and draft complaint email using appropriate stages, format and layout.",
+   detail:"Checked from the plan and the draft.",
+   subs:[{id:"done",label:"Completed Part 1: Plan and draft your writing."},{id:"layout",label:"Used appropriate layout."},{id:"opening",label:"Used appropriate opening sentence."},{id:"problem",label:"Stated the problem and provided details."},{id:"solution",label:"Suggested solutions."},{id:"closing",label:"Used an appropriate closing."},{id:"paras",label:"Used at least 2 paragraphs with topic sentence and supporting detail"},{id:"subject",label:"Used appropriate subject line."}],
+   good:"You planned your email and used the right stages and layout for a complaint email.",
+   tip:"Use all the stages of a complaint email: subject line, greeting, why you are writing, the problem with details, what you want them to do, and a polite closing with your name.",
+   subFb:{done:{good:"You completed the Planning table.",tip:"Complete the Planning table before you write the draft."},layout:{good:"Your email layout is correct (To, Subject, greeting and closing).",tip:"Set out the email with To, Subject, a greeting and a closing."},opening:{good:"Your opening sentence says why you are writing.",tip:"Start with a clear opening sentence, for example: I am writing to complain about an order I have not received."},problem:{good:"You explained the problem and gave details such as the order number and date.",tip:"Explain the problem and give details, for example the order number, the date and what you ordered."},solution:{good:"You suggested a solution.",tip:"Say what you want the company to do, for example send the items again or give you a refund."},closing:{good:"You used an appropriate closing.",tip:"Finish with a polite closing, for example: I look forward to hearing from you. Yours sincerely, and your name."},paras:{good:"You wrote paragraphs with a topic sentence and supporting detail.",tip:"Write at least 2 paragraphs. Start each one with a topic sentence, then add supporting detail."},subject:{good:"Your subject line is clear.",tip:"Write a clear subject line, for example: Order 45821 not received."}}},
+  {id:"polite", part:1, task:"2.", stage:"draft", auto:"polite",
+   label:"Use polite and formal language.",
+   detail:"Politeness markers and formal register in the draft.",
+   subs:[{id:"pol",label:"Used politeness marker."},{id:"formal",label:"Used formal language."}],
+   good:"Your language is polite and formal.",
+   tip:"Use polite and formal language, for example: Could you please ..., I would appreciate it if ... Avoid short forms such as I'm and don't.",
+   subFb:{pol:{good:"You used politeness markers.",tip:"Add politeness markers, for example: Could you please ..., I would be grateful if ..."},formal:{good:"Your register is formal.",tip:"Use formal language. Write I am and do not instead of I'm and don't, and avoid informal words."}}},
+  {id:"describe", part:1, task:"3.", stage:"draft", auto:"describe",
+   label:"Use adjectives, adverbs, adverbial phrases, prepositions, prepositional phrases to describe information and give explanations.",
+   detail:"Descriptive language in the draft, and Wrong word (WW) codes.",
+   subs:[{id:"adj",label:"Used adjectives to describe information and give explanation."},{id:"adv",label:"Used adverbs to describe information and give explanation."},{id:"prep",label:"Used prepositions, adverbial and prepositional phrases to describe information and give explanation."}],
+   good:"You used describing words and phrases to explain the problem.",
+   tip:"Use more describing language: adjectives (late, damaged), adverbs (unfortunately, still) and phrases with prepositions (on 3 May, at my front door).",
+   subFb:{adj:{good:"You used adjectives to describe the problem.",tip:"Use adjectives to describe the items and the problem, for example: damaged, late, disappointed."},adv:{good:"You used adverbs to explain.",tip:"Use adverbs, for example: unfortunately, still, immediately, already."},prep:{good:"You used prepositions and phrases to give details.",tip:"Use prepositional phrases to give details, for example: on 3 May, at my front door, by Friday."}}},
+  {id:"grammar", part:1, task:"4.", stage:"draft", auto:"grammar",
+   label:"Use appropriate grammar:",
+   bullets:["sentence structure with conjunctions","tenses including perfect, conditional or passive","discourse markers","simple modals"],
+   detail:"Grammar features in the draft, and grammar codes (WT, WF, WO, MW, Pr, X, A, SV, #, Ro, RW).",
+   subs:[{id:"cs",label:"Used compound and complex sentences with appropriate conjunctions."},{id:"tense",label:"Used different tenses (including one of the following: perfect, conditional or passive)."},{id:"dm",label:"Used discourse markers."},{id:"mod",label:"Used modals."}],
+   good:"Your grammar is mostly accurate and you used a range of structures.",
+   tip:"Check your grammar using the error codes on your draft.",
+   subFb:{cs:{good:"You joined ideas with conjunctions in compound and complex sentences.",tip:"Join ideas with conjunctions, for example: because, although, when, which."},tense:{good:"You used a range of tenses, including perfect, passive or conditional.",tip:"Use a range of tenses, for example: I have not received (perfect), it was delivered (passive), if you cannot send it, I would like a refund (conditional)."},dm:{good:"You used discourse markers to organise your ideas.",tip:"Use discourse markers, for example: however, in addition, therefore, as a result."},mod:{good:"You used modals.",tip:"Use modals, including negative ones, for example: could, would, should, cannot."}}},
+  {id:"proof", part:1, task:"5.", stage:"draft", auto:"proof", observe:true,
+   label:"Proofread own work.",
+   detail:"Tick the box if the student completed the Student checklist. Spelling (Sp), punctuation (P) and capital letter (C) codes are shown as evidence.",
+   subs:[{id:"chk",label:"Completed Student checklist in Part 1: Task 2"}],
+   good:"You completed the student checklist and checked your work.",
+   tip:"Proofread your work and complete the student checklist before you submit. Check spelling, punctuation and capital letters.",
+   subFb:{chk:{good:"You completed the student checklist.",tip:"Complete the student checklist before you submit your draft."}}, subSrcOnly:true},
+  {id:"fixed", part:2, task:"1.", stage:"final", auto:"fixed",
+   label:"Proofread and correct final draft.",
+   detail:"Compares the coded errors in the draft with the final copy.",
+   subs:[{id:"fix",label:"Corrected final copy using assessor mark up and error correction code from the first draft."}],
+   good:"You used the error codes to correct your draft.",
+   tip:"Go through every error code on your draft and correct each one in your final copy."},
+  {id:"register", part:2, task:"2.", stage:"final", auto:"register",
+   label:"Produce a final copy which demonstrates appropriate register to context, purpose and audience.",
+   detail:"Structure, staging and language of the final copy.",
+   subs:[{id:"reg",label:"Produced a final copy which satisfactorily demonstrates appropriate structure, staging and language for purpose."}],
+   good:"Your final copy has the right structure, staging and language for a complaint email.",
+   tip:"Make sure the final copy has all the stages and uses polite, formal language for a customer service team."}
+];
+const critById = id => CRITERIA.find(c => c.id === id);
+const PARTS = [
+  {n:1, t:"Part 1: Plan and draft your writing"},
+  {n:2, t:"Part 2: Edit and finalise your writing"}
+];
+const PRINT_INTRO = ["The assessor will use the following marking criteria to assess your responses or performance for each part and tasks of this assessment. You must meet all the criteria to be successful at this assessment.", "Note that S = Satisfactory and U/S = Unsatisfactory."];
+const COMMENT_NOTE = "Describe the student’s ability in demonstrating the required skills and knowledge. Record your observations in enough detail to demonstrate your judgement of the student’s performance against the criteria required.";
+
+/* =========================================================
+   2. RECORDS
+   ========================================================= */
+const records = [];
+let cur = null;
+let STAGE = "plan";
+const blankStage = () => ({date: "", text: "", words: "", photos: [], marks: [], comment: ""});
+function newRecord() {
+  return {id: uid(), name: "", date: todayISO(), stage: "plan",
+    stages: {plan: blankStage(), draft: blankStage(), final: blankStage()},
+    levels: {}, levelSrc: {}, evidence: {}, evidenceSrc: {}, subs: {}, subSrc: {},
+    well: "", improve: "", fbAuto: true, checked: false, saved: false};
+}
+function fixRecord(r) {
+  const b = newRecord();
+  Object.keys(b).forEach(k => { if (r[k] === undefined || r[k] === null) r[k] = b[k]; });
+  STAGES.forEach(s => {
+    r.stages[s.id] = Object.assign(blankStage(), r.stages[s.id] || {});
+    const st = r.stages[s.id];
+    if (!Array.isArray(st.photos)) st.photos = [];
+    if (!Array.isArray(st.marks)) st.marks = [];
+    st.photos.forEach(p => { if (!Array.isArray(p.marks)) p.marks = []; });
+  });
+  ["levels", "levelSrc", "evidence", "evidenceSrc", "subs", "subSrc"].forEach(k => { if (typeof r[k] !== "object") r[k] = {}; });
+  return r;
+}
+const stageHas = st => !!(st && (st.text.trim() || st.photos.length || st.marks.length || st.comment.trim()));
+function hasContent(r) {
+  return !!(r.name || STAGES.some(s => stageHas(r.stages[s.id])) || Object.keys(r.levels).length || r.well.trim() || r.improve.trim());
+}
+let REV = 0;
+function touch() { if (cur) cur.saved = false; REV++; }
+
+/* =========================================================
+   3. TEXT AND TOKENS
+   ========================================================= */
+function tokenize(text) {
+  const out = []; const re = /\S+/g; let m;
+  while ((m = re.exec(text))) out.push({w: m[0], i: m.index, j: m.index + m[0].length});
+  return out;
+}
+const core = w => String(w).toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9'$]/g, "");
+function wordCount(t) { return (String(t || "").match(/[A-Za-z0-9’']+/g) || []).length; }
+function markWords(toks, m) { return toks.slice(m.s, m.e + 1).map(t => t.w).join(" "); }
+/* keep codes on the right words when the teacher edits the typed text */
+function reanchor(st, oldToks) {
+  const toks = tokenize(st.text);
+  let lost = 0;
+  st.marks = st.marks.filter(m => {
+    const want = (m.words || "").split(" ");
+    const fits = s => s >= 0 && s + want.length <= toks.length && want.every((w, k) => toks[s + k].w === w);
+    if (fits(m.s)) { m.e = m.s + want.length - 1; return true; }
+    let best = -1, bd = 1e9;
+    for (let s = 0; s + want.length <= toks.length; s++) if (fits(s) && Math.abs(s - m.s) < bd) { best = s; bd = Math.abs(s - m.s); }
+    if (best >= 0) { m.s = best; m.e = best + want.length - 1; return true; }
+    lost++; return false;
+  });
+  return lost;
+}
+
+/* all coded marks on a stage: on the typed text and on the photos */
+function allMarks(st) {
+  const toks = tokenize(st.text);
+  const out = st.marks.map(m => ({code: m.code, fix: m.fix, words: markWords(toks, m), src: "text"}));
+  st.photos.forEach((p, k) => (p.marks || []).forEach(m => { if (m.code) out.push({code: m.code, fix: m.fix, words: "", src: "photo", page: k + 1}); }));
+  return out;
+}
+const errCount = st => allMarks(st).filter(m => !isGood(m.code)).length;
+const stageWords = st => wordCount(st.text) || Math.max(0, parseInt(st.words, 10) || 0);
+const photoMarkCount = st => st.photos.reduce((a, p) => a + (p.marks || []).length, 0);
+
+/* =========================================================
+   4. STAGE UI: photos, typing, marking
+   ========================================================= */
+const curStage = () => cur.stages[STAGE];
+function renderTabs() {
+  $("#stageTabs").innerHTML = STAGES.map(s => {
+    const st = cur.stages[s.id], n = errCount(st);
+    const bits = [];
+    if (st.photos.length) bits.push(plural(st.photos.length, "photo"));
+    if (stageWords(st)) bits.push(stageWords(st) + " words");
+    if (n) bits.push(plural(n, "code"));
+    return '<button type="button" class="stab' + (stageHas(st) ? " has" : "") + '" role="tab" data-stage="' + s.id + '" aria-selected="' + (s.id === STAGE) + '"><span class="sdot" aria-hidden="true"></span>' + esc(s.t) + (bits.length ? ' <span class="cnt">' + esc(bits.join(", ")) + "</span>" : "") + "</button>";
+  }).join("");
+}
+function renderStage() {
+  const s = stageById(STAGE), st = curStage();
+  $("#stageTag").textContent = s.t;
+  $("#stageHint").textContent = s.hint;
+  $("#stageDate").value = st.date || "";
+  if ($("#stageText").value !== st.text) $("#stageText").value = st.text;
+  $("#stageText").placeholder = STAGE === "plan" ? "Type the plan here. Press Add the headings to start with the stages from the Planning table." : "Type the " + s.t.toLowerCase() + " here, exactly as the student wrote it.";
+  $("#stageComment").value = st.comment || "";
+  $("#btnHeadings").hidden = !!st.text.trim();
+  $("#btnHeadings").textContent = STAGE === "plan" ? "Add the Planning table headings" : "Add the email headings (To, Subject, Message)";
+  $("#btnFromDraft").hidden = !(STAGE === "final" && !st.text.trim() && cur.stages.draft.text.trim());
+  SEL.a = SEL.b = null; SEL.mark = null;
+  $("#stageWords").value = st.words || "";
+  PSEL = null; PAGE = 0;
+  if (st.photos.length && !st.text.trim()) MM = "photo"; else if (st.text.trim() && !photoMarkCount(st)) MM = "text";
+  renderPhotos(); renderWordCount(); renderMarking(); renderTabs();
+}
+function renderWordCount() { const st = curStage(); $("#wordCount").textContent = wordCount(st.text) + " words"; $("#wordsField").hidden = !!st.text.trim(); }
+function renderPhotos() {
+  const st = curStage();
+  $("#photoList").innerHTML = st.photos.map((p, k) => '<div class="photo"><img src="' + p.data + '" alt="Page ' + (k + 1) + '" data-big="' + k + '">' + ((p.marks || []).length ? '<span class="pc">' + p.marks.length + "</span>" : "") + '<div class="pl">Page ' + (k + 1) + '</div><button type="button" class="px" data-delphoto="' + k + '" title="Remove this photo" aria-label="Remove page ' + (k + 1) + '">×</button></div>').join("");
+  $("#typeImgs").innerHTML = st.photos.map((p, k) => '<img src="' + p.data + '" alt="Page ' + (k + 1) + '" data-big="' + k + '">').join("");
+  $("#typeWrap").classList.toggle("withimg", st.photos.length > 0);
+}
+/* shrink photos so they keep well on this computer and in the saved file */
+function compressImage(file) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const max = 1800, sc = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.round(img.naturalWidth * sc), h = Math.round(img.naturalHeight * sc);
+      const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+      const cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, w, h); cx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      res({data: cv.toDataURL("image/jpeg", 0.8), w, h, at: Date.now(), marks: []});
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("This photo type cannot be opened here. Try a JPG or PNG photo.")); };
+    img.src = url;
+  });
+}
+async function addPhotos(files) {
+  const st = curStage(); let bad = 0;
+  for (const f of Array.from(files || [])) {
+    try { st.photos.push(await compressImage(f)); } catch (e) { bad++; }
+  }
+  if (!st.date) { st.date = todayISO(); $("#stageDate").value = st.date; }
+  if (st.photos.length && !st.text.trim()) { MM = "photo"; PAGE = st.photos.length - 1; }
+  touch(); renderPhotos(); renderMarking(); renderTabs(); renderList();
+  if (bad) showToast(bad + " photo" + (bad > 1 ? "s" : "") + " could not be opened. Try a JPG or PNG photo.");
+}
+$("#btnCamera").addEventListener("click", () => $("#inCamera").click());
+$("#btnPhotoFile").addEventListener("click", () => $("#inPhoto").click());
+$("#inCamera").addEventListener("change", e => { addPhotos(e.target.files); e.target.value = ""; });
+$("#inPhoto").addEventListener("change", e => { addPhotos(e.target.files); e.target.value = ""; });
+document.addEventListener("click", e => {
+  const big = e.target.closest("[data-big]");
+  if (big && (big.closest("#photoList") || big.closest("#typeImgs"))) { $("#photoBig").src = curStage().photos[+big.dataset.big].data; openOv("#ovPhoto"); return; }
+  const del = e.target.closest("[data-delphoto]");
+  if (del) {
+    const k = +del.dataset.delphoto, st = curStage(), p = st.photos[k], stg = STAGE, ref = cur;
+    st.photos.splice(k, 1); PSEL = null; PAGE = Math.min(PAGE, Math.max(0, st.photos.length - 1));
+    touch(); renderPhotos(); renderMarking(); renderTabs(); renderList();
+    showToast("Photo removed." + ((p.marks || []).length ? " Its " + plural(p.marks.length, "mark") + " went with it." : ""), () => { if (cur === ref && STAGE === stg) { st.photos.splice(k, 0, p); touch(); renderPhotos(); renderMarking(); renderTabs(); renderList(); } });
+  }
+});
+
+$("#stageTabs").addEventListener("click", e => {
+  const b = e.target.closest("[data-stage]"); if (!b) return;
+  STAGE = b.dataset.stage; cur.stage = STAGE; renderStage();
+});
+$("#stageDate").addEventListener("input", () => { curStage().date = $("#stageDate").value; touch(); });
+$("#stageWords").addEventListener("input", () => { curStage().words = $("#stageWords").value; touch(); renderTally(); renderTabs(); });
+$("#stageComment").addEventListener("input", () => { curStage().comment = $("#stageComment").value; touch(); renderTabs(); });
+let typeTimer = 0;
+$("#stageText").addEventListener("input", () => {
+  const st = curStage();
+  st.text = $("#stageText").value;
+  if (!st.date && st.text.trim()) { st.date = todayISO(); $("#stageDate").value = st.date; }
+  touch(); renderWordCount();
+  $("#btnHeadings").hidden = !!st.text.trim();
+  $("#btnFromDraft").hidden = !(STAGE === "final" && !st.text.trim() && cur.stages.draft.text.trim());
+  clearTimeout(typeTimer);
+  typeTimer = setTimeout(() => {
+    const lost = reanchor(st);
+    SEL.a = SEL.b = null; SEL.mark = null;
+    if (st.text.trim() && !photoMarkCount(st)) MM = "text";
+    renderMarking(); renderTabs(); renderList();
+    if (lost) showToast(plural(lost, "code") + " removed because the words changed.");
+  }, 350);
+});
+$("#btnHeadings").addEventListener("click", () => {
+  const st = curStage(); if (st.text.trim()) return;
+  st.text = stageById(STAGE).head; touch(); renderStage();
+  const ta = $("#stageText"); ta.focus(); ta.setSelectionRange(4, 4);
+});
+$("#btnFromDraft").addEventListener("click", () => {
+  const st = curStage(); if (st.text.trim()) return;
+  st.text = cur.stages.draft.text; if (!st.date) st.date = todayISO(); touch(); renderStage();
+  showToast("The draft text was copied. Change it so it matches the final copy exactly.");
+  $("#stageText").focus();
+});
+
+/* ---- marking ---- */
+const SEL = {a: null, b: null, mark: null};
+function selRange() { if (SEL.a === null) return null; const b = SEL.b === null ? SEL.a : SEL.b; return [Math.min(SEL.a, b), Math.max(SEL.a, b)]; }
+function gapHTML(gap, k) {
+  const n = (gap.match(/\n/g) || []).length;
+  return n === 0 ? (k ? " " : "") : n === 1 ? "<br>" : '<br><span class="pgap"></span>';
+}
+function renderMarks() {
+  const st = curStage(), toks = tokenize(st.text), box = $("#markView");
+  if (!toks.length) {
+    box.innerHTML = '<div class="empty">' + (st.photos.length ? "Type the text in b above, then mark it here." : "Type the text in b above, then mark it here.") + "</div>";
+    renderSelBar(); renderTally(); return;
+  }
+  const byTok = new Array(toks.length).fill(null);
+  st.marks.forEach(m => { for (let k = m.s; k <= m.e && k < toks.length; k++) byTok[k] = m; });
+  const rg = selRange();
+  let html = "", prev = 0;
+  toks.forEach((t, k) => {
+    const gap = st.text.slice(prev, t.i);
+    html += gapHTML(gap, k);
+    const m = byTok[k];
+    const cls = ["tk"];
+    if (m) cls.push(isGood(m.code) ? "mg" : "me");
+    if (m && SEL.mark === m.id) cls.push("msel");
+    if (rg && k >= rg[0] && k <= rg[1]) cls.push("sel");
+    html += '<span class="' + cls.join(" ") + '" data-k="' + k + '">' + esc(t.w) + "</span>";
+    if (m && k === m.e) html += '<span class="cd' + (isGood(m.code) ? " g" : "") + '" data-m="' + m.id + '" title="' + esc(CODE[m.code] ? CODE[m.code].n : m.code) + '">' + esc(codeLabel(m.code)) + "</span>" + (m.fix ? '<span class="fx">' + esc(m.fix) + "</span>" : "");
+    prev = t.j;
+  });
+  box.innerHTML = html;
+  renderSelBar(); renderTally();
+}
+function renderSelBar() {
+  if (MM === "photo") return renderPhotoSelBar();
+  const st = curStage(), toks = tokenize(st.text);
+  const m = SEL.mark && st.marks.find(x => x.id === SEL.mark);
+  const rg = selRange();
+  if (m) $("#selInfo").textContent = "“" + markWords(toks, m) + "”  " + codeLabel(m.code) + " (" + (CODE[m.code] ? CODE[m.code].n : "") + ")";
+  else if (rg) $("#selInfo").textContent = "Selected: “" + toks.slice(rg[0], rg[1] + 1).map(t => t.w).join(" ") + "”. Now tap a code.";
+  else $("#selInfo").textContent = toks.length ? "Tap a word to start." : "Nothing to mark yet.";
+  const fx = $("#fixIn");
+  fx.disabled = !(m && !isGood(m.code));
+  if (document.activeElement !== fx) fx.value = m ? (m.fix || "") : "";
+  $("#btnMarkDel").hidden = !m; $("#btnMarkDel").textContent = "Remove code";
+  $$(".cbtn").forEach(b => { b.disabled = !(m || rg); b.classList.toggle("on", !!(m && m.code === b.dataset.code)); });
+}
+function renderTally() {
+  const st = curStage(), words = stageWords(st), all = allMarks(st);
+  const errs = all.filter(m => !isGood(m.code)), goods = all.filter(m => isGood(m.code));
+  const nocode = st.photos.reduce((a, p) => a + (p.marks || []).filter(m => !m.code).length, 0);
+  const both = st.marks.length && st.photos.some(p => (p.marks || []).some(m => m.code));
+  if (!all.length) { $("#tally").innerHTML = (st.text.trim() || st.photos.length) ? '<span class="hint">No codes on this stage yet.' + (nocode ? " " + plural(nocode, "mark") + " on the photo still need a code." : "") + "</span>" : ""; return; }
+  const cnt = {}; all.forEach(m => { cnt[m.code] = (cnt[m.code] || 0) + 1; });
+  const per = words ? Math.round(errs.length / words * 1000) / 10 : 0;
+  $("#tally").innerHTML = '<span class="tsum">' + plural(errs.length, "error code") + (words ? " (" + per + " per 100 words)" : " (add the number of words to see errors per 100 words)") + (goods.length ? ", " + goods.length + " good use" : "") + "</span>" +
+    Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a]).map(c => '<span class="tc' + (isGood(c) ? " g" : "") + '"><b>' + esc(codeLabel(c)) + "</b> " + cnt[c] + "</span>").join("") +
+    (nocode ? '<span class="hint">' + plural(nocode, "mark") + " on the photo still need a code.</span>" : "") +
+    (both ? '<span class="hint">Codes on the photo and on the typed text are both counted. Mark each error in one place only.</span>' : "");
+}
+$("#markView").addEventListener("click", e => {
+  const cd = e.target.closest("[data-m]");
+  if (cd) { SEL.mark = cd.dataset.m; SEL.a = SEL.b = null; renderMarks(); return; }
+  const t = e.target.closest("[data-k]"); if (!t) return;
+  const k = +t.dataset.k, st = curStage();
+  const m = st.marks.find(x => k >= x.s && k <= x.e);
+  if (m && SEL.a === null) { SEL.mark = SEL.mark === m.id ? null : m.id; renderMarks(); return; }
+  SEL.mark = null;
+  if (SEL.a === null) SEL.a = k;
+  else if (SEL.b === null && k !== SEL.a && Math.abs(k - SEL.a) <= 25) SEL.b = k;
+  else if (SEL.b === null && k === SEL.a) SEL.a = null;
+  else { SEL.a = k; SEL.b = null; }
+  renderMarks();
+});
+function applyCode(code) {
+  if (MM === "photo") return applyPhotoCode(code);
+  const st = curStage(), toks = tokenize(st.text);
+  const m = SEL.mark && st.marks.find(x => x.id === SEL.mark);
+  if (m) { m.code = code; if (isGood(code)) m.fix = ""; }
+  else {
+    const rg = selRange(); if (!rg) return;
+    st.marks = st.marks.filter(x => x.e < rg[0] || x.s > rg[1]);
+    const nm = {id: uid(), s: rg[0], e: rg[1], code, fix: "", words: ""};
+    nm.words = markWords(toks, nm);
+    st.marks.push(nm); st.marks.sort((a, b) => a.s - b.s);
+    SEL.a = SEL.b = null; SEL.mark = nm.id;
+  }
+  touch(); renderMarks(); renderTabs(); renderList();
+}
+$("#palErr").innerHTML = ERR_CODES.map(x => '<button type="button" class="cbtn" data-code="' + esc(x.c) + '" title="' + esc(x.n) + '"><b>' + esc(x.c) + "</b>" + esc(x.n) + "</button>").join("");
+$("#palGood").innerHTML = GOOD_CODES.map(x => '<button type="button" class="cbtn g" data-code="' + x.c + '" title="' + esc(x.n) + '"><b>' + esc(x.l) + "</b>" + esc(x.n) + "</button>").join("");
+$$(".pal").forEach(p => p.addEventListener("click", e => { const b = e.target.closest("[data-code]"); if (b && !b.disabled) applyCode(b.dataset.code); }));
+$("#fixIn").addEventListener("input", () => {
+  if (MM === "photo") { const pm = selPhotoMark(); if (pm) { pm.fix = $("#fixIn").value; touch(); drawPhotoMarks(); } return; }
+  const m = SEL.mark && curStage().marks.find(x => x.id === SEL.mark); if (!m) return;
+  m.fix = $("#fixIn").value; touch();
+  const box = $("#markView"), cd = box.querySelector('[data-m="' + m.id + '"]');
+  if (cd) { let fx = cd.nextElementSibling; if (!fx || !fx.classList.contains("fx")) { fx = document.createElement("span"); fx.className = "fx"; cd.after(fx); } fx.textContent = m.fix; if (!m.fix) fx.remove(); }
+});
+$("#fixIn").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); SEL.mark = null; PSEL = null; renderMarking(); } });
+$("#btnMarkDel").addEventListener("click", () => {
+  if (MM === "photo") return deletePhotoMark();
+  const st = curStage(), i = st.marks.findIndex(x => x.id === SEL.mark); if (i < 0) return;
+  const gone = st.marks.splice(i, 1)[0], ref = cur, stg = STAGE;
+  SEL.mark = null; touch(); renderMarks(); renderTabs(); renderList();
+  showToast("Code " + codeLabel(gone.code) + " removed.", () => { if (cur === ref && STAGE === stg) { st.marks.push(gone); st.marks.sort((a, b) => a.s - b.s); touch(); renderMarks(); renderTabs(); } });
+});
+$("#btnSelClear").addEventListener("click", () => { SEL.a = SEL.b = null; SEL.mark = null; PSEL = null; renderMarking(); });
+
+/* ---- marking on the photo ---- */
+let MM = "photo", PAGE = 0, PSEL = null, PZOOM = 1, PMOVE = false;
+function renderMarking() {
+  const st = curStage();
+  if (!st.photos.length) MM = "text";
+  $$(".mmbtn").forEach(b => { b.setAttribute("aria-pressed", String(b.dataset.mm === MM)); b.disabled = b.dataset.mm === "photo" && !st.photos.length; });
+  $("#photoMark").hidden = MM !== "photo";
+  $("#markView").hidden = MM !== "text";
+  $("#markHint").textContent = MM === "photo"
+    ? "Draw on the photo with your finger, pen or mouse (underline or circle the error), then tap a code below. A single tap adds a ^ (for a missing word). Tap a code label to change or remove it."
+    : "Tap a word (tap a second word to mark a phrase), then tap a code. Tap a code label in the text to change or remove it.";
+  if (MM === "photo") renderPhotoMark(); else renderMarks();
+}
+$$(".mmbtn").forEach(b => b.addEventListener("click", () => { if (b.disabled) return; MM = b.dataset.mm; PSEL = null; SEL.a = SEL.b = null; SEL.mark = null; renderMarking(); }));
+const curPhoto = () => curStage().photos[PAGE];
+const selPhotoMark = () => { const p = curPhoto(); return p && PSEL ? (p.marks || []).find(m => m.id === PSEL) : null; };
+function markSVG(p, live) {
+  const w = p.w || 1000, h = p.h || 1400, sw = Math.max(3, w / 260), fs = Math.max(18, w / 36);
+  let out = "";
+  (p.marks || []).forEach(m => {
+    const good = isGood(m.code), col = !m.code ? "#B33A3A" : good ? "#2E808E" : "#8B0000";
+    const sel = live && m.id === PSEL;
+    const pts = m.pts.map(q => q[0].toFixed(1) + "," + q[1].toFixed(1)).join(" ");
+    if (sel) out += '<polyline points="' + pts + '" fill="none" stroke="#8CDBE5" stroke-width="' + (sw * 3.2) + '" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>';
+    out += '<polyline points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="' + sw + '" stroke-linecap="round" stroke-linejoin="round"' + (m.code ? "" : ' stroke-dasharray="' + (sw * 2) + " " + (sw * 1.5) + '"') + "/>";
+    const last = m.pts[m.pts.length - 1];
+    const txt = m.code ? codeLabel(m.code) + (m.fix ? "  " + m.fix : "") : (live ? "?" : "");
+    if (!txt) return;
+    const tw = Array.from(txt).reduce((t, ch) => t + (/[MW]/.test(ch) ? 0.9 : /[A-Z#✓]/.test(ch) ? 0.68 : /[mw]/.test(ch) ? 0.8 : /[ilj.,']/.test(ch) ? 0.3 : ch === " " ? 0.28 : 0.55), 0) * fs + fs * 0.75, th = fs * 1.35;
+    const lx = Math.max(0, Math.min(w - tw, last[0] + sw * 1.5)), ly = Math.max(0, Math.min(h - th, last[1] - th - sw));
+    out += '<g class="pml"' + (live ? ' data-pm="' + m.id + '"' : "") + '><rect x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" width="' + tw.toFixed(1) + '" height="' + th.toFixed(1) + '" rx="' + (fs * 0.3).toFixed(1) + '" fill="' + col + '"' + (sel ? ' stroke="#0B3F47" stroke-width="' + sw + '"' : "") + '/><text x="' + (lx + fs * 0.35).toFixed(1) + '" y="' + (ly + th * 0.74).toFixed(1) + '" font-family="Calibri,Carlito,Arial,sans-serif" font-weight="700" font-size="' + fs.toFixed(1) + '" fill="#fff">' + esc(txt) + "</text></g>";
+  });
+  return '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' + out + "</svg>";
+}
+function renderPhotoMark() {
+  const st = curStage();
+  PAGE = Math.max(0, Math.min(PAGE, st.photos.length - 1));
+  $("#pmPages").innerHTML = st.photos.length > 1 ? st.photos.map((p, k) => '<button type="button" class="small-btn" data-page="' + k + '" aria-pressed="' + (k === PAGE) + '">Page ' + (k + 1) + ((p.marks || []).length ? " (" + p.marks.length + ")" : "") + "</button>").join("") : "";
+  const p = curPhoto(), box = $("#pmStage");
+  box.classList.toggle("move", PMOVE);
+  box.style.width = (PZOOM * 100) + "%";
+  $("#pmZoom").textContent = Math.round(PZOOM * 100) + "%";
+  $("#pmDraw").setAttribute("aria-pressed", String(!PMOVE)); $("#pmMove").setAttribute("aria-pressed", String(PMOVE));
+  if (!p) { box.innerHTML = '<div class="empty">Add a photo in a above to mark on it.</div>'; renderSelBar(); renderTally(); return; }
+  if (!box.querySelector("img") || box.dataset.src !== String(p.at) + PAGE) { box.innerHTML = '<img alt="Page ' + (PAGE + 1) + '" src="' + p.data + '"><div id="pmSvg"></div>'; box.dataset.src = String(p.at) + PAGE; }
+  drawPhotoMarks();
+  renderSelBar(); renderTally();
+}
+function drawPhotoMarks() { const p = curPhoto(), el = $("#pmSvg"); if (p && el) el.outerHTML = '<div id="pmSvg">' + markSVG(p, true) + "</div>"; const n = $("#pmSvg"); if (n) n.style.cssText = "position:absolute;inset:0"; }
+function renderPhotoSelBar() {
+  const p = curPhoto(), m = selPhotoMark();
+  if (m) $("#selInfo").textContent = "Page " + (PAGE + 1) + ": " + (m.code ? codeLabel(m.code) + " (" + CODE[m.code].n + ")" : "mark drawn. Now tap a code.");
+  else $("#selInfo").textContent = p ? "Draw on the photo to mark an error." : "Add a photo first.";
+  const fx = $("#fixIn");
+  fx.disabled = !(m && m.code && !isGood(m.code));
+  if (document.activeElement !== fx) fx.value = m ? (m.fix || "") : "";
+  $("#btnMarkDel").hidden = !m; $("#btnMarkDel").textContent = "Remove mark";
+  $$(".cbtn").forEach(b => { b.disabled = !m; b.classList.toggle("on", !!(m && m.code === b.dataset.code)); });
+}
+function applyPhotoCode(code) {
+  const m = selPhotoMark(); if (!m) return;
+  m.code = code; if (isGood(code)) m.fix = "";
+  touch(); drawPhotoMarks(); renderSelBar(); renderTally(); renderTabs(); renderPhotos(); renderList();
+}
+function deletePhotoMark() {
+  const p = curPhoto(), i = p ? p.marks.findIndex(m => m.id === PSEL) : -1; if (i < 0) return;
+  const gone = p.marks.splice(i, 1)[0], ref = cur, stg = STAGE;
+  PSEL = null; touch(); renderPhotoMark(); renderTabs(); renderPhotos(); renderList();
+  showToast("Mark removed.", () => { if (cur === ref && STAGE === stg) { p.marks.splice(i, 0, gone); touch(); renderMarking(); renderTabs(); renderPhotos(); } });
+}
+$("#pmPages").addEventListener("click", e => { const b = e.target.closest("[data-page]"); if (!b) return; PAGE = +b.dataset.page; PSEL = null; renderPhotoMark(); });
+$("#pmDraw").addEventListener("click", () => { PMOVE = false; renderPhotoMark(); });
+$("#pmMove").addEventListener("click", () => { PMOVE = true; renderPhotoMark(); });
+$("#pmZoomIn").addEventListener("click", () => { PZOOM = Math.min(3, PZOOM + 0.5); renderPhotoMark(); });
+$("#pmZoomOut").addEventListener("click", () => { PZOOM = Math.max(1, PZOOM - 0.5); renderPhotoMark(); });
+(function wirePhotoDraw() {
+  const box = $("#pmStage"); let dr = null;
+  const toImg = (e, p) => { const r = box.getBoundingClientRect(); return [Math.max(0, Math.min(p.w, (e.clientX - r.left) / r.width * p.w)), Math.max(0, Math.min(p.h, (e.clientY - r.top) / r.height * p.h))]; };
+  box.addEventListener("pointerdown", e => {
+    const p = curPhoto(); if (!p || e.button > 0) return;
+    const lab = e.target.closest("[data-pm]");
+    if (lab) { e.preventDefault(); PSEL = PSEL === lab.dataset.pm ? null : lab.dataset.pm; drawPhotoMarks(); renderSelBar(); return; }
+    if (PMOVE) return;
+    e.preventDefault();
+    try { box.setPointerCapture(e.pointerId); } catch (er) {}
+    const pt = toImg(e, p);
+    dr = {p, pts: [pt], x0: e.clientX, y0: e.clientY, far: 0};
+    const svg = box.querySelector("svg");
+    if (svg) { const pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline"); pl.setAttribute("fill", "none"); pl.setAttribute("stroke", "#B33A3A"); pl.setAttribute("stroke-width", Math.max(3, p.w / 260)); pl.setAttribute("stroke-linecap", "round"); pl.setAttribute("stroke-linejoin", "round"); pl.setAttribute("points", pt.join(",")); svg.appendChild(pl); dr.pl = pl; }
+  });
+  box.addEventListener("pointermove", e => {
+    if (!dr) return;
+    const pt = toImg(e, dr.p), last = dr.pts[dr.pts.length - 1];
+    dr.far = Math.max(dr.far, Math.hypot(e.clientX - dr.x0, e.clientY - dr.y0));
+    if (Math.hypot(pt[0] - last[0], pt[1] - last[1]) < dr.p.w / 400) return;
+    dr.pts.push(pt);
+    if (dr.pl) dr.pl.setAttribute("points", dr.pts.map(q => q.join(",")).join(" "));
+  });
+  const end = e => {
+    if (!dr) return; const d = dr; dr = null;
+    if (e.type === "pointercancel") { drawPhotoMarks(); return; }
+    let pts = d.pts;
+    if (d.far < 8 || pts.length < 2) { const c = pts[0], k = d.p.w / 70; pts = [[c[0] - k, c[1] + k], c, [c[0] + k, c[1] + k]]; }
+    const m = {id: uid(), pts: pts.map(q => [Math.round(q[0] * 10) / 10, Math.round(q[1] * 10) / 10]), code: "", fix: ""};
+    d.p.marks = d.p.marks || []; d.p.marks.push(m);
+    PSEL = m.id; touch();
+    drawPhotoMarks(); renderSelBar(); renderTally(); renderPhotos(); renderTabs();
+  };
+  box.addEventListener("pointerup", end); box.addEventListener("pointercancel", end);
+})();
+
+/* =========================================================
+   5. CHECK AGAINST CRITERIA
+   Suggestions only. The teacher confirms every level.
+   ========================================================= */
+const ADJ_BANK = new Set("damaged broken late wrong new old expensive cheap disappointed disappointing frustrated frustrating upset unhappy annoyed angry worried important urgent poor terrible awful bad good great full whole entire missing same small large big blue black white red green grey pink online recent previous quick prompt fast slow long short simple careful professional reliable convenient inconvenient happy sure available possible impossible correct incorrect unacceptable helpful unhelpful responsible excellent special favourite beautiful useful necessary valuable undelivered stressful difficult easy free extra total final first second third last next busy empty safe warm cold comfortable heavy light clear wonderful lovely nice brand-new faulty incomplete unsatisfactory serious".split(" "));
+const ADJ_NOT = new Set("receive deserve give live have believe above active".split(" "));
+const ADV_BANK = new Set("still already yet soon never always unfortunately immediately quickly recently again today yesterday tomorrow now very really too also only promptly urgently carefully clearly finally fortunately sadly currently previously usually often sometimes later earlier online home there here back".split(" "));
+const ADV_NOT = new Set("only family reply supply apply july fly rely ugly friendly lovely early holy belly jelly silly daily weekly monthly likely lonely costly elderly".split(" "));
+const PREP_RE = /\b(on|in|at|by|from|for|since|until|before|after|with|without|during|within|to|of|about|under|near|outside|inside)\s+(the|my|your|our|their|this|that|these|those|a|an|\d+|monday|tuesday|wednesday|thursday|friday|saturday|sunday|january|february|march|april|may|june|july|august|september|october|november|december|home|time|order|delivery|website|email|phone|front|next|last|first|all|each|any|some|two|three|four|five|several|tracking|receipt|customer)\b(\s+[a-z0-9]+)?/gi;
+const POL_RE = /\b(please|thank you|thanks|i would appreciate|i'd appreciate|i would be (grateful|thankful)|could you|would you|i look forward to|kindly|i am afraid|i'm afraid|would you mind|i would like|i'd like|sorry to|appreciate)\b/gi;
+const INFORMAL_RE = /\b(\w+n't|i'm|i've|i'll|i'd|you're|it's|that's|there's|we're|they're|hey|hiya|gonna|wanna|gotta|guys|asap|pls|plz|thx|ok|okay|yeah|stuff|kinda|cos|coz|lol)\b|!!+/gi;
+const CONJ_RE = /\b(because|although|even though|though|when|while|if|unless|since|as soon as|which|who|whose|so that|but|so|until|whereas|or)\b/gi;
+const DM_RE = /\b(however|in addition|additionally|therefore|as a result|firstly|first of all|secondly|finally|furthermore|moreover|unfortunately|consequently|on the other hand|in fact|otherwise|meanwhile|besides|also|for example|in conclusion|as well as)\b/gi;
+const MODAL_RE = /\b(can|could|would|should|will|may|might|must|cannot|can't|couldn't|wouldn't|shouldn't|won't|mustn't|must not|could not|would not|should not|will not)\b/gi;
+const NEG_MODAL_RE = /\b(cannot|can't|couldn't|wouldn't|shouldn't|won't|mustn't|must not|could not|would not|should not|will not|can not)\b/i;
+const PP = "(?:been|\\w+ed|received|got|gotten|sent|paid|made|taken|given|done|seen|come|bought|heard|told|written|spoken|left|found|kept|known|chosen|shown|brought|lost|had|put|said|gone)";
+const PERFECT_RE = new RegExp("\\b(have|has|had|haven't|hasn't|hadn't|i've|we've|it's been)\\s+(not\\s+|still\\s+|already\\s+|never\\s+|just\\s+|yet\\s+)?" + PP + "\\b", "gi");
+const PASSIVE_RE = new RegExp("\\b(was|were|is|are|been|be|being|wasn't|weren't|isn't|aren't)\\s+(not\\s+|never\\s+|still\\s+|already\\s+)?(\\w+ed|sent|paid|made|taken|given|done|delivered|brought|bought|told|written|left|found|kept|shown|chosen|charged|lost|put)\\b", "gi");
+const COND_RE = /\bif\b[^.!?]*\b(will|would|could|can|might|should|won't|cannot|can't)\b|\b(will|would|could|can)\b[^.!?]*\bif\b/gi;
+
+function allMatches(re, text) { const out = []; re.lastIndex = 0; let m; while ((m = re.exec(text))) { out.push(m[0].replace(/\s+/g, " ").trim()); if (m[0] === "") re.lastIndex++; } return out; }
+function sentencesOf(t) { return String(t || "").replace(/([.!?])\s+/g, "$1\n").split(/\n/).map(x => x.trim()).filter(Boolean); }
+/* the body of the email: lines after Message:, without To/Subject */
+function bodyOf(text) {
+  let t = String(text || "").replace(/\r/g, "");
+  const mi = t.search(/^\s*message\s*:/im);
+  if (mi >= 0) t = t.slice(mi).replace(/^\s*message\s*:\s*/i, "");
+  return t.split("\n").filter(l => !/^\s*(to|subject|from|date)\s*:/i.test(l)).join("\n");
+}
+function features(text) {
+  const t = String(text || "").replace(/[’‘]/g, "'"), low = t.toLowerCase();
+  const f = {};
+  f.toLine = /^\s*to\s*:\s*\S+/im.test(t) || /\S+@\S+\.\S+/.test(t);
+  const sm = t.match(/^\s*subject\s*:\s*(.*)$/im);
+  f.subjText = sm ? sm[1].trim() : "";
+  f.subject = wordCount(f.subjText) >= 2;
+  const body = bodyOf(t);
+  const lines = body.split("\n").map(x => x.trim()).filter(Boolean);
+  const gm = body.match(/^\s*(dear\b[^\n]*|to whom it may concern[^\n]*|hello\b[^\n]*|hi\b[^\n]*|good (morning|afternoon)[^\n]*)/im);
+  f.greetText = gm ? gm[1].trim() : "";
+  f.greeting = !!gm;
+  f.formalGreeting = /^(dear|to whom)/i.test(f.greetText);
+  const om = body.match(/\b(i am writing|i'm writing|i write|i would like to (complain|make a complaint|inform|let you know|report|tell)|i am contacting|i am emailing|i'm contacting|i'm emailing|i wish to (complain|inform|report))\b[^.!?\n]*[.!?]?/i);
+  f.openText = om ? om[0].trim() : "";
+  f.opening = !!om;
+  const ordered = /\b(order(ed)?|purchas\w*|bought|item|parcel|package|delivery)\b/i.test(t);
+  const notRec = /\b(not (yet )?(been )?(received|arrived|delivered|come)|never (received|arrived|came|got)|haven't (yet )?(received|got)|have not (yet )?(received|got)|has not (yet )?(arrived|come)|hasn't (yet )?(arrived|come)|did not (receive|arrive|come|get)|didn't (receive|arrive|come|get)|no (delivery|parcel|package)|missing|did not come|not here|nothing (was|came))\b/i.test(t);
+  f.detailHits = uniq(allMatches(/\b(order|receipt|tracking|invoice|reference)\s*(number|no\.?|#)?\s*(is\s+)?:?\s*#?\s*[A-Z]*\d[A-Z0-9-]{2,}/gi, t)
+    .concat(allMatches(/\$\s?\d+(\.\d\d)?/g, t))
+    .concat(allMatches(/\b\d{1,2}(st|nd|rd|th)?\s+(of\s+)?(january|february|march|april|may|june|july|august|september|october|november|december)\b|\b(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}\b|\b\d{1,2}\/\d{1,2}(\/\d{2,4})?\b/gi, t))).slice(0, 4);
+  f.problem = ordered && notRec;
+  f.problemDetail = f.problem && f.detailHits.length > 0;
+  const sol = allMatches(/\b(refund|replace|replacement|re-?send|send (it|them|the|my|me|another|a new)|deliver (it|them|my|the)|investigate|look into|check (where|on|with|what)|money back|compensat\w*|cancel|track (it|my|the)|contact me|call me|let me know|reply)\b/gi, t);
+  f.solText = uniq(sol).slice(0, 3);
+  f.solution = /\b(refund|replace|replacement|re-?send|send (it|them|the|my|me|another|a new)|deliver (it|them|my|the)|investigate|look into|money back|compensat\w*|cancel)\b/i.test(t);
+  const cm = body.match(/\b(yours (sincerely|faithfully|truly)|kind regards|best regards|warm regards|regards|sincerely|best wishes|thank you for your (time|help|attention|understanding))\b/i);
+  f.closeText = cm ? cm[0] : "";
+  f.closing = !!cm;
+  if (cm) { const after = body.slice(body.toLowerCase().lastIndexOf(cm[0].toLowerCase()) + cm[0].length).replace(/^[,.\s]+/, ""); f.nameAfter = /[A-Za-z]{2,}/.test(after.split("\n").slice(0, 3).join(" ")); }
+  /* paragraphs: blocks of 2 or more sentences, separated by blank lines */
+  const blocks = body.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+  f.paraCount = blocks.filter(b => sentencesOf(b.replace(/\n/g, " ")).length >= 2 && wordCount(b) >= 15).length;
+  f.paras = f.paraCount >= 2;
+  f.layout = f.toLine && f.subject && f.greeting && f.closing;
+  /* language */
+  f.pol = uniq(allMatches(POL_RE, low));
+  f.informal = uniq(allMatches(INFORMAL_RE, low));
+  f.formal = f.informal.length === 0 && (!f.greeting || f.formalGreeting || /^hello/i.test(f.greetText));
+  const words = (body.toLowerCase().match(/[a-z][a-z'-]*/g) || []);
+  f.adj = uniq(words.filter(w => ADJ_BANK.has(w) || (w.length > 5 && /(ful|less|ous|able|ible|ive|ish)$/.test(w) && !ADJ_NOT.has(w))));
+  f.adv = uniq(words.filter(w => ADV_BANK.has(w) || (w.length > 4 && /ly$/.test(w) && !ADV_NOT.has(w)))).filter(w => !["also", "only", "very", "too", "really", "now", "here", "there", "back", "home", "online"].includes(w)).slice(0, 12);
+  f.prep = uniq(allMatches(PREP_RE, body).map(x => x.toLowerCase())).filter(x => !/^to (the|my|your)$/.test(x)).slice(0, 12);
+  f.conj = allMatches(CONJ_RE, body.toLowerCase());
+  f.conjSet = uniq(f.conj);
+  f.dm = uniq(allMatches(DM_RE, body.toLowerCase()));
+  const noDates = body.toLowerCase().replace(/\b(\d{1,2}(st|nd|rd|th)?\s+(of\s+)?may|may\s+\d{1,2})\b/g, " ");
+  f.modal = uniq(allMatches(MODAL_RE, noDates));
+  f.negModal = NEG_MODAL_RE.test(body);
+  f.perfect = uniq(allMatches(PERFECT_RE, body.toLowerCase())).slice(0, 3);
+  f.passive = uniq(allMatches(PASSIVE_RE, body.toLowerCase())).filter(x => !/^(is|are|be|being) (interested|worried|tired|bored|excited|pleased|disappointed|concerned)$/.test(x)).slice(0, 3);
+  f.cond = allMatches(COND_RE, body.toLowerCase()).map(x => x.length > 60 ? x.slice(0, 57) + "..." : x).slice(0, 2);
+  f.words = wordCount(body);
+  return f;
+}
+function codeCount(st, list) { return allMarks(st).filter(m => list.includes(m.code)).length; }
+function per100(n, words) { return words ? n / words * 100 : 0; }
+function goodTicks(st) { const g = {}; allMarks(st).forEach(m => { const c = CODE[m.code]; if (c && c.good) { g[c.crit + "." + c.sub] = (g[c.crit + "." + c.sub] || 0) + 1; } }); return g; }
+function densLevel(d, cuts) { return d <= cuts[0] ? 4 : d <= cuts[1] ? 3 : d <= cuts[2] ? 2 : 1; }
+const q = arr => arr.map(x => "‘" + x + "’").join(", ");
+const yn = b => b ? "yes" : "no";
+
+/* which draft errors were corrected in the final copy */
+function corrections(r) {
+  const d = r.stages.draft, f = r.stages.final;
+  const dt = tokenize(d.text), ftxt = " " + tokenize(f.text).map(t => core(t.w)).filter(Boolean).join(" ") + " ";
+  const errs = d.marks.filter(m => !isGood(m.code));
+  const still = [], fixed = [];
+  errs.forEach(m => {
+    const fixN = m.fix ? " " + tokenize(m.fix).map(t => core(t.w)).filter(Boolean).join(" ") + " " : "";
+    let ctx = dt.slice(Math.max(0, m.s - 1), Math.min(dt.length, m.e + 2)).map(t => core(t.w)).filter(Boolean);
+    if (ctx.length < 2) ctx = dt.slice(Math.max(0, m.s - 2), Math.min(dt.length, m.e + 3)).map(t => core(t.w)).filter(Boolean);
+    const same = ctx.length >= 2 && ftxt.indexOf(" " + ctx.join(" ") + " ") >= 0;
+    if (fixN.trim() && ftxt.indexOf(fixN) >= 0 && !same) fixed.push(m);
+    else if (same) still.push(m);
+    else fixed.push(m);
+  });
+  return {errs, still, fixed, dt};
+}
+
+function suggest(c, r) {
+  const d = r.stages.draft, f = r.stages.final, p = r.stages.plan;
+  const st = c.stage === "final" ? f : d;
+  if (c.auto === "fixed") return fixedSuggest(r);
+  if (!st.text.trim()) {
+    if (!st.photos.length) return {evidence: c.stage === "final" ? "No final copy yet." : "No draft yet."};
+    return photoOnly(c, r, st);
+  }
+  const F = features(st.text), G = goodTicks(st), W = Math.max(F.words, wordCount(st.text));
+  const g = k => !!G[c.id + "." + k];
+  if (c.auto === "plan") {
+    const done = stageHas(p);
+    const subs = {done, layout: F.layout, opening: F.opening, problem: F.problem, solution: F.solution, closing: F.closing, paras: F.paras, subject: F.subject};
+    const k = ["layout", "opening", "problem", "solution", "closing", "paras", "subject"].filter(x => subs[x]).length;
+    let lv = k >= 7 ? 4 : k >= 5 ? 3 : k >= 3 ? 2 : 1;
+    if (k === 7 && !F.problemDetail) lv = 3;
+    if (!done) lv = Math.min(lv, 2);
+    const par = codeCount(d, ["Par"]); if (par >= 2) lv = Math.max(1, lv - 1);
+    const miss = [];
+    if (!F.toLine) miss.push("To line"); if (!F.subject) miss.push("subject line"); if (!F.greeting) miss.push("greeting");
+    if (!F.opening) miss.push("opening sentence"); if (!F.problem) miss.push("the problem"); if (!F.solution) miss.push("a solution");
+    if (!F.closing) miss.push("closing"); if (!F.paras) miss.push("2 paragraphs (" + F.paraCount + " found)");
+    const ev = (done ? "Plan completed. " : "No plan yet. ") + k + " of 7 stages found in the draft." +
+      (F.subjText ? " Subject: ‘" + F.subjText + "’." : "") + (F.openText ? " Opening: ‘" + F.openText.slice(0, 80) + "’." : "") +
+      (F.detailHits.length ? " Details: " + q(F.detailHits) + "." : "") + (miss.length ? " Not found: " + miss.join(", ") + "." : "") +
+      (par ? " Paragraphing (Par) codes: " + par + "." : "");
+    return {level: lv, subs, evidence: ev};
+  }
+  if (c.auto === "polite") {
+    const pol = F.pol.length > 0 || g("pol"), formal = F.formal;
+    const lv = (F.pol.length >= 2 || G["polite.pol"] >= 2) && formal ? 4 : pol && formal ? 3 : (pol || formal) ? 2 : 1;
+    return {level: lv, subs: {pol, formal}, evidence: "Politeness markers: " + (F.pol.length ? q(F.pol) : "none found") + "." + (F.informal.length ? " Informal language: " + q(F.informal.slice(0, 5)) + "." : " No informal language found.") + (F.greetText ? " Greeting: ‘" + F.greetText + "’." : "")};
+  }
+  if (c.auto === "describe") {
+    const adj = F.adj.length >= 2 || g("adj"), adv = F.adv.length >= 1 || g("adv"), prep = F.prep.length >= 2 || g("prep");
+    const n = [adj, adv, prep].filter(Boolean).length;
+    let lv = n === 3 ? ((F.adj.length >= 4 && F.adv.length >= 2 && F.prep.length >= 4) ? 4 : 3) : n === 2 ? 2 : 1;
+    const ww = codeCount(st, VOC_CODES), dW = per100(ww, W);
+    lv = Math.min(lv, densLevel(dW, [2, 4, 7]));
+    return {level: lv, subs: {adj, adv, prep}, evidence: "Adjectives: " + (F.adj.length ? q(F.adj.slice(0, 6)) : "none found") + ". Adverbs: " + (F.adv.length ? q(F.adv.slice(0, 5)) : "none found") + ". Phrases: " + (F.prep.length ? q(F.prep.slice(0, 5)) : "none found") + ". Wrong word (WW) codes: " + ww + "."};
+  }
+  if (c.auto === "grammar") {
+    const cs = F.conj.filter(x => x !== "or").length >= 2 || g("cs");
+    const tense = !!(F.perfect.length || F.passive.length || F.cond.length) || g("tense");
+    const dm = F.dm.length >= 1 || g("dm"), mod = F.modal.length >= 1 || g("mod");
+    const n = [cs, tense, dm, mod].filter(Boolean).length;
+    let lv = n === 4 ? 4 : n === 3 ? 3 : n === 2 ? 2 : 1;
+    const gc = codeCount(st, GRAM_CODES), dG = per100(gc, W);
+    lv = Math.min(lv, densLevel(dG, [3, 6, 10]));
+    const tl = []; if (F.perfect.length) tl.push("perfect " + q(F.perfect.slice(0, 2))); if (F.passive.length) tl.push("passive " + q(F.passive.slice(0, 2))); if (F.cond.length) tl.push("conditional " + q(F.cond.slice(0, 1)));
+    const byCode = GRAM_CODES.map(x => [x, codeCount(st, [x])]).filter(x => x[1]).map(x => x[0] + " " + x[1]).join(", ");
+    return {level: lv, subs: {cs, tense, dm, mod}, evidence: "Conjunctions: " + (F.conjSet.length ? q(F.conjSet.slice(0, 6)) : "none found") + ". Tenses: " + (tl.length ? tl.join("; ") : "no perfect, passive or conditional found") + ". Discourse markers: " + (F.dm.length ? q(F.dm.slice(0, 4)) : "none found") + ". Modals: " + (F.modal.length ? q(F.modal.slice(0, 5)) : "none found") + (F.negModal ? " (including negative)" : "") + ". Grammar codes: " + gc + (byCode ? " (" + byCode + ")" : "") + ", " + (Math.round(dG * 10) / 10) + " per 100 words."};
+  }
+  if (c.auto === "proof") return suggestProof(r);
+  if (c.auto === "register") {
+    const k = ["layout", "opening", "problem", "solution", "closing", "paras", "subject"].filter(x => F[x]).length;
+    const score = k + (F.pol.length ? 1 : 0) + (F.formal ? 1 : 0);
+    let lv = score >= 9 ? 4 : score >= 7 ? 3 : score >= 5 ? 2 : 1;
+    const errs = errCount(f), dE = per100(errs, W);
+    lv = Math.min(lv, dE <= 4 ? 4 : dE <= 8 ? 3 : dE <= 12 ? 2 : 1);
+    return {level: lv, subs: {reg: lv >= 3}, evidence: k + " of 7 stages found in the final copy. Politeness markers: " + (F.pol.length ? q(F.pol.slice(0, 3)) : "none") + ". " + (F.formal ? "Formal register." : "Informal language: " + q(F.informal.slice(0, 4)) + ".") + " Error codes on the final copy: " + errs + " (" + (Math.round(dE * 10) / 10) + " per 100 words)."};
+  }
+  return {};
+}
+/* the draft or final is a photo only: suggest from the codes, not the language */
+function photoOnly(c, r, st) {
+  const W = stageWords(st), G = goodTicks(st), g = k => G[c.id + "." + k] ? true : undefined;
+  const per = (n) => W ? " (" + (Math.round(per100(n, W) * 10) / 10) + " per 100 words)" : "";
+  const noW = W ? "" : " Add the number of words in Step 2 to get a suggested level.";
+  const ticked = c.subs.filter(sb => G[c.id + "." + sb.id]).map(sb => sb.label.replace(/\.$/, "").toLowerCase());
+  const tk = ticked.length ? " Good use ticked on the photo: " + ticked.join("; ") + "." : "";
+  const what = st === r.stages.final ? "final copy" : "draft";
+  /* the app cannot read the photo, so Strong (4) only when every feature is ticked as good use */
+  const cap = l => l === undefined ? l : Math.min(l, c.subs.every(sb => G[c.id + "." + sb.id]) ? 4 : 3);
+  if (c.auto === "plan") return {subs: {done: stageHas(r.stages.plan)}, evidence: (stageHas(r.stages.plan) ? "Plan completed. " : "No plan yet. ") + "The " + what + " is marked on the photo, so check the stages and layout yourself. Paragraphing (Par) codes: " + codeCount(st, ["Par"]) + "."};
+  if (c.auto === "polite") return {subs: {pol: g("pol")}, evidence: "Marked on the photo. Check politeness and formal register yourself." + tk};
+  if (c.auto === "describe") { const n = codeCount(st, VOC_CODES); return {level: cap(W ? densLevel(per100(n, W), [2, 4, 7]) : undefined), subs: {adj: g("adj"), adv: g("adv"), prep: g("prep")}, evidence: "From the codes on the photo: wrong word (WW) " + n + per(n) + "." + tk + noW}; }
+  if (c.auto === "grammar") { const n = codeCount(st, GRAM_CODES); const by = GRAM_CODES.map(x => [x, codeCount(st, [x])]).filter(x => x[1]).map(x => x[0] + " " + x[1]).join(", "); return {level: cap(W ? densLevel(per100(n, W), [3, 6, 10]) : undefined), subs: {cs: g("cs"), tense: g("tense"), dm: g("dm"), mod: g("mod")}, evidence: "From the codes on the photo: grammar codes " + n + (by ? " (" + by + ")" : "") + per(n) + "." + tk + noW}; }
+  if (c.auto === "proof") return suggestProof(r);
+  if (c.auto === "register") { const n = errCount(st); const lv = W ? (per100(n, W) <= 4 ? 3 : per100(n, W) <= 8 ? 3 : per100(n, W) <= 12 ? 2 : 1) : undefined; return {level: lv, evidence: "The final copy is marked on the photo. Error codes: " + n + per(n) + ". Check the structure, staging and register yourself." + noW}; }
+  return {};
+}
+function suggestProof(r) {
+  const d = r.stages.draft;
+  return {evidence: "Draft: spelling (Sp) " + codeCount(d, ["Sp"]) + ", punctuation (P) " + codeCount(d, ["P"]) + ", capital letters (C) " + codeCount(d, ["C"]) + "."};
+}
+/* Part 2 row 1: did the final copy fix the coded errors? */
+function fixedSuggest(r) {
+  const d = r.stages.draft, f = r.stages.final;
+  if (!stageHas(f)) return {evidence: "No final copy yet."};
+  const left = errCount(f), n = errCount(d);
+  if (!n) return {evidence: "There are no error codes on the draft, so the app cannot compare. Mark this row yourself." + (left ? " Error codes on the final copy: " + left + "." : "")};
+  const textErrs = d.marks.filter(m => !isGood(m.code)).length;
+  if (textErrs && f.text.trim()) {
+    const R = corrections(r), rate = R.fixed.length / R.errs.length;
+    let lv = rate >= 0.85 ? 4 : rate >= 0.6 ? 3 : rate >= 0.35 ? 2 : 1;
+    if (left > Math.max(3, n * 0.5)) lv = Math.min(lv, 2);
+    const ex = R.still.slice(0, 4).map(m => "‘" + markWords(R.dt, m) + "’ (" + m.code + ")").join(", ");
+    return {level: lv, subs: {fix: lv >= 3}, evidence: R.fixed.length + " of " + R.errs.length + " coded errors in the draft were corrected in the final copy (" + Math.round(rate * 100) + "%)." + (ex ? " Not corrected: " + ex + (R.still.length > 4 ? " and " + (R.still.length - 4) + " more" : "") + "." : "") + (n > textErrs ? " " + (n - textErrs) + " more codes are on the draft photo." : "") + " Error codes on the final copy: " + left + "."};
+  }
+  /* marked on the photos: compare how many errors are left */
+  const rate = Math.max(0, 1 - left / n);
+  const lv = rate >= 0.85 ? 4 : rate >= 0.6 ? 3 : rate >= 0.35 ? 2 : 1;
+  const fMarked = left > 0 || f.marks.length || photoMarkCount(f) > 0;
+  return {level: fMarked ? lv : undefined, subs: fMarked ? {fix: lv >= 3} : undefined, evidence: "Draft: " + plural(n, "error code") + ". Final copy: " + plural(left, "error code") + " (" + Math.round(rate * 100) + "% fewer)." + (fMarked ? " Check that the final copy fixed the coded errors from the draft." : " The final copy has no marks yet. Mark it first, or mark this row yourself.")};
+}
+function evaluate() {
+  if (!cur) return;
+  syncFromUI();
+  const d = cur.stages.draft, f = cur.stages.final;
+  if (!stageHas(d) && !stageHas(f)) {
+    $("#evalOut").innerHTML = '<div class="status warn">There is no draft yet. Add a photo of the draft and mark it, or type it, in Step 2. Then press Check against criteria.</div>';
+    return;
+  }
+  CRITERIA.forEach(c => {
+    const sug = suggest(c, cur);
+    if (sug.level && !c.observe && cur.levelSrc[c.id] !== "teacher") { cur.levels[c.id] = sug.level; cur.levelSrc[c.id] = "auto"; }
+    if (sug.level === undefined && cur.levelSrc[c.id] === "auto") { delete cur.levels[c.id]; delete cur.levelSrc[c.id]; }
+    if (sug.evidence && (cur.evidenceSrc[c.id] !== "teacher" || !cur.evidence[c.id])) { cur.evidence[c.id] = sug.evidence; cur.evidenceSrc[c.id] = "auto"; }
+    if (sug.subs) {
+      cur.subs[c.id] = cur.subs[c.id] || {};
+      Object.entries(sug.subs).forEach(([k, v]) => { if (v === undefined) return; if (cur.subSrc[c.id + "." + k] !== "teacher") { cur.subs[c.id][k] = !!v; cur.subSrc[c.id + "." + k] = "auto"; } });
+    }
+  });
+  cur.checked = true; touch();
+  renderEval(); renderGrid();
+  if (cur.fbAuto || (!cur.well.trim() && !cur.improve.trim())) buildFeedback();
+  renderList();
+}
+$("#btnEvaluate").addEventListener("click", evaluate);
+function renderEval() {
+  const out = $("#evalOut");
+  if (!cur || !cur.checked) { out.innerHTML = ""; return; }
+  const tile = (k, v, sub) => '<div class="tile"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="s">' + (sub || "") + "</div></div>";
+  const st = s => cur.stages[s], errs = s => errCount(st(s));
+  const R = st("draft").text.trim() && st("final").text.trim() && st("draft").marks.some(m => !isGood(m.code)) ? corrections(cur) : null;
+  out.innerHTML = '<div class="tiles">' +
+    tile("Plan", stageHas(st("plan")) ? "Done" : "None", st("plan").photos.length ? plural(st("plan").photos.length, "photo") : "") +
+    tile("Draft", stageWords(st("draft")) || "n/a", (stageWords(st("draft")) ? "words, " : "") + plural(errs("draft"), "error code")) +
+    tile("Final copy", stageHas(st("final")) ? (stageWords(st("final")) || "n/a") : "n/a", stageHas(st("final")) ? (stageWords(st("final")) ? "words, " : "") + plural(errs("final"), "error code") : "not added yet") +
+    (R ? tile("Corrected", R.fixed.length + " / " + R.errs.length, "draft errors fixed in the final copy") : tile("Codes", errs("draft") + " → " + (stageHas(st("final")) ? errs("final") : "?"), "draft → final copy")) +
+    "</div>" + (!stageHas(st("final")) ? '<div class="status">Part 2 rows are checked once the final copy is added. Open saved work next time to add it.</div>' : "");
+}
+
+/* =========================================================
+   6. CHECKLIST GRID (1 to 4 slider)
+   ========================================================= */
+function renderGrid() {
+  let html = "";
+  PARTS.forEach(P => {
+    html += '<div class="gpart">' + esc(P.t) + "</div>";
+    CRITERIA.filter(c => c.part === P.n).forEach(c => {
+      const lv = cur.levels[c.id] || 0, src = cur.levelSrc[c.id];
+      const su = lv ? (lv >= 3 ? '<span class="su s">S</span>' : '<span class="su u">U/S</span>') : '<span class="su n">n/a</span>';
+      const tag = c.observe ? '<span class="src obs">Assessor to mark</span>' : (src === "auto" ? '<span class="src auto">Suggested</span>' : "");
+      html += '<div class="crit" data-c="' + c.id + '">' +
+        '<div><div class="lbl">' + esc(c.task) + " " + esc(c.label) + (c.bullets ? " " + esc(c.bullets.join("; ")) : "") + tag + '</div><div class="det">' + esc(c.detail) + "</div>" +
+        '<div class="subs">' + c.subs.map(sb => { const on = !!(cur.subs[c.id] && cur.subs[c.id][sb.id]); return '<button type="button" class="subbtn' + (cur.subSrc[c.id + "." + sb.id] === "auto" ? " auto" : "") + '" data-sub="' + sb.id + '" aria-pressed="' + on + '">' + esc(sb.label) + "</button>"; }).join("") + "</div>" +
+        "</div>" + lvSliderHTML(c, lv, src) +
+        '<div class="ev">' + su + '<input type="text" data-ev="' + c.id + '" placeholder="Assessor comments" value="' + esc(cur.evidence[c.id] || "") + '"></div>' +
+        "</div>";
+    });
+  });
+  $("#grid").innerHTML = html;
+  renderOverall();
+}
+function partOf(r, n) {
+  const list = CRITERIA.filter(c => c.part === n);
+  const scored = list.filter(c => r.levels[c.id]);
+  return {n: list.length, scored: scored.length, met: scored.filter(c => r.levels[c.id] >= 3).length};
+}
+function overallOf(r) {
+  const n = CRITERIA.length;
+  const scored = CRITERIA.filter(c => r.levels[c.id]);
+  const met = scored.filter(c => r.levels[c.id] >= 3).length;
+  let res = "n", txt = "Not finished";
+  if (scored.length && scored.some(c => r.levels[c.id] < 3)) { res = "u"; txt = "Not Yet Satisfactory (U/S)"; }
+  else if (scored.length === n) { res = "s"; txt = "Satisfactory (S)"; }
+  return {n, scored: scored.length, met, res, txt};
+}
+function renderOverall() {
+  const o = overallOf(cur), p1 = partOf(cur, 1), p2 = partOf(cur, 2);
+  $("#overall").innerHTML = '<span>Overall result</span><span class="res ' + o.res + '">' + o.txt + '</span><span style="flex:1"></span>' +
+    '<span class="pp">Part 1: ' + p1.met + " of " + p1.n + " met</span>" + '<span class="pp">Part 2: ' + p2.met + " of " + p2.n + " met</span>" +
+    (o.scored < o.n ? '<span class="pp">' + (o.n - o.scored) + " not assessed yet</span>" : "");
+}
+$("#grid").addEventListener("click", e => {
+  const sb = e.target.closest("[data-sub]"); if (!sb) return;
+  const cid = sb.closest(".crit").dataset.c, k = sb.dataset.sub;
+  cur.subs[cid] = cur.subs[cid] || {};
+  cur.subs[cid][k] = !cur.subs[cid][k]; cur.subSrc[cid + "." + k] = "teacher"; touch();
+  renderGrid();
+  if (cur.fbAuto && (cur.well || cur.improve)) buildFeedback();
+});
+$("#grid").addEventListener("input", e => {
+  const id = e.target.dataset.ev; if (!id) return;
+  cur.evidence[id] = e.target.value; cur.evidenceSrc[id] = "teacher"; touch();
+});
+const LV_POS = l => ((l - 1) / 3 * 100) + "%";
+function lvSliderHTML(c, lv, src) {
+  const auto = lv && src === "auto";
+  return '<div class="lvs' + (lv ? " has" : "") + (auto ? " auto" : "") + '" role="slider" tabindex="0" data-lv="' + c.id + '" aria-label="' + esc(c.label) + '" aria-valuemin="1" aria-valuemax="4"' +
+    (lv ? ' aria-valuenow="' + lv + '" aria-valuetext="' + lv + " " + LEVELS[lv - 1].t + (auto ? ", suggested" : "") + '"' : ' aria-valuetext="Not assessed"') + ">" +
+    '<div class="zl"><span>U/S</span><span>S</span></div>' +
+    '<div class="rail"><div class="trk"></div><div class="mid"></div><div class="fill" style="width:' + (lv ? LV_POS(lv) : "0") + '"></div>' +
+    LEVELS.map(L => '<span class="stop" style="left:' + LV_POS(L.l) + '">' + L.l + "</span>").join("") +
+    '<div class="thumb' + (lv ? " l" + lv : "") + '" style="left:' + (lv ? LV_POS(lv) : "0") + '">' + (lv || "") + "</div></div>" +
+    '<div class="names">' + LEVELS.map(L => '<span class="' + (lv === L.l ? "on" : "") + '" style="left:' + LV_POS(L.l) + '">' + L.t + "</span>").join("") + "</div>" +
+    '<div class="hintl">' + (!lv ? "Not assessed. Tap or drag to select a level." : auto ? "Suggested. Tap " + lv + " to confirm." : "") + "</div></div>";
+}
+function setLevel(id, l, isTap) {
+  if (isTap && cur.levels[id] === l && cur.levelSrc[id] === "teacher") { delete cur.levels[id]; delete cur.levelSrc[id]; }
+  else { cur.levels[id] = l; cur.levelSrc[id] = "teacher"; }
+  touch(); renderGrid(); renderList();
+  if (cur.fbAuto && (cur.well || cur.improve)) buildFeedback();
+  const el = document.querySelector('.lvs[data-lv="' + id + '"]'); if (el && el.dataset.keep) el.focus();
+}
+function lvFromX(el, x) {
+  const r = el.querySelector(".rail").getBoundingClientRect();
+  return Math.max(1, Math.min(4, Math.round((x - r.left) / r.width * 3) + 1));
+}
+function lvPreview(el, l) {
+  el.classList.add("has"); el.classList.remove("auto");
+  el.querySelector(".fill").style.width = LV_POS(l);
+  const t = el.querySelector(".thumb"); t.style.left = LV_POS(l); t.className = "thumb l" + l; t.textContent = l;
+  el.querySelectorAll(".names span").forEach((s, i) => s.classList.toggle("on", i + 1 === l));
+}
+(function wireSlider() {
+  let drag = null;
+  const grid = document.getElementById("grid");
+  grid.addEventListener("pointerdown", e => {
+    const el = e.target.closest(".lvs"); if (!el || e.button > 0) return;
+    e.preventDefault(); el.focus();
+    drag = {el, id: el.dataset.lv, x0: e.clientX, moved: false, l: lvFromX(el, e.clientX)};
+    try { el.setPointerCapture(e.pointerId); } catch (er) {}
+    el.classList.add("dragging"); lvPreview(el, drag.l);
+  });
+  grid.addEventListener("pointermove", e => {
+    if (!drag) return;
+    if (Math.abs(e.clientX - drag.x0) > 6) drag.moved = true;
+    const l = lvFromX(drag.el, e.clientX); if (l !== drag.l) { drag.l = l; lvPreview(drag.el, l); }
+  });
+  const end = e => {
+    if (!drag) return; const d = drag; drag = null;
+    if (e.type === "pointercancel") { renderGrid(); return; }
+    d.el.dataset.keep = "1"; setLevel(d.id, d.l, !d.moved);
+  };
+  grid.addEventListener("pointerup", end); grid.addEventListener("pointercancel", end);
+  grid.addEventListener("keydown", e => {
+    const el = e.target.closest(".lvs"); if (!el) return;
+    const id = el.dataset.lv, now = cur.levels[id] || 0; let l = null, tap = false;
+    if (e.key === "ArrowRight" || e.key === "ArrowUp") l = Math.min(4, (now || 0) + 1);
+    else if (e.key === "ArrowLeft" || e.key === "ArrowDown") l = Math.max(1, (now || 2) - 1);
+    else if (e.key === "Home") l = 1; else if (e.key === "End") l = 4;
+    else if (/^[1-4]$/.test(e.key)) { l = +e.key; tap = true; }
+    else if ((e.key === "Enter" || e.key === " ") && now) { l = now; tap = cur.levelSrc[id] !== "auto"; if (tap) return e.preventDefault(); }
+    else if (e.key === "Delete" || e.key === "Backspace") { if (now) { delete cur.levels[id]; delete cur.levelSrc[id]; touch(); renderGrid(); renderList(); } e.preventDefault(); const n = document.querySelector('.lvs[data-lv="' + id + '"]'); if (n) n.focus(); return; }
+    if (l === null) return;
+    e.preventDefault(); el.dataset.keep = "1";
+    setLevel(id, l, tap);
+    const again = document.querySelector('.lvs[data-lv="' + id + '"]'); if (again) again.focus();
+  });
+})();
+
+/* =========================================================
+   7. FEEDBACK
+   ========================================================= */
+function topErrors(st, n) {
+  const cnt = {}, ex = {};
+  allMarks(st).filter(m => !isGood(m.code)).forEach(m => { cnt[m.code] = (cnt[m.code] || 0) + 1; if (!ex[m.code] || (!ex[m.code].words && m.words)) ex[m.code] = m; });
+  return Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a]).slice(0, n).map(c => ({c, n: cnt[c], m: ex[c], words: ex[c].words}));
+}
+function buildFeedback() {
+  const well = [], impr = [];
+  CRITERIA.forEach(c => {
+    const l = cur.levels[c.id]; if (!l) return;
+    if (c.subFb) {
+      const subs = cur.subs[c.id] || {}; let tips = 0, goods = 0;
+      if (l >= 3) well.push("- " + c.good);
+      Object.keys(c.subFb).forEach(k => {
+        if (subs[k]) { if (l < 3 && goods < 2) { well.push("- " + c.subFb[k].good); goods++; } return; }
+        if (cur.subSrc[c.id + "." + k]) { impr.push("- " + c.subFb[k].tip); tips++; }
+      });
+      if (l < 3 && !tips) impr.push("- " + c.tip);
+      return;
+    }
+    if (l >= 3) well.push("- " + c.good); else impr.push("- " + c.tip);
+  });
+  /* the error codes the student uses most */
+  const src = stageHas(cur.stages.final) ? cur.stages.final : cur.stages.draft;
+  const top = topErrors(src, 3);
+  if (top.length) {
+    impr.push("- Look again at the codes " + (src === cur.stages.final ? "on your final copy" : "on your draft") + ":");
+    top.forEach(t => impr.push("    " + t.c + " (" + CODE[t.c].n.toLowerCase() + "), " + plural(t.n, "time") + (t.words ? ", for example ‘" + t.words + "’" + (t.m.fix ? " should be ‘" + t.m.fix + "’" : "") : (t.m.fix ? ", for example it should be ‘" + t.m.fix + "’" : "")) + "."));
+  }
+  if (cur.stages.final.text.trim() && cur.stages.draft.marks.some(m => !isGood(m.code)) && !photoMarkCount(cur.stages.draft)) {
+    const R = corrections(cur);
+    if (R.errs.length && R.fixed.length === R.errs.length) well.push("- You corrected every coded error from your draft.");
+  }
+  if (!impr.length && well.length) impr.push("- Keep going. Next time, try a longer email with more detail and more complex sentences.");
+  cur.well = well.join("\n"); cur.improve = impr.join("\n"); cur.fbAuto = true;
+  $("#fbWell").value = cur.well; $("#fbImprove").value = cur.improve;
+  $("#fbHint").textContent = well.length || impr.length ? "Feedback generated from the checklist and the error codes. Review and edit as required." : "Complete the checklist first, then press Generate feedback.";
+}
+let fbArmed = 0;
+$("#btnRebuildFb").addEventListener("click", () => {
+  if (!cur.fbAuto && (cur.well.trim() || cur.improve.trim()) && Date.now() - fbArmed > 4000) {
+    fbArmed = Date.now(); $("#btnRebuildFb").textContent = "Tap again to replace the current feedback";
+    setTimeout(() => { $("#btnRebuildFb").textContent = "Generate feedback"; }, 4000);
+    return;
+  }
+  fbArmed = 0; $("#btnRebuildFb").textContent = "Generate feedback";
+  buildFeedback(); touch();
+});
+$("#fbWell").addEventListener("input", () => { cur.well = $("#fbWell").value; cur.fbAuto = false; touch(); });
+$("#fbImprove").addEventListener("input", () => { cur.improve = $("#fbImprove").value; cur.fbAuto = false; touch(); });
+
+/* =========================================================
+   8. TEXT REPORT, ZIP, SAVE, OPEN
+   ========================================================= */
+function codedText(st, plain) {
+  const toks = tokenize(st.text); if (!toks.length) return "";
+  const end = {}; st.marks.forEach(m => { end[m.e] = m; });
+  let out = "", prev = 0;
+  toks.forEach((t, k) => {
+    out += st.text.slice(prev, t.i) + t.w;
+    const m = end[k];
+    if (m) out += "[" + codeLabel(m.code) + (m.fix ? ": " + m.fix : "") + "]";
+    prev = t.j;
+  });
+  return out;
+}
+function tallyText(st) {
+  const all = allMarks(st), errs = all.filter(m => !isGood(m.code)), cnt = {};
+  all.forEach(m => { cnt[m.code] = (cnt[m.code] || 0) + 1; });
+  if (!all.length) return "No codes.";
+  return plural(errs.length, "error code") + ". " + Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a]).map(c => codeLabel(c) + " " + cnt[c]).join(", ") + ".";
+}
+function toTXT(r) {
+  const L = [], o = overallOf(r), ON = "[x]", OFF = "[ ]";
+  L.push("WRITING ASSESSMENT REPORT", UNIT_NAME, QUAL_NAME, EVENT_NAME, TASK_NAME, "");
+  L.push("Student: " + (r.name || ""), "Teacher/assessor: " + ($("#teacherName").value.trim()), "Overall result: " + o.txt, "");
+  PARTS.forEach(P => {
+    L.push(P.t.toUpperCase());
+    CRITERIA.filter(c => c.part === P.n).forEach(c => {
+      const l = r.levels[c.id];
+      L.push(c.task + " " + c.label + (c.bullets ? " " + c.bullets.join("; ") : ""));
+      L.push("   Result: " + (l ? (l >= 3 ? "S" : "U/S") + " (level " + l + " " + LEVELS[l - 1].t + ")" : "not assessed"));
+      c.subs.forEach(sb => L.push("   " + (r.subs[c.id] && r.subs[c.id][sb.id] ? ON : OFF) + " " + sb.label));
+      if (r.evidence[c.id]) L.push("   Comments: " + r.evidence[c.id]);
+    });
+    L.push("");
+  });
+  L.push("WHAT WAS DONE WELL", r.well || "", "", "WHAT NEEDS IMPROVEMENT", r.improve || "", "");
+  STAGES.forEach(s => {
+    const st = r.stages[s.id]; if (!stageHas(st)) return;
+    L.push("---- " + s.t.toUpperCase() + (st.date ? " (" + fmtDateAU(st.date) + ")" : "") + " ----");
+    if (st.photos.length) L.push(plural(st.photos.length, "photo") + " saved with this report" + (photoMarkCount(st) ? ", with the marking (see the _marked photos)" : "") + ".");
+    st.photos.forEach((p, k) => { const ms = (p.marks || []).filter(m => m.code); if (ms.length) L.push("Codes on page " + (k + 1) + ": " + ms.map(m => codeLabel(m.code) + (m.fix ? " (" + m.fix + ")" : "")).join(", ")); });
+    if (!st.text.trim() && stageWords(st)) L.push("Number of words: " + stageWords(st));
+    if (st.text.trim()) L.push("", codedText(st), "");
+    if (st.text.trim() || photoMarkCount(st)) L.push("Codes: " + tallyText(st));
+    if (st.comment.trim()) L.push("Teacher comment: " + st.comment.trim());
+    L.push("");
+  });
+  L.push("ERROR CORRECTION CODE", ERR_CODES.map(x => x.c + " = " + x.n).join("; "), "");
+  L.push("Saved " + new Date().toLocaleString("en-AU") + ". Open the ZIP in the Writing Assessment page (Open saved work) to keep working on it.");
+  return L.join("\r\n");
+}
+function dataUrlBytes(u) { const b = atob(u.split(",")[1] || ""); const a = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+function bytesToDataUrl(u8, mime) {
+  let s = ""; const CH = 0x8000;
+  for (let i = 0; i < u8.length; i += CH) s += String.fromCharCode.apply(null, u8.subarray(i, i + CH));
+  return "data:" + (mime || "image/jpeg") + ";base64," + btoa(s);
+}
+/* files for one student; folder is "" for a single save */
+function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
+async function markedJpeg(p) {
+  const img = await loadImg(p.data);
+  const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(markSVG(p, false).replace("<svg ", '<svg width="' + p.w + '" height="' + p.h + '" '));
+  const ov = await loadImg(svgUrl);
+  const cv = document.createElement("canvas"); cv.width = p.w; cv.height = p.h;
+  const cx = cv.getContext("2d"); cx.drawImage(img, 0, 0, p.w, p.h); cx.drawImage(ov, 0, 0, p.w, p.h);
+  return dataUrlBytes(cv.toDataURL("image/jpeg", 0.85));
+}
+async function studentFiles(r, folder) {
+  const enc = new TextEncoder(), files = [], pre = folder ? folder + "/" : "", base = safeName(r.name);
+  const copy = JSON.parse(JSON.stringify(r));
+  STAGES.forEach(s => {
+    copy.stages[s.id].photos = r.stages[s.id].photos.map((p, k) => {
+      const nm = "photos/" + s.id + "_page_" + (k + 1) + ".jpg";
+      files.push({name: pre + nm, data: dataUrlBytes(p.data)});
+      return {file: nm, w: p.w, h: p.h, at: p.at, marks: p.marks || []};
+    });
+  });
+  for (const s of STAGES) {
+    const ph = r.stages[s.id].photos;
+    for (let k = 0; k < ph.length; k++) {
+      if (!(ph[k].marks || []).length) continue;
+      try { files.push({name: pre + "photos/" + s.id + "_page_" + (k + 1) + "_marked.jpg", data: await markedJpeg(ph[k])}); } catch (e) {}
+    }
+  }
+  delete copy.saved;
+  const pack = {app: APP_ID, kind: "writing-assessment", version: 1, unit: UNIT_NAME, event: EVENT_NAME, teacher: $("#teacherName").value.trim(), savedAt: new Date().toISOString(), record: copy};
+  files.unshift({name: pre + "assessment.json", data: enc.encode(JSON.stringify(pack, null, 1))});
+  files.splice(1, 0, {name: pre + base + "_" + FILE_TAG + "_Report.txt", data: enc.encode("﻿" + toTXT(r))});
+  return files;
+}
+const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(u8) { let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC_T[(c ^ u8[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function makeZip(files) {
+  const enc = new TextEncoder(), parts = [], central = [];
+  const d = new Date();
+  const dtime = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+  const ddate = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  let offset = 0;
+  files.forEach(f => {
+    const name = enc.encode(f.name), data = f.data, crc = crc32(data);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+    lh.setUint16(10, dtime, true); lh.setUint16(12, ddate, true); lh.setUint32(14, crc, true);
+    lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
+    parts.push(new Uint8Array(lh.buffer), name, data);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+    ch.setUint16(12, dtime, true); ch.setUint16(14, ddate, true); ch.setUint32(16, crc, true);
+    ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true); ch.setUint16(28, name.length, true);
+    ch.setUint16(30, 0, true); ch.setUint16(32, 0, true); ch.setUint16(34, 0, true); ch.setUint16(36, 0, true); ch.setUint32(38, 0, true); ch.setUint32(42, offset, true);
+    central.push(new Uint8Array(ch.buffer), name);
+    offset += 30 + name.length + data.length;
+  });
+  const cdSize = central.reduce((a, b) => a + b.length, 0);
+  const end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true);
+  end.setUint32(12, cdSize, true); end.setUint32(16, offset, true);
+  return new Blob(parts.concat(central, [new Uint8Array(end.buffer)]), {type: "application/zip"});
+}
+/* read a ZIP (ours, or one re-zipped by Windows or a Mac) */
+async function readZip(buf) {
+  const u8 = new Uint8Array(buf), dv = new DataView(buf), dec = new TextDecoder();
+  let eo = -1;
+  for (let i = u8.length - 22; i >= Math.max(0, u8.length - 66000); i--) if (dv.getUint32(i, true) === 0x06054b50) { eo = i; break; }
+  if (eo < 0) throw new Error("This is not a ZIP file.");
+  const count = dv.getUint16(eo + 10, true); let p = dv.getUint32(eo + 16, true);
+  const out = {};
+  for (let k = 0; k < count; k++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) break;
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true);
+    const nl = dv.getUint16(p + 28, true), xl = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true), lo = dv.getUint32(p + 42, true);
+    const name = dec.decode(u8.subarray(p + 46, p + 46 + nl));
+    p += 46 + nl + xl + cl;
+    if (/\/$/.test(name) || /^__MACOSX\//.test(name)) continue;
+    const ds = lo + 30 + dv.getUint16(lo + 26, true) + dv.getUint16(lo + 28, true);
+    const raw = u8.subarray(ds, ds + csize);
+    let data = null;
+    if (method === 0) data = raw.slice();
+    else if (method === 8 && window.DecompressionStream) data = new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer());
+    if (data) out[name] = data;
+  }
+  return out;
+}
+function download(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name; a.style.display = "none";
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 4000);
+}
+function syncFromUI() {
+  if (!cur) return;
+  cur.name = $("#studentName").value.trim(); cur.date = $("#assessDate").value;
+  cur.well = $("#fbWell").value; cur.improve = $("#fbImprove").value;
+}
+function zipName(r) { return safeName(r.name) + "_" + FILE_TAG + "_Writing.zip"; }
+async function savePackage() {
+  syncFromUI();
+  if (!cur.name) { setStatus("#saveStatus", "Type the student's name in Step 1 first.", "warn"); $("#studentName").classList.add("needname"); $("#studentName").focus(); return false; }
+  const files = await studentFiles(cur, "");
+  download(makeZip(files), zipName(cur));
+  cur.saved = true; REV++; renderList();
+  const ph = files.filter(f => /\.jpg$/.test(f.name) && !/_marked\.jpg$/.test(f.name)).length, mk = files.filter(f => /_marked\.jpg$/.test(f.name)).length;
+  setStatus("#saveStatus", "Saved " + zipName(cur) + ". Inside: the assessment file, a text report" + (ph ? " and " + plural(ph, "photo") : "") + (mk ? " (plus " + mk + " marked cop" + (mk > 1 ? "ies" : "y") + ")" : "") + ". Keep this file. Next time, press Open saved work and choose it to add the next stage.");
+  return true;
+}
+$("#btnSave").addEventListener("click", savePackage);
+function namedRecords() { return records.filter(hasContent); }
+async function saveAll() {
+  syncFromUI();
+  const list = namedRecords();
+  if (!list.length) { setStatus("#saveStatus", "There are no students to save yet.", "warn"); return false; }
+  const files = [], used = {};
+  for (const r of list) {
+    let folder = safeName(r.name || "Student");
+    used[folder] = (used[folder] || 0) + 1;
+    if (used[folder] > 1) folder += "_" + used[folder];
+    (await studentFiles(r, folder)).forEach(f => files.push(f));
+  }
+  const day = (($("#assessDate").value || todayISO()).replace(/-/g, ""));
+  download(makeZip(files), FILE_TAG + "_Writing_All_Students_" + day + ".zip");
+  list.forEach(r => { r.saved = true; }); REV++;
+  renderList();
+  setStatus("#saveStatus", "Saved all " + plural(list.length, "student") + " in one ZIP file. Each student has a folder. You can open this ZIP later with Open saved work.");
+  return true;
+}
+$("#btnSaveAll").addEventListener("click", saveAll);
+$("#btnSaveAllSide").addEventListener("click", saveAll);
+
+/* open saved work */
+function packToRecord(pack, files, pre) {
+  if (!pack || !pack.record || pack.kind !== "writing-assessment") throw new Error("This file is not a saved writing assessment.");
+  if (pack.app && pack.app !== APP_ID) throw new Error("This file is from a different assessment.");
+  const r = fixRecord(pack.record);
+  let missing = 0;
+  STAGES.forEach(s => {
+    r.stages[s.id].photos = (r.stages[s.id].photos || []).map(p => {
+      if (p.data) return p;
+      const b = files && files[pre + p.file];
+      if (!b) { missing++; return null; }
+      return {data: bytesToDataUrl(b, "image/jpeg"), w: p.w, h: p.h, at: p.at, marks: Array.isArray(p.marks) ? p.marks : []};
+    }).filter(Boolean);
+  });
+  r.saved = true;
+  return {r, missing, teacher: pack.teacher};
+}
+async function openFiles(fileList) {
+  const got = []; let missing = 0, bad = [];
+  for (const f of Array.from(fileList || [])) {
+    try {
+      const buf = await f.arrayBuffer();
+      if (/\.json$/i.test(f.name) || new Uint8Array(buf)[0] === 0x7b) {
+        const x = packToRecord(JSON.parse(new TextDecoder().decode(buf)), null, "");
+        got.push(x); missing += x.missing;
+      } else {
+        const files = await readZip(buf);
+        const packs = Object.keys(files).filter(n => /(^|\/)assessment\.json$/.test(n));
+        if (!packs.length) throw new Error("No saved assessment was found in this ZIP.");
+        packs.forEach(n => {
+          const pre = n.slice(0, n.length - "assessment.json".length);
+          const x = packToRecord(JSON.parse(new TextDecoder().decode(files[n])), files, pre);
+          got.push(x); missing += x.missing;
+        });
+      }
+    } catch (e) { bad.push(f.name + ": " + (e && e.message ? e.message : "could not be opened")); }
+  }
+  if (got.length) {
+    syncFromUI();
+    let replaced = 0;
+    got.forEach(x => {
+      const i = records.findIndex(r => r.id === x.r.id);
+      if (i >= 0) { records[i] = x.r; replaced++; } else records.push(x.r);
+    });
+    /* drop the empty starter record */
+    for (let i = records.length - 1; i >= 0; i--) if (!hasContent(records[i]) && records.length > 1) records.splice(i, 1);
+    if (!$("#teacherName").value.trim() && got[0].teacher) { $("#teacherName").value = got[0].teacher; store(STO + "teacher", got[0].teacher); }
+    loadRecord(got[got.length - 1].r);
+    REV++; persistSoon();
+    const names = got.map(x => x.r.name || "(no name)").join(", ");
+    setStatus("#saveStatus", "Opened " + plural(got.length, "student") + ": " + names + "." + (replaced ? " The copy on this computer was replaced with the saved file." : "") + (missing ? " " + plural(missing, "photo") + " could not be found in the file." : "") + (bad.length ? " Not opened: " + bad.join("; ") : ""), bad.length || missing ? "warn" : "");
+    window.scrollTo({top: 0});
+    showToast("Opened " + names + ".");
+  } else if (bad.length) {
+    setStatus("#saveStatus", "Could not open: " + bad.join("; "), "err");
+    $("#sec5").scrollIntoView({block: "start"});
+  }
+}
+["#btnOpen", "#btnOpenSide"].forEach(id => $(id).addEventListener("click", () => $("#inOpen").click()));
+$("#inOpen").addEventListener("change", e => { openFiles(e.target.files); e.target.value = ""; });
+/* drag a saved ZIP onto the page */
+document.addEventListener("dragover", e => { if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files")) e.preventDefault(); });
+document.addEventListener("drop", e => {
+  const fl = e.dataTransfer && e.dataTransfer.files; if (!fl || !fl.length) return;
+  e.preventDefault();
+  const imgs = Array.from(fl).filter(f => /^image\//.test(f.type)), rest = Array.from(fl).filter(f => !/^image\//.test(f.type));
+  if (imgs.length) addPhotos(imgs);
+  if (rest.length) openFiles(rest);
+});
+
+/* =========================================================
+   9. PRINT (laid out like the checklist in the assessment)
+   ========================================================= */
+function codedHTML(st) {
+  const toks = tokenize(st.text); if (!toks.length) return "";
+  const byTok = new Array(toks.length).fill(null);
+  st.marks.forEach(m => { for (let k = m.s; k <= m.e && k < toks.length; k++) byTok[k] = m; });
+  let html = "", prev = 0;
+  toks.forEach((t, k) => {
+    const gap = st.text.slice(prev, t.i);
+    html += gapHTML(gap, k);
+    const m = byTok[k];
+    html += m ? '<span class="' + (isGood(m.code) ? "g" : "e") + '">' + esc(t.w) + "</span>" : esc(t.w);
+    if (m && k === m.e) html += "<sup" + (isGood(m.code) ? ' class="g"' : "") + ">" + esc(codeLabel(m.code)) + "</sup>" + (m.fix ? '<span class="fx">(' + esc(m.fix) + ")</span>" : "");
+    prev = t.j;
+  });
+  return html;
+}
+function reportHTML(r) {
+  const o = overallOf(r), ON = "☑", OFF = "☐";
+  const tick = on => '<span class="' + (on ? "on" : "") + '">' + (on ? ON : OFF) + "</span>";
+  const subOn = (c, id) => !!(r.subs[c.id] && r.subs[c.id][id]);
+  const fld = (lab, val, cls) => '<div' + (cls ? ' class="' + cls + '"' : "") + '><div class="pr-lab">' + lab + '</div><div class="pr-fld">' + val + "</div></div>";
+  const mono = v => '<span style="font-family:var(--mono)">' + v + "</span>";
+  const st = s => r.stages[s], errs = s => errCount(st(s));
+  const table = P => {
+    const rows = CRITERIA.filter(c => c.part === P.n).map(c => {
+      const l = r.levels[c.id], isS = l && l >= 3, isU = l && l < 3;
+      const sdate = st(c.stage).date || (c.stage === "draft" ? r.date : "");
+      const crit = '<div class="bk">' + esc(c.label) + "</div>" + (c.bullets ? '<ul class="bl">' + c.bullets.map(b => "<li>" + esc(b) + "</li>").join("") + "</ul>" : "");
+      let cm = '<div class="ev2"><i>Date:</i> ' + (l ? esc(fmtDateAU(sdate)) : "") + "</div>";
+      c.subs.forEach((sb, k) => {
+        if (c.id === "plan" && k === 1) cm += '<div class="sb">Drafted email:</div>';
+        cm += '<div class="sb' + (c.id === "plan" && k > 0 ? " ind" : "") + '">' + tick(subOn(c, sb.id)) + esc(sb.label) + "</div>";
+      });
+      cm += '<div class="ev2"><i>Comments:</i> ' + esc(String(r.evidence[c.id] || "").trim()) + "</div>";
+      return '<tr><td class="n tn">' + esc(c.task) + '</td><td class="cr">' + crit + '</td><td class="tk2' + (isS ? " on" : "") + '">' + (isS ? ON : OFF) + '</td><td class="tk2' + (isU ? " on" : "") + '">' + (isU ? ON : OFF) + "</td><td>" + cm + "</td></tr>";
+    }).join("");
+    return '<div class="pr-part">' + esc(P.t) + '</div><table class="pr-ck"><thead><tr><th class="n tn">Task</th><th class="cr">Did the student do the following?</th><th class="tk2">S</th><th class="tk2">U/S</th><th>Assessor comments<div class="thn">' + esc(COMMENT_NOTE) + "</div></th></tr></thead><tbody>" + rows + "</tbody></table>";
+  };
+  const stagesHTML = STAGES.filter(s => stageHas(st(s.id))).map(s => {
+    const x = st(s.id);
+    return '<div class="pr-stage"><div class="pr-h">' + esc(s.t) + (x.date ? "  (" + esc(fmtDateAU(x.date)) + ")" : "") + "</div>" +
+      (x.text.trim() ? '<div class="pr-wr">' + codedHTML(x) + "</div>" : "") +
+      '<div class="pr-tally">' + esc((stageWords(x) ? stageWords(x) + " words. " : "") + "Codes: " + tallyText(x)) + "</div>" +
+      (x.comment.trim() ? '<div class="pr-tc"><b>Teacher comment:</b> ' + esc(x.comment.trim()) + "</div>" : "") +
+      (x.photos.length ? '<div class="pr-photos">' + x.photos.map((p, k) => (p.marks || []).length ? '<figure class="big" style="width:' + Math.min(186, 210 * (p.w || 3) / (p.h || 4)).toFixed(1) + 'mm"><div class="pr-ph"><img src="' + p.data + '" alt="">' + markSVG(p, false) + '</div><figcaption>' + esc(s.t) + ", page " + (k + 1) + ", marked by the assessor</figcaption></figure>" : '<figure><img src="' + p.data + '" alt=""><figcaption>' + esc(s.t) + ", page " + (k + 1) + "</figcaption></figure>").join("") + "</div>" : "") +
+      "</div>";
+  }).join("");
+  const key = '<table class="pr-key"><tbody>' + [0, 1, 2, 3].map(i => "<tr>" + ERR_CODES.slice(i * 4, i * 4 + 4).map(x => '<td class="c">' + esc(x.c) + "</td><td>" + esc(x.n) + "</td>").join("") + "</tr>").join("") +
+    "<tr>" + GOOD_CODES.slice(0, 4).map(x => '<td class="c g">' + esc(x.l) + "</td><td>" + esc(x.n) + "</td>").join("") + "</tr><tr>" + GOOD_CODES.slice(4).map(x => '<td class="c g">' + esc(x.l) + "</td><td>" + esc(x.n) + "</td>").join("") + "</tr></tbody></table>";
+  return '<div class="pr-top"><div><div class="ev">' + esc(EVENT_NAME) + '</div><div class="tk">' + esc(TASK_NAME) + '</div></div><div class="pr-res ' + o.res + '">' + esc(o.txt) + "</div></div>" +
+    fld("Unit code and name", esc(UNIT_NAME)) + fld("Qualification or course code and name", esc(QUAL_NAME)) +
+    '<div class="pr-h2">Student details</div><div class="pr-sd">' +
+      fld("Student name", esc(r.name || ""), "w2") + fld("Student number", "", "w2") +
+      fld("Teacher/assessor", esc($("#teacherName").value.trim()), "w2") + fld("Draft", mono(stageHas(st("draft")) ? (stageWords(st("draft")) ? stageWords(st("draft")) + " words, " : "") + errs("draft") + " codes" : "n/a"), "") + fld("Final copy", mono(stageHas(st("final")) ? (stageWords(st("final")) ? stageWords(st("final")) + " words, " : "") + errs("final") + " codes" : "n/a"), "") +
+    "</div>" +
+    '<div class="pr-h2">Marking criteria</div>' + PRINT_INTRO.map(t => '<div class="pr-p">' + esc(t) + "</div>").join("") +
+    '<div class="pr-cap">Levels 3 Meets and 4 Strong = S. Levels 1 Not yet and 2 Developing = U/S.</div>' +
+    PARTS.map(table).join("") +
+    '<div class="pr-h">Feedback</div><div class="pr-fb"><div class="w"><div class="h">What Was Done Well</div><div class="b">' + esc(r.well) + '</div></div><div class="i"><div class="h">What Needs Improvement</div><div class="b">' + esc(r.improve) + "</div></div></div>" +
+    '<div class="pr-outc"><b>Assessment outcome</b><span class="' + (o.res === "s" ? "on" : "") + '">' + (o.res === "s" ? ON : OFF) + ' Satisfactory</span><span class="' + (o.res === "u" ? "on" : "") + '">' + (o.res === "u" ? ON : OFF) + " Unsatisfactory</span></div>" +
+    '<div class="pr-end"><div class="pr-sign"><div>Assessor name, signature and date</div><div>Student name, signature and date</div></div></div>' +
+    (stagesHTML ? '<div class="pr-wrstart"><div class="pr-h2">Student writing</div>' + stagesHTML + '<div class="pr-h">Error correction code</div>' + key + "</div>" : "");
+}
+function setPageFooter(label) {
+  let st = $("#prPageStyle");
+  if (!st) { st = document.createElement("style"); st.id = "prPageStyle"; document.head.appendChild(st); }
+  label = String(label || "").replace(/["\\\n]/g, " ");
+  st.textContent = '@page{@bottom-left{content:"' + label + '";font-family:Calibri,Carlito,Arial,sans-serif;font-size:9px;color:#495054}@bottom-right{content:"Page " counter(page) " of " counter(pages);font-family:Calibri,Carlito,Arial,sans-serif;font-size:9px;color:#495054}}';
+}
+let PRINT_ALL = false;
+const ORIG_TITLE = document.title;
+function buildPrint() {
+  syncFromUI();
+  $("#printArea").innerHTML = reportHTML(cur);
+  setPageFooter(String(cur.name || "") + "  |  Writing Assessment Report");
+}
+window.addEventListener("afterprint", () => { document.title = ORIG_TITLE; PRINT_ALL = false; });
+$("#btnPrint").addEventListener("click", () => {
+  buildPrint();
+  document.title = safeName(cur.name || "Student") + "_" + FILE_TAG + "_Report";
+  setTimeout(() => window.print(), 60);
+});
+window.addEventListener("beforeprint", () => { if (cur && !PRINT_ALL) { buildPrint(); if (document.title === ORIG_TITLE) document.title = safeName(cur.name || "Student") + "_" + FILE_TAG + "_Report"; } });
+function printAll() {
+  syncFromUI();
+  const list = namedRecords();
+  if (!list.length) { setStatus("#saveStatus", "There are no students to print yet.", "warn"); return; }
+  PRINT_ALL = true;
+  $("#printArea").innerHTML = list.map(r => '<div class="pr-one">' + reportHTML(r) + "</div>").join("");
+  setPageFooter("Writing Assessment Report");
+  document.title = FILE_TAG + "_All_Students_" + (($("#assessDate").value || todayISO()).replace(/-/g, ""));
+  setStatus("#saveStatus", "Printing " + plural(list.length, "report") + ". Each student starts on a new page.");
+  setTimeout(() => window.print(), 80);
+}
+$("#btnPrintAll").addEventListener("click", printAll);
+
+/* =========================================================
+   10. UI WIRING
+   ========================================================= */
+function setStatus(sel, msg, kind) { const el = $(sel); el.style.display = ""; el.className = "status" + (kind ? " " + kind : ""); el.textContent = msg; }
+function renderList() {
+  const ul = $("#studentList");
+  const list = records.filter(r => hasContent(r) || r === cur);
+  ul.innerHTML = list.map(r => {
+    const o = overallOf(r), tags = [];
+    const done = STAGES.filter(s => stageHas(r.stages[s.id])).map(s => s.t.replace(" copy", ""));
+    tags.push(done.length ? '<span class="tag ok">' + esc(done.join(", ")) + "</span>" : '<span class="tag">No writing yet</span>');
+    if (o.scored) tags.push('<span class="tag ' + (o.res === "s" ? "ok" : o.res === "u" ? "bad" : "warn") + '">' + (o.res === "s" ? "S" : o.res === "u" ? "U/S" : o.scored + "/" + o.n + " assessed") + "</span>");
+    if (hasContent(r)) tags.push(r.saved ? '<span class="tag ok">Saved</span>' : '<span class="tag warn">Not saved</span>');
+    return '<li><button type="button" class="pick" data-id="' + r.id + '" aria-current="' + (r === cur) + '"><span class="nm">' + esc(r.name || "(no name yet)") + '</span><span class="tags">' + tags.join("") + "</span></button></li>";
+  }).join("") || '<li class="hint">No students yet.</li>';
+  updateDeleteOne();
+}
+function loadRecord(r) {
+  cur = r; STAGE = r.stage || "plan";
+  $("#studentName").value = r.name; $("#assessDate").value = r.date;
+  $("#fbWell").value = r.well; $("#fbImprove").value = r.improve;
+  $("#studentName").classList.remove("needname");
+  $("#saveStatus").style.display = "none";
+  $("#fbHint").textContent = r.well || r.improve ? "Review and edit the feedback as required." : "Complete the checklist first, then press Generate feedback.";
+  renderStage(); renderEval(); renderGrid(); renderList();
+}
+$("#studentName").addEventListener("input", () => { cur.name = $("#studentName").value.trim(); $("#studentName").classList.remove("needname"); touch(); renderList(); });
+$("#assessDate").addEventListener("input", () => { cur.date = $("#assessDate").value; touch(); });
+$("#teacherName").addEventListener("input", () => { store(STO + "teacher", $("#teacherName").value); REV++; });
+$("#studentList").addEventListener("click", e => {
+  const b = e.target.closest("[data-id]"); if (!b) return;
+  syncFromUI();
+  const r = records.find(x => x.id === b.dataset.id); if (r) loadRecord(r);
+});
+$("#btnNewStudent").addEventListener("click", () => {
+  syncFromUI();
+  if (!hasContent(cur)) { $("#studentName").focus(); return; }
+  const r = newRecord(); r.date = cur.date || todayISO();
+  records.push(r); loadRecord(r); $("#studentName").focus();
+  window.scrollTo({top: 0});
+});
+let toastT = 0;
+function showToast(msg, undo) {
+  const t = $("#toast"); $("#toastMsg").textContent = msg; t.classList.add("show");
+  $("#toastBtn").hidden = !undo;
+  $("#toastBtn").onclick = () => { t.classList.remove("show"); clearTimeout(toastT); undo && undo(); };
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove("show"), undo ? 9000 : 5000);
+}
+$$(".sz button").forEach(b => b.addEventListener("click", () => {
+  document.documentElement.style.setProperty("--fs", b.dataset.fs + "px");
+  $$(".sz button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  store(STO + "fs", b.dataset.fs);
+}));
+function openOv(id) { $(id).classList.add("show"); }
+$$(".ov").forEach(ov => ov.addEventListener("click", e => { if (e.target === ov || e.target.closest("[data-close]")) ov.classList.remove("show"); }));
+document.addEventListener("keydown", e => { if (e.key === "Escape") $$(".ov.show").forEach(o => o.classList.remove("show")); });
+$("#btnHelp").addEventListener("click", () => openOv("#ovHelp"));
+$("#btnCodes").addEventListener("click", () => openOv("#ovCodes"));
+$("#codeKey").innerHTML = ERR_CODES.map(x => "<tr><td>" + esc(x.c) + "</td><td>" + esc(x.n) + "</td></tr>").join("") +
+  GOOD_CODES.map(x => '<tr class="g"><td>' + esc(x.l) + "</td><td>" + esc(x.n) + " (good use, optional)</td></tr>").join("");
+(function topH() { const f = () => { const t = document.getElementById("topFix"); if (t) document.documentElement.style.setProperty("--topH", t.offsetHeight + "px"); }; f(); window.addEventListener("resize", f); if (window.ResizeObserver) { const t = document.getElementById("topFix"); if (t) new ResizeObserver(f).observe(t); } })();
+
+/* =========================================================
+   11. KEEP WORK ON THIS COMPUTER (IndexedDB, 30 days)
+   ========================================================= */
+const KEEP_DAYS = 30;
+const PS = {db: null, ok: false, rev: -1, timer: 0};
+function openDB() {
+  return new Promise((res, rej) => {
+    let rq;
+    try { rq = indexedDB.open(DB_NAME, 1); } catch (e) { rej(e); return; }
+    rq.onupgradeneeded = () => { const db = rq.result; if (!db.objectStoreNames.contains("records")) db.createObjectStore("records", {keyPath: "id"}); if (!db.objectStoreNames.contains("meta")) db.createObjectStore("meta"); };
+    rq.onsuccess = () => res(rq.result);
+    rq.onerror = () => rej(rq.error);
+    rq.onblocked = () => rej(new Error("blocked"));
+  });
+}
+async function persist() {
+  if (!PS.ok || !PS.db) return;
+  syncFromUI();
+  if (PS.rev === REV) return;
+  const rev = REV;
+  try {
+    await new Promise((res, rej) => {
+      const tx = PS.db.transaction(["records", "meta"], "readwrite");
+      const st = tx.objectStore("records");
+      st.clear();
+      records.filter(hasContent).forEach((r, i) => st.put(Object.assign(JSON.parse(JSON.stringify(r)), {order: i, updated: Date.now()})));
+      tx.objectStore("meta").put({current: cur ? cur.id : null, savedAt: Date.now()}, "session");
+      tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error);
+    });
+    PS.rev = rev;
+    showKeepNote();
+  } catch (e) {
+    PS.ok = false;
+    $("#sessionNote").textContent = "This computer could not keep your work (" + ((e && e.name) || "error") + "). Save each student before you close this page.";
+  }
+}
+function persistSoon() { clearTimeout(PS.timer); PS.timer = setTimeout(persist, 600); }
+function showKeepNote() {
+  const n = records.filter(hasContent).length;
+  $("#sessionNote").textContent = n ? "Your work is kept on this computer for 30 days, even if the page closes. Save each student as a file to keep a copy you can open on any computer." : "Your work is kept on this computer while you work. Save each student to keep a copy you can open again later.";
+}
+async function readAll() {
+  return new Promise((res, rej) => {
+    const tx = PS.db.transaction(["records", "meta"], "readonly");
+    const out = {recs: [], meta: null};
+    tx.objectStore("records").getAll().onsuccess = e => { out.recs = e.target.result || []; };
+    tx.objectStore("meta").get("session").onsuccess = e => { out.meta = e.target.result || null; };
+    tx.oncomplete = () => res(out); tx.onerror = () => rej(tx.error);
+  });
+}
+async function clearDB() {
+  if (!PS.db) return;
+  await new Promise(res => { const tx = PS.db.transaction(["records", "meta"], "readwrite"); tx.objectStore("records").clear(); tx.objectStore("meta").clear(); tx.oncomplete = res; tx.onerror = res; });
+  PS.rev = -1;
+}
+async function restoreSession() {
+  if (!window.indexedDB) { $("#sessionNote").textContent = "This browser cannot keep your work. Save each student before you close this page."; return; }
+  try { PS.db = await openDB(); PS.ok = true; }
+  catch (e) { $("#sessionNote").textContent = "This browser cannot keep your work here. Save each student before you close this page."; return; }
+  let data;
+  try { data = await readAll(); } catch (e) { data = {recs: []}; }
+  const cutoff = Date.now() - KEEP_DAYS * 86400000;
+  const recs = (data.recs || []).filter(r => (r.updated || 0) >= cutoff).sort((a, b) => (a.order || 0) - (b.order || 0));
+  if (!recs.length) { if ((data.recs || []).length) await clearDB(); showKeepNote(); PS.rev = REV; setInterval(persist, 3000); return; }
+  const restored = recs.map(o => { const r = fixRecord(o); delete r.order; delete r.updated; return r; });
+  const typed = records.filter(hasContent);
+  records.length = 0;
+  restored.concat(typed).forEach(r => records.push(r));
+  const pick = records.find(r => data.meta && r.id === data.meta.current) || records[records.length - 1];
+  loadRecord(pick);
+  PS.rev = REV;
+  showKeepNote();
+  setInterval(persist, 3000);
+  const n = restored.length;
+  $("#welcomeText").textContent = plural(n, "student") + " from last time " + (n > 1 ? "were" : "was") + " kept on this computer, with " + (n > 1 ? "their" : "the") + " writing, codes and results.";
+  openOv("#ovWelcome");
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") persist(); });
+window.addEventListener("pagehide", () => { persist(); });
+
+/* clear all students */
+function openClearAll() {
+  syncFromUI();
+  const all = records.filter(hasContent), unsaved = all.filter(r => !r.saved);
+  const nm = r => esc(r.name || "(no name yet)");
+  $("#clearInfo").innerHTML = !all.length ? "There are no students with work on this computer."
+    : "<div>Students on this computer: <b>" + all.length + "</b></div>" +
+      (unsaved.length ? "<div>Not saved yet: <b>" + unsaved.length + "</b></div><ul>" + unsaved.slice(0, 8).map(r => "<li>" + nm(r) + "</li>").join("") + (unsaved.length > 8 ? "<li>and " + (unsaved.length - 8) + " more</li>" : "") + "</ul>" : "<div>All of them have been saved.</div>");
+  openOv("#ovClear");
+  setTimeout(() => { const c = $("#ovClear [data-close]"); if (c) c.focus(); }, 30);
+}
+$("#btnClearAll").addEventListener("click", openClearAll);
+$("#btnWelcomeFresh").addEventListener("click", () => { $("#ovWelcome").classList.remove("show"); openClearAll(); });
+$("#btnClearSave").addEventListener("click", () => { saveAll(); });
+$("#btnClearYes").addEventListener("click", async () => {
+  records.length = 0;
+  const r = newRecord(); records.push(r);
+  await clearDB();
+  loadRecord(r); REV++; PS.rev = REV;
+  $("#ovClear").classList.remove("show");
+  showKeepNote();
+  showToast("All students were deleted from this computer.");
+});
+
+/* leaving the page */
+function unsavedCount() { return records.filter(r => hasContent(r) && !r.saved).length; }
+window.addEventListener("beforeunload", e => {
+  const n = unsavedCount();
+  if (!n) return;
+  persist();
+  e.preventDefault(); e.returnValue = "";
+  setTimeout(() => {
+    $("#leaveText").textContent = plural(n, "student") + (n > 1 ? " are" : " is") + " not saved as a file yet. " + (PS.ok ? "Your work is kept on this computer, but the saved ZIP file is the safe copy." : "If you close this page now, the work will be lost.");
+    openOv("#ovLeave");
+  }, 400);
+});
+$("#btnLeaveSave").addEventListener("click", async () => { if (await saveAll()) $("#ovLeave").classList.remove("show"); });
+$("#btnLeavePrint").addEventListener("click", () => { $("#ovLeave").classList.remove("show"); printAll(); });
+
+/* two tabs */
+try {
+  const bc = new BroadcastChannel(DB_NAME);
+  bc.onmessage = e => { if (e.data === "hello") bc.postMessage("here"); if (e.data === "here") openOv("#ovTwo"); };
+  bc.postMessage("hello");
+} catch (e) {}
+
+/* delete one student */
+function studentLabel(r) { return (r && r.name) ? r.name : "this student"; }
+function updateDeleteOne() {
+  const b = $("#btnDeleteOne"); if (!b || !cur) return;
+  b.hidden = !hasContent(cur);
+  b.textContent = "Delete " + (cur.name ? cur.name : "this student");
+}
+$("#btnDeleteOne").addEventListener("click", () => {
+  syncFromUI();
+  const nm = studentLabel(cur);
+  $("#delOneTitle").textContent = "Delete " + nm + "?";
+  $("#delOneText").textContent = "This deletes " + (cur.name ? cur.name + "'s" : "this student's") + " photos, writing, codes, results and feedback from this computer. The other students stay. You cannot undo this." + (cur.saved ? "" : " This student is not saved as a file yet.");
+  $("#btnDelOneSave").hidden = !!cur.saved;
+  $("#btnDelOneYes").textContent = "Delete " + nm;
+  openOv("#ovDelOne");
+});
+$("#btnDelOneSave").addEventListener("click", async () => {
+  if (await savePackage()) { $("#btnDelOneSave").hidden = true; $("#delOneText").textContent = "Saved. You can delete " + studentLabel(cur) + " now. The other students stay."; }
+});
+$("#btnDelOneYes").addEventListener("click", () => {
+  const gone = cur, i = records.indexOf(gone), nm = studentLabel(gone);
+  if (i >= 0) records.splice(i, 1);
+  let next = records[Math.min(i, records.length - 1)] || records[records.length - 1];
+  if (!next) { next = newRecord(); records.push(next); }
+  loadRecord(next); REV++;
+  $("#ovDelOne").classList.remove("show");
+  persist();
+  showToast(nm.charAt(0).toUpperCase() + nm.slice(1) + " was deleted.");
+});
+
+/* =========================================================
+   12. START
+   ========================================================= */
+(function init() {
+  const st = store(STO + "teacher"); if (st) $("#teacherName").value = st;
+  const fs = store(STO + "fs"); if (fs) { const b = $('.sz button[data-fs="' + fs + '"]'); if (b) b.click(); }
+  const r = newRecord(); records.push(r);
+  loadRecord(r);
+})();
+restoreSession();
+</script>
+</body>
+</html>
