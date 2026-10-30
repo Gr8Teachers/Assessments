@@ -236,27 +236,43 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 @media print{
   html{font-size:10pt}
   body{background:#fff}
-  .bar,.wrap,.ov,.toast{display:none!important}
+  .bar,.steps,.wrap,.ov,.toast{display:none!important}
   #printArea{display:block;font-family:var(--body);color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 /* print report: 11px body text, never scaled down */
 #printArea{font-size:11px;line-height:1.45}
-.pr-head{background:#0B3F47;color:#fff;padding:3.5mm 5mm;border-radius:2.5mm;display:flex;justify-content:space-between;align-items:flex-end;gap:4mm}
-.pr-head .ey{color:#8CDBE5;font-family:var(--display);font-weight:900;font-size:10px;letter-spacing:1.2px;text-transform:uppercase}
-.pr-head h1{font-size:20px;margin-top:.6mm}
-.pr-head .sub{font-size:11px;color:#E7F7F9}
-.pr-res{font-family:var(--display);font-weight:900;font-size:14px;padding:1.6mm 3.5mm;border-radius:2mm;background:#fff;white-space:nowrap}
+/* report laid out like the official marking guide */
+.pr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:4mm;margin-bottom:2.5mm}
+.pr-top .ev{font-family:var(--display);font-weight:900;color:#0B3F47;font-size:19px;line-height:1.2}
+.pr-top .tk{font-family:var(--display);font-weight:900;color:#2E808E;font-size:14px;line-height:1.25;margin-top:.8mm}
+.pr-res{font-family:var(--display);font-weight:900;font-size:12px;padding:1.4mm 3mm;border-radius:1.5mm;border:.4mm solid currentColor;white-space:nowrap;background:#fff}
 .pr-res.s{color:#236A76}.pr-res.u{color:#8B0000}.pr-res.n{color:#8B0000}
-.pr-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1.8mm;margin:3mm 0}
-.pr-meta div{border:.3mm solid #C9CFD2;border-radius:1.5mm;padding:1.2mm 2.2mm;font-size:11px}
-.pr-meta b{display:block;color:#495054;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px}
-.pr-meta div.wide{grid-column:span 2}
-.pr-t{width:100%;border-collapse:collapse;font-size:11px}
-.pr-t th{background:#2E808E;color:#fff;text-align:left;padding:1.3mm 2mm;font-size:10.5px}
-.pr-t td{border-bottom:.25mm solid #C9CFD2;padding:1.2mm 2mm;vertical-align:top}
-.pr-t tr:nth-child(even) td{background:#F4F5F5}
-.pr-t .c{text-align:center;white-space:nowrap}
-.pr-t .S{color:#236A76;font-weight:700}.pr-t .US{color:#8B0000;font-weight:700}
+.pr-lab{font-weight:700;color:#2E808E;font-size:11px;margin:2mm 0 .7mm}
+.pr-fld{border:.3mm solid #2E808E;padding:.9mm 2mm;font-size:11px;min-height:5mm}
+.pr-h2{font-family:var(--display);font-weight:900;color:#22272B;font-size:14px;margin:4mm 0 1mm}
+.pr-sd{display:grid;grid-template-columns:repeat(4,1fr);column-gap:3mm}
+.pr-sd .w2{grid-column:span 2}
+.pr-cap{font-size:9.5px;color:#495054;margin:1.5mm 0 .8mm}
+.pr-ck{width:100%;border-collapse:collapse;font-size:11px;border:.3mm solid #2E808E}
+.pr-ck th{background:#2E808E;color:#fff;text-align:left;padding:1.4mm 2mm;font-size:10.5px;font-weight:700;vertical-align:top;border:.3mm solid #2E808E}
+.pr-ck td{border:.3mm solid #2E808E;padding:1.4mm 2mm;vertical-align:top}
+.pr-ck .n{width:6%;text-align:center;font-family:var(--mono)}
+.pr-ck .cr{width:31%}
+.pr-ck .tk2{width:6%;text-align:center;font-size:13px;line-height:1.1}
+.pr-ck th.tk2{font-size:10.5px}
+.pr-ck .on{color:#0B3F47;font-weight:700}
+.pr-ck .lv{display:block;margin-top:1mm;font-size:10px;color:#495054}
+.pr-ck .lv b{font-family:var(--mono)}
+.pr-ck .lv.S b{color:#236A76}.pr-ck .lv.US b{color:#8B0000}
+.pr-ck .sb{margin-bottom:.8mm}
+.pr-ck .sb span{font-size:12.5px;margin-right:1mm}
+.pr-ck .ev2{margin-top:.6mm}
+.pr-ck .ev2 i{font-style:normal;color:#22272B}
+.pr-ck .ev2{margin-top:1mm}
+.pr-ck ul.bl{margin:.6mm 0 0;padding-left:4.5mm}
+.pr-ck ul.bl li{margin-bottom:.4mm}
+.pr-p{font-size:11px;margin:.6mm 0 1.2mm}
+.pr-ck .lv{display:none}
 .pr-h{font-family:var(--display);font-weight:900;color:#2E808E;font-size:13px;margin:4mm 0 1.5mm;border-bottom:.4mm solid #2E808E;padding-bottom:.6mm}
 .pr-box{font-size:11px;line-height:1.5;white-space:pre-wrap;border:.3mm solid #C9CFD2;border-radius:1.5mm;padding:2mm 2.5mm;background:#FBFCFD}
 .pr-box.ipa{font-family:var(--ipa);font-size:11.5px;line-height:1.6}
@@ -270,9 +286,9 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 .pr-box .spS{color:#236A76}.pr-box .spT{color:#495054}
 .pr-note{font-size:10px;color:#495054;margin-top:1mm}
 /* page flow: keep each block whole; long transcripts run onto the next page */
-.pr-head,.pr-meta,.pr-fb > div,.pr-end{break-inside:avoid;page-break-inside:avoid}
-.pr-t tr{break-inside:avoid;page-break-inside:avoid}
-.pr-t thead{display:table-header-group}
+.pr-top,.pr-sd,.pr-fb > div,.pr-end{break-inside:avoid;page-break-inside:avoid}
+.pr-ck tr{break-inside:avoid;page-break-inside:avoid}
+.pr-ck thead{display:table-header-group}
 .pr-h{break-after:avoid;page-break-after:avoid}
 .pr-box{box-decoration-break:clone;-webkit-box-decoration-break:clone;orphans:3;widows:3}
 </style>
@@ -906,11 +922,32 @@ const IS_WEBKIT = (() => {
 const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent || "") || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 /* =========================================================
-   1. RUBRIC PROFILES (from VU23520 marking guides)
+   1. RUBRIC PROFILES (from VU23519 marking guides)
    ========================================================= */
 const LEVELS = [
   {l:1, t:"Not yet"}, {l:2, t:"Developing"}, {l:3, t:"Meets"}, {l:4, t:"Strong"}
 ];
+
+/* Printed checklist: wording copied from each marking guide's checklist, so the
+   printed report can replace the checklist page. Rows not listed here print the
+   on-screen wording. sample = the guide row has a "Speech sample(s):" line. */
+const PRINT_ROWS = {
+  sk1: {
+    open:   {label:"Started the conversation with a friendly, polite greeting", sample:"Speech sample:"},
+    turns:  {label:"Took turns by:", bullets:["extending an invitation to speak","responding to an invitation to speak"],
+             subs:{respond:"took turns by responding to an invitation to speak about themselves", extend:"took turns by asking the teacher about themselves"}},
+    info:   {label:"Asked for and gave information, explanation or opinion", intro:"Asked for and gave information, explanation or opinion by using:",
+             subs:{sent:"simple or compound sentences", q:"simple questions", tense:"simple tense (eg present tense)", vocab:"vocabulary about themselves"}, sample:"Speech samples:"},
+    disc:   {label:"Used simple discourse markers or cohesive devices", sample:"Speech sample:"},
+    pron:   {label:"Used clear pronunciation with some word stress, pausing and sentence stress to express meaning",
+             subs:{stress:"used word stress", pause:"used pausing and sentence stress."}},
+    body:   {label:"Used body language to show meaning or acknowledge understanding",
+             subs:{body:"used facial expressions/ head movements/ hand gestures/eye contact."}},
+    close:  {label:"Closed the conversation or responded to a closing", sample:"Speech sample:"},
+    review: {bullets:["Reviewed their participation in conversation","Determined strategies to improve"],
+             subs:{p2:"completed part 2.", disc:"discussed performance and strategies with the teacher."}}
+  }
+};
 
 /* phrase banks used by Suggest marks (VU23519 role plays) */
 const BANK = {
@@ -935,6 +972,9 @@ const BANK = {
   modals: ["can","could","would","will","might","should","may"],
   presentSimple: ["it washes","it drains","it doesn't","it does","it makes","it is","it's","it works","it spins","it won't","i live","i have","i need","my name is","my name's","my number is","my address is","i'm","i am"]
 };
+
+const UNIT_NAME = "VU23519 | Participate in simple conversations and transactions";
+const QUAL_NAME = "22639VIC | Certificate II in EAL(Access)";
 
 const PROFILES = [
   {
@@ -2430,19 +2470,41 @@ function speakerHTML(t) {
 function reportHTML(r) {
   const prof = profileById(r.profileId), o = overallOf(r), s = r.stats || analyse(r);
   const withIpa = $("#chkPrintIpa").checked;
+  const ON = "☑", OFF = "☐";
+  const ev = String(prof.short || "").split("|").pop().trim();
+  const fld = (lab, val, cls) => '<div' + (cls ? ' class="' + cls + '"' : "") + '><div class="pr-lab">' + lab + '</div><div class="pr-fld">' + val + "</div></div>";
+  const PR = PRINT_ROWS[prof.id] || {};
   const rows = prof.criteria.map((c, i) => {
-    const l = r.levels[c.id];
-    return "<tr><td>" + (i + 1) + ". " + esc(c.label) + "</td><td class=\"c\">" + (l ? l + " " + LEVELS[l - 1].t : "") + "</td><td class=\"c " + (l ? (l >= 3 ? "S" : "US") : "") + "\">" + (l ? (l >= 3 ? "S" : "U/S") : "") + "</td><td>" + (c.subs ? '<div class="pr-subs">' + esc(subsText(r, c, "\u2611", "\u2610")) + "</div>" : "") + esc(r.evidence[c.id] || "") + "</td></tr>";
+    const l = r.levels[c.id], isS = l && l >= 3, isU = l && l < 3, pr = PR[c.id] || {};
+    const crit = (pr.label ? '<div>' + esc(pr.label) + "</div>" : (pr.bullets ? "" : "<div>" + esc(c.label) + "</div>")) +
+      (pr.bullets ? '<ul class="bl">' + pr.bullets.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul>" : "");
+    const subs = c.subs ? c.subs.map(sb => { const on = r.subs[c.id] && r.subs[c.id][sb.id]; return '<div class="sb"><span class="' + (on ? "on" : "") + '">' + (on ? ON : OFF) + "</span>" + esc((pr.subs && pr.subs[sb.id]) || sb.label) + "</div>"; }).join("") : "";
+    const evTxt = String(r.evidence[c.id] || "").trim().replace(/^Listen to the recording and judge\.?$/i, ""), quoted = /["“]/.test(evTxt);
+    const sampleLab = pr.sample || (PR[c.id] ? "" : "Speech sample:");
+    const sample = sampleLab ? '<div class="ev2"><i>' + sampleLab + "</i> " + (quoted ? esc(evTxt) : "") + "</div>" : "";
+    const lvTxt = l ? "Level " + l + " " + LEVELS[l - 1].t + "." : "";
+    const comment = [(!sampleLab || !quoted) ? evTxt : "", lvTxt].filter(Boolean).map(esc).join(" ");
+    return '<tr><td class="n">' + (i + 1) + '</td><td class="cr">' + crit +
+      '</td><td class="tk2' + (isS ? " on" : "") + '">' + (isS ? ON : OFF) + '</td><td class="tk2' + (isU ? " on" : "") + '">' + (isU ? ON : OFF) + "</td><td>" +
+      (pr.intro ? '<div class="sb">' + esc(pr.intro) + "</div>" : "") + subs + sample +
+      '<div class="ev2"><i>Assessor’s comment (if required):</i> ' + comment + "</div></td></tr>";
   }).join("");
-  return '<div class="pr-head"><div><div class="ey">' + esc(prof.short) + '</div><h1>Speaking Assessment Report</h1><div class="sub">' + esc(prof.task) + '</div></div><div class="pr-res ' + o.res + '">' + esc(o.txt) + "</div></div>" +
-    '<div class="pr-meta"><div class="wide"><b>Student</b>' + esc(r.name || "") + "</div><div><b>Date</b>" + esc(fmtDateAU(r.date)) + "</div><div><b>Attempt</b>" + r.attempt + "</div>" +
-    "<div><b>Length</b>" + (r.audio ? fmtTime(r.audio.duration) : "n/a") + "</div><div><b>Student words</b>" + s.words + "</div><div><b>Turns (S / T)</b>" + (s.hasLabels ? s.sTurnCount + " / " + s.tTurnCount : "n/a") + "</div><div><b>Score</b>" + o.total + " / " + o.max + " (" + o.met + " of " + o.n + " met)</div></div>" +
-    '<table class="pr-t"><thead><tr><th style="width:38%">Criterion</th><th style="width:13%">Level</th><th style="width:7%">S / U/S</th><th>Evidence</th></tr></thead><tbody>' + rows + "</tbody></table>" +
+  return '<div class="pr-top"><div><div class="ev">' + esc(ev) + '</div><div class="tk">' + esc(prof.task) + '</div></div><div class="pr-res ' + o.res + '">' + esc(o.txt) + "</div></div>" +
+    fld("Unit code and name", esc(UNIT_NAME)) + fld("Qualification/Course code and name", esc(QUAL_NAME)) +
+    '<div class="pr-h2">Student details</div><div class="pr-sd">' +
+      fld("Student name", esc(r.name || ""), "w2") + fld("Student number", "", "w2") + fld("Date", esc(fmtDateAU(r.date))) + fld("Attempt", '<span style="font-family:var(--mono)">' + r.attempt + "</span>") +
+      fld("Teacher/assessor", esc($("#teacherName").value.trim()), "w2") + fld("Recording length", '<span style="font-family:var(--mono)">' + (r.audio ? fmtTime(r.audio.duration) : "n/a") + "</span>") +
+      fld("Student words", '<span style="font-family:var(--mono)">' + s.words + "</span>") +
+      fld("Turns (student / teacher)", '<span style="font-family:var(--mono)">' + (s.hasLabels ? s.sTurnCount + " / " + s.tTurnCount : "n/a") + "</span>", "w2") +
+      fld("Score", '<span style="font-family:var(--mono)">' + o.total + " / " + o.max + "</span> (" + o.met + " of " + o.n + " criteria met)", "w2") +
+    "</div>" +
+    '<div class="pr-h2">Checklist</div><div class="pr-p">Your teacher/assessor will complete this checklist while they observe you completing your assessment. Read the checklist to understand what skills you need to demonstrate. You must meet all the criteria.</div><div class="pr-p">Note that S = Satisfactory and U/S = Unsatisfactory.</div><div class="pr-cap">Levels 3 Meets and 4 Strong = S. Levels 1 Not yet and 2 Developing = U/S.</div>' +
+    '<table class="pr-ck"><thead><tr><th class="n">#</th><th class="cr">Did the student do the following?</th><th class="tk2">S</th><th class="tk2">U/S</th><th>Assessor comments and student speech samples</th></tr></thead><tbody>' + rows + "</tbody></table>" +
     '<div class="pr-h">Feedback</div><div class="pr-fb"><div class="w"><div class="h">What Was Done Well</div><div class="b">' + esc(r.well) + '</div></div><div class="i"><div class="h">What Needs Improvement</div><div class="b">' + esc(r.improve) + "</div></div></div>" +
     '<div class="pr-h">Transcript (edited by the teacher)</div><div class="pr-box">' + speakerHTML(r.english) + "</div>" +
     (withIpa ? '<div class="pr-h">Phonetic IPA transcript</div><div class="pr-box ipa">' + speakerHTML(r.ipa) + "</div>" : "") +
-    '<div class="pr-end"><div class="pr-note">Levels: 1 Not yet, 2 Developing (U/S); 3 Meets, 4 Strong (S). All criteria must be met for a Satisfactory result. Audio file: ' + esc(r.audio ? audioFileName(r) : "none") + ".</div>" +
-    '<div class="pr-sign"><div>Teacher: ' + esc($("#teacherName").value.trim()) + "&nbsp;&nbsp;&nbsp;Signature</div><div>Student signature</div></div></div>";
+    '<div class="pr-end"><div class="pr-note">Audio file: ' + esc(r.audio ? audioFileName(r) : "none") + ".</div>" +
+    '<div class="pr-sign"><div>Teacher/assessor signature</div><div>Student signature</div></div></div>';
 }
 function buildPrint() {
   syncFromUI();
