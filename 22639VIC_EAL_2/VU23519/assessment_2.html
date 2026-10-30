@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VU23519 Speaking Assessment</title>
+<title>VU23519 Assessment 2 Speaking Assessment</title>
 <style>
 :root{
   --navy:#0B3F47; --navy-2:#14555F; --teal:#2E808E; --teal-d:#236A76; --teal-t:#E7F7F9;
@@ -50,6 +50,9 @@ h1,h2,h3{font-family:var(--display);font-weight:900;margin:0}
 .bar h1{font-size:1.15rem;letter-spacing:.2px}
 .bar .eyebrow{color:var(--amber-l);font-family:var(--display);font-weight:900;font-size:.72rem;letter-spacing:1.4px;text-transform:uppercase}
 .bar .grow{flex:1}
+.asmt{background:#E7F7F9;border-bottom:3px solid #2E808E;padding:.8rem 1rem .9rem}
+.asmt .ey{font-family:var(--display);font-weight:900;color:#2E808E;font-size:.8rem;letter-spacing:1.2px;text-transform:uppercase}
+.asmt h2{font-family:var(--display);font-weight:900;color:#0B3F47;font-size:1.45rem;line-height:1.25;margin:.15rem 0 0}
 .bar button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:10px;padding:.4rem .75rem;min-height:44px}
 .bar button:hover{background:rgba(255,255,255,.22)}
 .bar .sz button{min-width:44px;padding:.4rem .5rem}
@@ -236,7 +239,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 @media print{
   html{font-size:10pt}
   body{background:#fff}
-  .bar,.steps,.wrap,.ov,.toast{display:none!important}
+  .bar,.asmt,.steps,.wrap,.ov,.toast{display:none!important}
   #printArea{display:block;font-family:var(--body);color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 /* print report: 11px body text, never scaled down */
@@ -272,6 +275,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 .pr-ck ul.bl{margin:.6mm 0 0;padding-left:4.5mm}
 .pr-ck ul.bl li{margin-bottom:.4mm}
 .pr-ck .sbl{margin:.8mm 0 0 1mm}
+.pr-ck .sb.ind{margin-left:5mm}
 .pr-p{font-size:11px;margin:.6mm 0 1.2mm}
 .pr-ck .lv{display:none}
 .pr-h{font-family:var(--display);font-weight:900;color:#2E808E;font-size:13px;margin:4mm 0 1.5mm;border-bottom:.4mm solid #2E808E;padding-bottom:.6mm}
@@ -298,7 +302,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 
 <header class="bar">
   <h1>Speaking Assessment</h1>
-  <span class="unit">VU23519 role plays</span>
+  <span class="unit">VU23519 Assessment 2</span>
   <div class="grow"></div>
   <div class="sz" role="group" aria-label="Text size">
     <button type="button" data-fs="16" aria-pressed="false" title="Smaller text">A-</button>
@@ -308,6 +312,11 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
   <button type="button" id="btnMicCheck">Test microphone</button>
   <button type="button" id="btnHelp">Help</button>
 </header>
+
+<section class="asmt" aria-label="Assessment">
+  <div class="ey" id="asmtEy">VU23519 | Assessment event 2 of 3</div>
+  <h2 id="asmtTitle">Role play, Conversation 2 (talking about the weekend)</h2>
+</section>
 
 <nav class="steps" aria-label="Steps">
   <a href="#sec1"><b>1</b> Student</a><a href="#sec2"><b>2</b> Record</a><a href="#sec3"><b>3</b> Check the transcript</a><a href="#sec4"><b>4</b> Mark</a><a href="#sec6"><b>5</b> Feedback</a><a href="#sec7"><b>6</b> Print or save</a>
@@ -343,7 +352,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
           <input id="teacherName" type="text" autocomplete="off" placeholder="Your name">
         </div>
       </div>
-      <div class="row" style="margin-top:.7rem">
+      <div class="row" hidden>
         <div class="field">
           <label for="profileSel">Assessment</label>
           <select id="profileSel"></select>
@@ -499,7 +508,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
   <div class="modal">
     <h2 id="helpTitle">Help</h2>
     <ol class="helplist">
-      <li><b>Student.</b> Type the name. Choose the assessment.</li>
+      <li><b>Student.</b> Type the name.</li>
       <li><b>Record.</b> Press Start recording. Press Stop at the end. If the browser asks about the microphone, choose Allow.</li>
       <li><b>Two voices.</b> Tap Student or Teacher when the speaker changes. Only the student's lines are marked.</li>
       <li><b>Check the transcript.</b> Fix any wrong words. If no words appeared, press Make text from the recording.</li>
@@ -966,6 +975,21 @@ const PRINT_ROWS = {
     close:  {label:"Closed the conversation or responded to a closing", sample:"Speech sample:"},
     review: {bullets:["Reviewed their participation in conversation","Determined strategies to improve"],
              subs:{p2:"completed part 2.", disc:"discussed performance and strategies with the teacher."}}
+  },
+  sk3: {
+    init:   {label:"Initiated the transaction", sample:"Speech sample:"},
+    resp:   {label:"Responded to requests to explain and give information", intro:"Responded to teacher and explained problem using correct grammar:",
+             subs:{sent:"simple or compound sentence structure", conj:"a simple conjunction", tense:"simple tense (e.g. present simple)", vocab:"used appropriate vocabulary", details:"gave name, address and phone number and a suitable time"},
+             indent:["sent","conj","tense"], sample:"Speech sample of explanation:"},
+    polite: {label:"Used polite requests appropriate for this transaction", sample:"Speech sample:"},
+    clar:   {bullets:["Repeated or clarified if teacher didn\u2019t understand","Asked the teacher to repeat or clarify if needed"],
+             subs:{gave:"repeated/clarified, or not required", asked:"asked questions for repetition/clarification, or not required"},
+             sample:"Speech sample of student asking for repetition or clarification (if required):"},
+    pron:   {label:"Used clear pronunciation with some word stress, pausing and sentence stress to express meaning",
+             subs:{stress:"used word stress", pause:"used pausing and sentence stress."}},
+    close:  {label:"Closed or responded to closing", sample:"Speech sample:"},
+    review: {bullets:["Reviewed their participation in conversation","Determined strategies to improve"],
+             subs:{p2:"completed part 2.", disc:"discussed performance and strategies with the teacher."}}
   }
 };
 
@@ -995,6 +1019,8 @@ const BANK = {
 
 const UNIT_NAME = "VU23519 | Participate in simple conversations and transactions";
 const QUAL_NAME = "22639VIC | Certificate II in EAL(Access)";
+
+const APP_PROFILE = "sk2"; /* this file marks one assessment event only */
 
 const PROFILES = [
   {
@@ -1312,7 +1338,7 @@ const records = [];
 let cur = null;
 function newRecord() {
   return {
-    id: uid(), name: "", date: todayISO(), profileId: $("#profileSel") ? $("#profileSel").value || "sk1" : "sk1",
+    id: uid(), name: "", date: todayISO(), profileId: $("#profileSel") ? $("#profileSel").value || APP_PROFILE : APP_PROFILE,
     attempt: 1, audio: null, english: "", ipa: "", ipaManual: false,
     conf: [], stats: null, levels: {}, levelSrc: {}, evidence: {}, evidenceSrc: {}, subs: {}, subSrc: {},
     well: "", improve: "", fbAuto: true, saved: false
@@ -2499,7 +2525,7 @@ function reportHTML(r) {
     const crit = (pr.label ? '<div>' + esc(pr.label) + "</div>" : (pr.bullets ? "" : "<div>" + esc(c.label) + "</div>")) +
       (pr.bullets ? '<ul class="bl">' + pr.bullets.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul>" : "") +
       (pr.subBullets && c.subs ? '<div class="sbl">' + c.subs.map(sb => { const on = r.subs[c.id] && r.subs[c.id][sb.id]; return '<div class="sb"><span class="' + (on ? "on" : "") + '">' + (on ? ON : OFF) + "</span>" + esc(pr.subBullets[sb.id] || sb.label) + "</div>"; }).join("") + "</div>" : "");
-    const subs = (c.subs && !pr.subBullets) ? c.subs.map(sb => { const on = r.subs[c.id] && r.subs[c.id][sb.id]; return '<div class="sb"><span class="' + (on ? "on" : "") + '">' + (on ? ON : OFF) + "</span>" + esc((pr.subs && pr.subs[sb.id]) || sb.label) + "</div>"; }).join("") : "";
+    const subs = (c.subs && !pr.subBullets) ? c.subs.map(sb => { const on = r.subs[c.id] && r.subs[c.id][sb.id]; return '<div class="sb' + (pr.indent && pr.indent.includes(sb.id) ? " ind" : "") + '"><span class="' + (on ? "on" : "") + '">' + (on ? ON : OFF) + "</span>" + esc((pr.subs && pr.subs[sb.id]) || sb.label) + "</div>"; }).join("") : "";
     const evTxt = String(r.evidence[c.id] || "").trim().replace(/^Listen to the recording and judge\.?$/i, ""), quoted = /["“]/.test(evTxt);
     const sampleLab = pr.sample || (PR[c.id] ? "" : "Speech sample:");
     const sample = sampleLab ? '<div class="ev2"><i>' + sampleLab + "</i> " + (quoted ? esc(evTxt) : "") + "</div>" : "";
@@ -2776,8 +2802,9 @@ $("#btnSrTest").addEventListener("click", () => {
    12. START
    ========================================================= */
 (function init() {
-  $("#profileSel").innerHTML = PROFILES.map(p => '<option value="' + p.id + '">' + esc(p.title) + "</option>").join("");
-  const sp = store("eal19_speak_profile"); if (sp && PROFILES.some(p => p.id === sp)) $("#profileSel").value = sp;
+  $("#profileSel").innerHTML = PROFILES.filter(p => p.id === APP_PROFILE).map(p => '<option value="' + p.id + '">' + esc(p.title) + "</option>").join("");
+  $("#profileSel").value = APP_PROFILE;
+  { const p = profileById(APP_PROFILE); $("#asmtEy").textContent = p.short; $("#asmtTitle").textContent = p.title.replace(/^.*?of \d+:\s*/, ""); }
   const sl = store("eal19_speak_lang"); if (sl) $("#langSel").value = sl;
   const st = store("eal19_speak_teacher"); if (st) $("#teacherName").value = st;
   const fs = store("eal19_speak_fs"); if (fs) { const b = $('.sz button[data-fs="' + fs + '"]'); if (b) b.click(); }
@@ -2840,7 +2867,7 @@ $("#btnSaveAllSide").addEventListener("click", saveAll);
    Recordings, transcripts and marks are kept in this browser,
    so closing the page or a crash does not lose them.
    ========================================================= */
-const DB_NAME = "eal_speaking_" + (document.title.match(/VU\d+/) || ["app"])[0].toLowerCase();
+const DB_NAME = "eal_speaking_vu23519_ae2";
 const KEEP_DAYS = 30;
 const PS = {db: null, ok: false, sig: "", timer: 0};
 function openDB() {
