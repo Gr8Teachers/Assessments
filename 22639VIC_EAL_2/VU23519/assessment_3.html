@@ -9,10 +9,10 @@
   --navy:#0B3F47; --navy-2:#14555F; --teal:#2E808E; --teal-d:#236A76; --teal-t:#E7F7F9;
   --amber:#8CDBE5; --amber-t:#EBEBEB; --amber-l:#8CDBE5; --panel:#F4F5F5; --line:#C9CFD2;
   --grey:#495054; --ink:#22272B; --red:#8B0000; --red-t:#F7E6E6; --white:#fff; --bg:#EBEBEB;
-  --display:"Segoe UI Black","Arial Black","Segoe UI",Carlito,Calibri,system-ui,sans-serif;
+  --display:Calibri,Carlito,"Segoe UI",Candara,"Helvetica Neue",Arial,sans-serif;
   --body:Calibri,Carlito,"Segoe UI",Candara,"Helvetica Neue",Arial,sans-serif;
-  --mono:Consolas,"Lucida Console","DejaVu Sans Mono","Courier New",monospace;
-  --ipa:"Charis SIL","Doulos SIL","Gentium Plus","Segoe UI","Lucida Sans Unicode","Arial Unicode MS","DejaVu Sans",sans-serif;
+  --mono:Calibri,Carlito,"Segoe UI",Candara,"Helvetica Neue",Arial,sans-serif;
+  --ipa:Calibri,Carlito,"Charis SIL","Doulos SIL","Gentium Plus","Segoe UI","Lucida Sans Unicode","Arial Unicode MS","DejaVu Sans",sans-serif;
   --fs:18px;
 }
 *{box-sizing:border-box}
@@ -26,6 +26,13 @@
 .bigbtns{display:flex;flex-direction:column;gap:.6rem;align-items:stretch;max-width:380px;margin:0 auto}
 .bigbtns .btn{min-height:56px;font-size:1.08rem}
 .ex-l{font-weight:700;color:var(--navy);min-width:110px}
+@media (min-width:701px){#sec7 .ex-l{min-width:17rem}}
+/* Step 6: each label and its two buttons on one line; all buttons the same size */
+#sec7 .exgrid{display:grid;grid-template-columns:max-content minmax(0,15rem) minmax(0,15rem);gap:.6rem .6rem;align-items:center}
+#sec7 .exgrid .exports{display:contents}
+#sec7 .exgrid .ex-l{min-width:0!important;margin-right:.6rem}
+#sec7 .exgrid .btn{width:100%;min-width:0;justify-content:center;text-align:center;padding:.55rem .5rem;white-space:normal;line-height:1.15;min-height:48px;height:100%}
+@media (max-width:640px){#sec7 .exgrid{grid-template-columns:1fr 1fr}#sec7 .exgrid .ex-l{grid-column:1/-1;margin:.3rem 0 0}}
 .pr-one + .pr-one{break-before:page;page-break-before:always}
 main .card{scroll-margin-top:80px}
 .bar h1{font-size:1.3rem}
@@ -40,7 +47,7 @@ details.more summary{cursor:pointer;color:var(--teal-d);font-weight:700;min-heig
 .helplist{padding-left:1.4rem}.helplist li{margin-bottom:.5rem}
 
 html{font-size:var(--fs)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.45}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.45;font-variant-numeric:tabular-nums}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 h1,h2,h3{font-family:var(--display);font-weight:900;margin:0}
@@ -50,13 +57,25 @@ h1,h2,h3{font-family:var(--display);font-weight:900;margin:0}
 .bar h1{font-size:1.15rem;letter-spacing:.2px}
 .bar .eyebrow{color:var(--amber-l);font-family:var(--display);font-weight:900;font-size:.72rem;letter-spacing:1.4px;text-transform:uppercase}
 .bar .grow{flex:1}
-.asmt{background:#E7F7F9;border-bottom:3px solid #2E808E;padding:.8rem 1rem .9rem}
+.topfix{position:sticky;top:0;z-index:20;background:var(--bg);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.topfix .bar{position:static}
+.topfix .steps{padding:.45rem 1rem .5rem}
+.topfix .steps a{min-height:34px;font-size:.86rem;padding:.2rem .7rem .2rem .3rem}
+main .card{scroll-margin-top:calc(var(--topH,170px) + 12px)!important}
+@media (max-width:760px){.topfix .steps{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}.topfix .steps a{flex:0 0 auto}.asmt h2{font-size:1.05rem!important}}
+.asmt{background:#E7F7F9;border-bottom:3px solid #2E808E;padding:.45rem 1rem .5rem}
 .asmt .ey{font-family:var(--display);font-weight:900;color:#2E808E;font-size:.8rem;letter-spacing:1.2px;text-transform:uppercase}
-.asmt h2{font-family:var(--display);font-weight:900;color:#0B3F47;font-size:1.45rem;line-height:1.25;margin:.15rem 0 0}
+.asmt h2{font-family:var(--display);font-weight:900;color:#0B3F47;font-size:1.25rem;line-height:1.2;margin:.1rem 0 0}
 .bar button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:10px;padding:.4rem .75rem;min-height:44px}
 .bar button:hover{background:rgba(255,255,255,.22)}
 .bar .sz button{min-width:44px;padding:.4rem .5rem}
 .bar .sz button[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:var(--navy)}
+/* slim header with smaller text */
+.bar{padding:.3rem 1rem;gap:.45rem;min-height:0}
+.bar h1{font-size:.95rem;letter-spacing:.2px}
+.bar .unit{font-size:.72rem;padding:.1rem .55rem}
+.bar button{min-height:32px;padding:.15rem .6rem;font-size:.78rem;border-radius:8px}
+.bar .sz button{min-width:34px;padding:.15rem .35rem}
 
 /* layout */
 .wrap{display:grid;grid-template-columns:270px 1fr;gap:1rem;padding:1rem;max-width:1500px;margin:0 auto}
@@ -75,7 +94,10 @@ h1,h2,h3{font-family:var(--display);font-weight:900;margin:0}
 .field label{font-weight:700;color:var(--navy);font-size:.9rem}
 .field input,.field select{border:1.5px solid var(--line);border-radius:10px;padding:.5rem .65rem;min-height:46px;background:#fff}
 .field input:focus,.field select:focus,textarea:focus{outline:3px solid rgba(46,128,142,.35);border-color:var(--teal)}
-#studentName{font-size:1.2rem;font-weight:700}
+#studentName,#teacherName{font-size:1rem;font-weight:400}
+#sec1 .row{align-items:flex-end}
+#sec1 .field input{height:48px;min-height:48px;box-sizing:border-box}
+#studentName::placeholder,#teacherName::placeholder{font-style:italic;font-weight:400;font-size:1rem;color:#6B7378;opacity:1}
 .needname{outline:3px solid var(--amber)!important}
 
 /* buttons */
@@ -90,7 +112,16 @@ h1,h2,h3{font-family:var(--display);font-weight:900;margin:0}
 .b-rec.on{animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(139,0,0,.45)}50%{box-shadow:0 0 0 10px rgba(139,0,0,0)}}
 @media (prefers-reduced-motion:reduce){.b-rec.on{animation:none}*{transition:none!important}}
-.dot{width:.75em;height:.75em;border-radius:50%;background:currentColor;display:inline-block}
+.dot{width:.8em;height:.9em;background:currentColor;display:inline-block;clip-path:polygon(0 0,100% 50%,0 100%)}
+.ic{display:inline-block;flex:0 0 auto}
+.ic-stop{width:.75em;height:.75em;background:currentColor;border-radius:2px}
+.ic-pause{width:.75em;height:.85em;border-left:.26em solid currentColor;border-right:.26em solid currentColor;box-sizing:border-box}
+.ic-play{width:.75em;height:.85em;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%)}
+.ic-again{width:1.05em;height:1.05em}
+#btnStop{background:var(--red);color:#fff;border:0}
+#btnStop:hover:not(:disabled){background:#6E0000}
+#btnPause{background:#F2C12E;color:#22272B;border:1.5px solid #F2C12E}
+#btnPause:hover:not(:disabled){background:#E3AE12;border-color:#E3AE12;color:#22272B}
 
 /* side list */
 .side h2{font-size:.95rem;color:var(--navy);margin-bottom:.5rem}
@@ -104,6 +135,13 @@ h1,h2,h3{font-family:var(--display);font-weight:900;margin:0}
 .tag.warn{background:var(--amber-t);border-color:var(--amber-l);color:#8B0000}
 .tag.bad{background:var(--red-t);border-color:#D9A3A3;color:var(--red)}
 .side .btn{width:100%;margin-bottom:.45rem}
+.side .siderow{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.45rem}
+.side .siderow .btn{margin-bottom:0;line-height:1.15;text-align:center;min-width:0;white-space:normal;padding:.45rem .35rem;font-size:.88rem}
+@media (min-width:981px){.side .siderow{gap:.35rem}.side .siderow .btn{font-size:.82rem;padding:.4rem .25rem}}
+@media (max-width:520px){.side .siderow{gap:.35rem}.side .siderow .btn{font-size:.85rem;padding:.45rem .4rem}}
+.clearinfo{background:#FBECEC;border:1px solid #E7B9B9;border-radius:10px;padding:.6rem .8rem;margin:.2rem 0 .8rem;text-align:left}
+.clearinfo b{color:var(--red)}
+.clearinfo ul{margin:.35rem 0 0;padding-left:1.2rem}
 
 /* recorder */
 .rec-zone{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:center}
@@ -115,6 +153,15 @@ h1,h2,h3{font-family:var(--display);font-weight:900;margin:0}
 .status.err{border-left-color:var(--red);background:var(--red-t)}
 .status.warn{border-left-color:#8B0000;background:var(--amber-t)}
 .ctrls{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
+/* Record step: 1 Allow, 2 Start, 3 Stop/Pause/Start again */
+.rstep{display:grid;grid-template-columns:2.1rem 1fr;gap:.7rem;padding:.75rem 0;border-bottom:1px solid var(--line)}
+.rstep:first-of-type{padding-top:.2rem}
+.rstep .rn{width:2.1rem;height:2.1rem;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;font-size:1.05rem;display:flex;align-items:center;justify-content:center}
+.rstep.done .rn{background:var(--navy)}
+.rstep .rt{font-weight:700;color:var(--navy);font-size:1.02rem;line-height:2.1rem}
+.rstep .micbar,.rstep .ctrls{margin-top:.25rem}
+.rstep .spk{margin-top:.7rem}
+.rstep + .status{margin-top:.8rem}
 .player{margin-top:.8rem;display:none;align-items:center;gap:.7rem;flex-wrap:wrap;background:var(--teal-t);border-radius:12px;padding:.6rem .8rem}
 .player.show{display:flex}
 .player audio{flex:1;min-width:240px;display:block}
@@ -132,6 +179,19 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 .interim{min-height:1.6em;color:var(--teal-d);font-style:italic;font-size:.9rem}
 .small-btn{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:.25rem .6rem;min-height:38px;font-size:.85rem;font-weight:700;color:var(--navy)}
 .small-btn:hover{border-color:var(--teal)}
+.ipasw{display:inline-flex;align-items:center;gap:.5rem;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:.2rem .7rem .2rem .3rem;min-height:40px;font-weight:700;font-size:.9rem;color:var(--grey);cursor:pointer}
+.ipasw{white-space:nowrap;flex:0 0 auto}
+.ipasw .knob{width:2.6rem;height:1.45rem;border-radius:999px;background:#C9CFD2;position:relative;flex:0 0 auto;transition:background .15s}
+.ipasw .knob::after{content:"";position:absolute;top:.15rem;left:.15rem;width:1.15rem;height:1.15rem;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:left .15s}
+.ipasw[aria-checked="true"]{border-color:var(--teal);color:var(--navy)}
+.ipasw[aria-checked="true"] .knob{background:var(--teal)}
+.ipasw[aria-checked="true"] .knob::after{left:1.3rem}
+.ipasw:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+body.no-ipa .ipa-part{display:none!important}
+body.no-ipa .dual{grid-template-columns:1fr}
+.sec-h .ipasw.onbar{min-height:36px;padding:.1rem .65rem .1rem .25rem;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.35);color:#fff}
+.sec-h .ipasw.onbar[aria-checked="true"]{border-color:#8CDBE5;color:#fff}
+.sec-h .ipasw.onbar[aria-checked="true"] .knob{background:#2E808E}
 .legend{font-size:.82rem;color:var(--grey)}
 .micbar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:.7rem}
 .micbar select{border:1.5px solid var(--line);border-radius:10px;padding:.45rem .6rem;min-height:46px;background:#fff;max-width:360px}
@@ -187,7 +247,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 .crit .det{font-size:.85rem;color:var(--grey)}
 .crit .src{font-size:.72rem;font-weight:700;padding:.05rem .45rem;border-radius:999px;margin-left:.4rem;vertical-align:middle}
 .src.auto{background:var(--amber);color:var(--navy)}
-.src.obs{background:#EBEBEB;color:var(--navy)}
+.src.obs{background:#8B0000;color:#fff}
 .seg{display:flex;gap:.3rem;flex-wrap:wrap}
 .seg button{border:1.5px solid var(--line);background:#fff;border-radius:10px;min-height:46px;min-width:78px;padding:.25rem .45rem;font-size:.8rem;font-weight:700;line-height:1.1;color:var(--grey)}
 .seg button b{display:block;font-family:var(--mono);font-size:1.05rem}
@@ -195,6 +255,28 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 .seg button[aria-pressed="true"][data-l="2"]{background:#495054;border-color:#495054;color:#fff}
 .seg button[aria-pressed="true"][data-l="3"]{background:var(--teal);border-color:var(--teal);color:#fff}
 .seg button[aria-pressed="true"][data-l="4"]{background:var(--navy);border-color:var(--navy);color:#fff}
+/* 1 to 4 slider scale */
+.lvs{width:360px;max-width:100%;padding:.15rem .9rem .1rem;user-select:none;-webkit-user-select:none;touch-action:none;cursor:pointer;border-radius:12px}
+@media (max-width:900px){.lvs{width:100%}}
+.lvs:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.lvs .zl{display:flex;justify-content:space-between;font-size:.72rem;font-weight:700;letter-spacing:.4px;margin-bottom:.15rem}
+.lvs .zl span:first-child{color:var(--red)}.lvs .zl span:last-child{color:var(--teal)}
+.lvs .rail{position:relative;height:46px}
+.lvs .trk{position:absolute;left:0;right:0;top:19px;height:8px;border-radius:999px;background:linear-gradient(90deg,#F0D9D9 0 50%,#D5EEF1 50% 100%)}
+.lvs .mid{position:absolute;left:50%;top:11px;width:2px;height:24px;margin-left:-1px;background:#C9CFD2}
+.lvs .fill{position:absolute;left:0;top:19px;height:8px;border-radius:999px;background:var(--teal)}
+.lvs .stop{position:absolute;top:10px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:#fff;border:2px solid #C9CFD2;font-family:var(--mono);font-weight:700;font-size:.85rem;color:var(--grey);display:flex;align-items:center;justify-content:center}
+.lvs .thumb{position:absolute;top:2px;width:42px;height:42px;margin-left:-21px;border-radius:50%;display:none;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:1.25rem;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.28);transition:left .12s}
+.lvs.has .thumb{display:flex}
+.lvs.dragging .thumb{transition:none}
+.lvs .thumb.l1{background:var(--red)}.lvs .thumb.l2{background:#495054}.lvs .thumb.l3{background:var(--teal)}.lvs .thumb.l4{background:var(--navy)}
+.lvs.auto .thumb{outline:3px dashed var(--amber);outline-offset:2px}
+.lvs .names{position:relative;height:1.2rem;font-size:.78rem;font-weight:700;color:var(--grey)}
+.lvs .names span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.lvs .names span:first-child{transform:none;left:0!important}
+.lvs .names span:last-child{transform:none;left:auto!important;right:0}
+.lvs .names span.on{color:var(--navy)}
+.lvs .hintl{font-size:.75rem;color:var(--grey);text-align:center;min-height:1rem}
 .crit .ev{grid-column:1/-1;display:flex;gap:.5rem;align-items:center}
 .crit .ev input{flex:1;border:1.5px solid var(--line);border-radius:9px;padding:.4rem .6rem;min-height:42px;font-size:.92rem}
 .su{font-family:var(--display);font-weight:900;font-size:.8rem;padding:.25rem .55rem;border-radius:8px;min-width:48px;text-align:center}
@@ -232,6 +314,30 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 .toast{position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:.6rem .9rem;display:none;align-items:center;gap:.8rem;z-index:60;max-width:92vw}
 .toast.show{display:flex}
 .toast button{background:var(--amber);border:0;color:#fff;border-radius:9px;padding:.35rem .8rem;font-weight:700;min-height:40px}
+
+/* consistent type: one size for section headings, one smaller size under them */
+:root{--h-sec:1.2rem;--h-sub:1rem}
+.rstep .rn{font-size:var(--h-sub)}
+.sec-h h2,.side h2{font-size:var(--h-sec);line-height:1.25}
+.side h2{margin-bottom:.6rem}
+.sec-h .stepn{width:2rem;height:2rem;font-size:1rem}
+.rstep .rt,.tbox .th b,.fbh,.ex-l,.spk-l,.crit .lbl,.more summary,.field label,.chipset b{font-size:var(--h-sub);font-weight:700}
+.rstep .rt,.tbox .th b,.ex-l,.spk-l,.crit .lbl,.field label,.chipset b{color:var(--navy)}
+.spk .spk-l{font-size:.9rem;font-style:italic;font-weight:400;color:var(--grey)}
+/* expand arrow before More settings and the other expanders */
+details.more > summary{font-size:.9rem;gap:.4rem;list-style:none}
+details.more > summary::-webkit-details-marker{display:none}
+details.more > summary::before{content:"";width:.5em;height:.5em;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translate(-2px,-2px);transition:transform .15s;flex:0 0 auto;margin:0 .2rem}
+details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2px)}
+/* smaller text inside More settings */
+.more-body{font-size:.85rem}
+.more-body .check{min-height:30px;margin:0}
+.more-body{gap:.25rem!important}
+.more-body .check input{width:1.05rem;height:1.05rem}
+.more-body .field label{font-size:.85rem}
+.more-body select{font-size:.85rem;min-height:38px}
+.spk{padding:.35rem .6rem}
+.spk .spkbtn{min-height:36px;min-width:88px;font-size:.9rem;border-radius:8px;padding:.15rem .7rem}
 
 /* print */
 #printArea{display:none}
@@ -300,6 +406,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 </head>
 <body>
 
+<div class="topfix" id="topFix">
 <header class="bar">
   <h1>Speaking Assessment</h1>
   <span class="unit">VU23519 Assessment 3</span>
@@ -319,18 +426,21 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 </section>
 
 <nav class="steps" aria-label="Steps">
-  <a href="#sec1"><b>1</b> Student</a><a href="#sec2"><b>2</b> Record</a><a href="#sec3"><b>3</b> Check the transcript</a><a href="#sec4"><b>4</b> Mark</a><a href="#sec6"><b>5</b> Feedback</a><a href="#sec7"><b>6</b> Print or save</a>
+  <a href="#sec1"><b>1</b> Student</a><a href="#sec2"><b>2</b> Record</a><a href="#sec3"><b>3</b> Transcript</a><a href="#sec4"><b>4</b> Checklist</a><a href="#sec6"><b>5</b> Feedback</a><a href="#sec7"><b>6</b> Print or save</a>
 </nav>
+</div>
 
 <div class="wrap">
   <aside class="side">
     <div class="card">
-      <h2>Students today</h2>
+      <h2>Students being assessed</h2>
       <ul class="slist" id="studentList"></ul>
       <button type="button" class="btn b-red" id="btnDeleteOne">Delete this student</button>
-      <button type="button" class="btn b-teal" id="btnNewStudent">+ Next student</button>
-      <button type="button" class="btn b-ghost" id="btnSaveAllSide">Save all students</button>
-      <button type="button" class="btn b-red" id="btnClearAll">Clear all students</button>
+      <div class="siderow">
+        <button type="button" class="btn b-teal" id="btnNewStudent">+ Next student</button>
+        <button type="button" class="btn b-ghost" id="btnSaveAllSide">Save all students</button>
+        <button type="button" class="btn b-red" id="btnClearAll">Clear all students</button>
+      </div>
       <p class="hint" id="sessionNote">Save each student before you close this page.</p>
     </div>
   </aside>
@@ -341,15 +451,15 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
       <div class="row">
         <div class="field" style="flex:2;min-width:240px">
           <label for="studentName">Student name</label>
-          <input id="studentName" type="text" autocomplete="off" placeholder="Type the name first">
+          <input id="studentName" type="text" autocomplete="off" placeholder="Type student name first">
         </div>
         <div class="field" style="max-width:200px">
           <label for="assessDate">Date</label>
           <input id="assessDate" type="date">
         </div>
         <div class="field" style="max-width:230px">
-          <label for="teacherName">Teacher (optional)</label>
-          <input id="teacherName" type="text" autocomplete="off" placeholder="Your name">
+          <label for="teacherName">Teacher</label>
+          <input id="teacherName" type="text" autocomplete="off" placeholder="Teacher name">
         </div>
       </div>
       <div class="row" hidden>
@@ -363,32 +473,50 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 
     <section class="card" id="sec2">
       <div class="sec-h"><span class="stepn">2</span><h2>Record</h2><span class="grow"></span><span class="phase" id="attemptTag">Try 1</span></div>
-      <div class="micbar">
-        <button type="button" class="btn b-teal" id="btnAllowMic">Allow the microphone</button>
-        <select id="micSel" aria-label="Microphone" hidden></select>
-        <span class="micstate" id="micState">Microphone: checking ...</span>
-      </div>
-      <div class="rec-zone">
-        <div>
-          <button type="button" class="btn b-rec" id="btnRecord"><span class="dot"></span><span id="recLabel">Start recording</span></button>
-        </div>
-        <div>
-          <div class="row" style="align-items:center;gap:1rem">
-            <span class="timer" id="timer">0:00</span>
-            <span class="hint" id="targetTime"></span>
+      <div class="rstep" id="rstep1">
+        <span class="rn" aria-hidden="true">a</span>
+        <div class="rbody">
+          <div class="rt">Allow the microphone</div>
+          <div class="micbar">
+            <button type="button" class="btn b-teal" id="btnAllowMic">Allow the microphone</button>
+            <select id="micSel" aria-label="Microphone" hidden></select>
+            <span class="micstate" id="micState">Microphone: checking ...</span>
           </div>
-          <div class="meter" aria-hidden="true"><i id="meterFill"></i></div>
         </div>
       </div>
-      <div class="ctrls">
-        <button type="button" class="btn b-navy" id="btnStop" disabled>Stop</button>
-        <button type="button" class="btn b-ghost" id="btnPause" disabled>Pause</button>
-        <button type="button" class="btn b-red" id="btnReset">Delete and start again</button>
+      <div class="rstep">
+        <span class="rn" aria-hidden="true">b</span>
+        <div class="rbody">
+          <div class="rt">Start recording</div>
+          <div class="rec-zone">
+            <div>
+              <button type="button" class="btn b-rec" id="btnRecord"><span class="dot"></span><span id="recLabel">Start recording</span></button>
+            </div>
+            <div>
+              <div class="row" style="align-items:center;gap:1rem">
+                <span class="timer" id="timer">0:00</span>
+                <span class="hint" id="targetTime"></span>
+              </div>
+              <div class="meter" aria-hidden="true"><i id="meterFill"></i></div>
+            </div>
+          </div>
+          <div class="spk" role="group" aria-label="Who is talking now">
+            <span class="spk-l">Who is talking now?</span>
+            <button type="button" class="spkbtn" data-spk="S" aria-pressed="true">Student</button>
+            <button type="button" class="spkbtn" data-spk="T" aria-pressed="false">Teacher</button>
+          </div>
+        </div>
       </div>
-      <div class="spk" role="group" aria-label="Who is talking now">
-        <span class="spk-l">Who is talking now?</span>
-        <button type="button" class="spkbtn" data-spk="S" aria-pressed="true">Student</button>
-        <button type="button" class="spkbtn" data-spk="T" aria-pressed="false">Teacher</button>
+      <div class="rstep">
+        <span class="rn" aria-hidden="true">c</span>
+        <div class="rbody">
+          <div class="rt">Stop, pause or start again</div>
+          <div class="ctrls">
+            <button type="button" class="btn b-navy" id="btnStop" disabled><span class="ic ic-stop" aria-hidden="true"></span>Stop</button>
+            <button type="button" class="btn b-ghost" id="btnPause" disabled><span class="ic ic-pause" aria-hidden="true"></span><span class="lbl">Pause</span></button>
+            <button type="button" class="btn b-red" id="btnReset"><svg class="ic ic-again" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M20.5 3.5v5h-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Start again</button>
+          </div>
+        </div>
       </div>
       <div class="status" id="recStatus">Type the student's name. Then press Start recording.</div>
       <div class="player" id="player">
@@ -400,7 +528,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
         <div class="more-body">
           <label class="check"><input type="checkbox" id="chkLive" checked> Show words while recording</label>
           <label class="check"><input type="checkbox" id="chkLabels" checked> Start each line with S: or T:</label>
-          <label class="check"><input type="checkbox" id="chkAutoWhisper" checked> If no words appear, make text from the recording after Stop</label>
+          <label class="check"><input type="checkbox" id="chkAutoWhisper" checked> If no words appear, transcribe the recording after Stop</label>
           <div class="row">
             <div class="field" style="max-width:300px">
               <label for="langSel">Accent for showing words</label>
@@ -412,7 +540,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
               </select>
             </div>
             <div class="field" style="max-width:360px">
-              <label for="whisperModel">Text from recording</label>
+              <label for="whisperModel">Transcription</label>
               <select id="whisperModel">
                 <option value="Xenova/whisper-base.en">More accurate (80 MB download, first time only)</option>
                 <option value="Xenova/whisper-tiny.en">Faster (40 MB download, first time only)</option>
@@ -424,9 +552,9 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
     </section>
 
     <section class="card" id="sec3">
-      <div class="sec-h"><span class="stepn">3</span><h2>Check the transcript</h2></div>
+      <div class="sec-h"><span class="stepn">3</span><h2>Transcript</h2><span class="grow"></span><button type="button" class="ipasw onbar" role="switch" aria-checked="true" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA on</span></button></div>
       <div class="trtools">
-        <button type="button" class="btn b-amber" id="btnWhisper">Make text from the recording</button>
+        <button type="button" class="btn b-amber" id="btnWhisper">Transcribe the recording</button>
         <span class="msg" id="whisperMsg">Use this if no words appeared while you recorded.</span>
         <div class="meter" id="whisperBar"><i></i></div>
       </div>
@@ -435,7 +563,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
           <div class="th"><b>What was said</b><span class="grow"></span><span class="hint" id="wc">0 words</span></div>
           <textarea class="tx" id="engText" spellcheck="true" placeholder="Words appear here while you record. S: is the student. T: is the teacher. You can fix any word."></textarea>
           <div class="linetools" id="lineTools">
-            <span class="hint">Click a line, then:</span>
+            <span class="hint">Click a line and mark it as:</span>
             <button type="button" class="small-btn lt-s" data-mark="S">Student line</button>
             <button type="button" class="small-btn lt-t" data-mark="T">Teacher line</button>
             <button type="button" class="small-btn" data-mark="X">No label</button>
@@ -445,25 +573,25 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
           <div class="srstate" id="srState" aria-live="polite">Words will appear while you record.</div>
           <div class="interim" id="interim" aria-live="polite"></div>
         </div>
-        <div class="tbox">
+        <div class="tbox ipa-part">
           <div class="th"><b>Sounds (IPA)</b><span class="grow"></span>
-            <button type="button" class="small-btn" id="btnRegenIpa">Update IPA</button>
+            <button type="button" class="small-btn ipa-part" id="btnRegenIpa">Update IPA</button>
           </div>
-          <textarea class="tx" id="ipaText" spellcheck="false" placeholder="The IPA appears here by itself. You can change any symbol."></textarea>
-          <div class="legend" id="ipaStatus">Words with * need checking.</div>
-          <details class="more"><summary>IPA symbols</summary><div class="row" style="margin-top:.5rem;gap:.4rem" id="ipaKeys" aria-label="IPA symbol keys"></div></details>
+          <textarea class="tx ipa-part" id="ipaText" spellcheck="false" placeholder="The IPA appears here by itself. You can change any symbol."></textarea>
+          <div class="legend ipa-part" id="ipaStatus">Words with * need checking.</div>
+          <details class="more ipa-part"><summary>IPA symbols</summary><div class="row" style="margin-top:.5rem;gap:.4rem" id="ipaKeys" aria-label="IPA symbol keys"></div></details>
         </div>
       </div>
     </section>
 
     <section class="card" id="sec4">
-      <div class="sec-h"><span class="stepn">4</span><h2>Mark</h2></div>
+      <div class="sec-h"><span class="stepn">4</span><h2>Checklist</h2></div>
       <div class="row" style="align-items:center">
-        <button type="button" class="btn b-amber" id="btnEvaluate">Suggest marks</button>
-        <span class="hint">The app suggests marks. You can change any of them.</span>
+        <button type="button" class="btn b-amber" id="btnEvaluate">Check against criteria</button>
+        <span class="hint">Levels are suggested from the transcript. Review and adjust each criterion as required.</span>
       </div>
       <div id="evalOut"></div>
-      <div class="scale" id="sec5">Tap a number on each row. <b>3</b> or <b>4</b> is S. <b>1</b> or <b>2</b> is U/S. Every row needs S to pass.</div>
+      <div class="scale" id="sec5">Tap or slide along the scale on each row. Tap a suggested level to confirm it. <b>3</b> or <b>4</b> is S. <b>1</b> or <b>2</b> is U/S. Every row needs S to pass.</div>
       <div id="grid"></div>
       <div class="overall" id="overall"></div>
     </section>
@@ -471,7 +599,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
     <section class="card" id="sec6">
       <div class="sec-h"><span class="stepn">5</span><h2>Feedback</h2></div>
       <div class="row" style="align-items:center;margin-bottom:.7rem">
-        <button type="button" class="btn b-ghost" id="btnRebuildFb">Write feedback for me</button>
+        <button type="button" class="btn b-ghost" id="btnRebuildFb">Generate feedback</button>
         <span class="hint" id="fbHint">You can change the words.</span>
       </div>
       <div class="fb">
@@ -482,19 +610,20 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
 
     <section class="card" id="sec7">
       <div class="sec-h"><span class="stepn">6</span><h2>Print or save</h2></div>
+      <div class="exgrid">
       <div class="exports">
-        <span class="ex-l">This student:</span>
-        <button type="button" class="btn b-navy" id="btnPrint">Print report</button>
+        <span class="ex-l">Current student:</span>
+        <button type="button" class="btn b-navy" id="btnPrint">Print / Save as PDF</button>
         <button type="button" class="btn b-teal" id="btnSave">Save to this computer</button>
-        <button type="button" class="btn b-ghost" id="btnSaveSep">Save as separate files</button>
       </div>
       <div class="exports" style="margin-top:.6rem">
-        <span class="ex-l">All students:</span>
-        <button type="button" class="btn b-navy" id="btnPrintAll">Print all students</button>
+        <span class="ex-l">All students assessed in this session:</span>
+        <button type="button" class="btn b-navy" id="btnPrintAll">Print / Save all as PDF</button>
         <button type="button" class="btn b-teal" id="btnSaveAll">Save all students</button>
       </div>
-      <label class="check" style="margin-top:.4rem"><input type="checkbox" id="chkPrintIpa" checked> Print the IPA too</label>
-      <p class="hint" style="margin:.6rem 0 0">Saving makes one ZIP file with the recording (MP3) and the report. You can print and save as many times as you like.</p>
+      </div>
+      <div class="check" style="margin-top:.4rem"><button type="button" class="ipasw" role="switch" aria-checked="true" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA on</span></button><span class="hint">When IPA is on, it is printed and saved in the report.</span></div>
+      <p class="hint" style="margin:.6rem 0 0"><b>Print / Save as PDF</b> opens the print window. Choose a printer, or choose <b>Save as PDF</b> as the destination. <b>Save to this computer</b> keeps the recording (MP3) and a text report in one ZIP file. You can print and save as many times as you like.</p>
       <div class="status" id="saveStatus" style="display:none"></div>
     </section>
   </main>
@@ -510,13 +639,13 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
     <ol class="helplist">
       <li><b>Student.</b> Type the name.</li>
       <li><b>Record.</b> Press Start recording. Press Stop at the end. If the browser asks about the microphone, choose Allow.</li>
-      <li><b>Two voices.</b> Tap Student or Teacher when the speaker changes. Only the student's lines are marked.</li>
-      <li><b>Check the transcript.</b> Fix any wrong words. If no words appeared, press Make text from the recording.</li>
-      <li><b>Mark.</b> Press Suggest marks. Then check each row and change the number if you need to.</li>
-      <li><b>Feedback.</b> Press Write feedback for me. Change the words if you like.</li>
-      <li><b>Print or save.</b> Print the report, or save it to this computer with the recording.</li>
+      <li><b>Two voices.</b> Tap Student or Teacher when the speaker changes. Only the student's lines are assessed.</li>
+      <li><b>Transcript.</b> Fix any wrong words. If no words appeared, press Transcribe the recording.</li>
+      <li><b>Checklist.</b> Press Check against criteria. Then review each criterion and adjust the level if required.</li>
+      <li><b>Feedback.</b> Press Generate feedback. Review and edit the text as required.</li>
+      <li><b>Print or save.</b> Press Print / Save as PDF, then choose a printer or Save as PDF. Press Save to this computer to keep the recording.</li>
     </ol>
-    <p class="hint">Made a mistake while recording? Press Delete and start again. An Undo button shows for a few seconds.</p>
+    <p class="hint">Made a mistake while recording? Press Start again. An Undo button shows for a few seconds.</p>
     <p class="hint">Nothing is sent anywhere. Your work is kept on this computer, even if the page closes, until you press Clear all students. On a shared computer, save your work and then press Clear all students when you finish. Work is deleted by itself after 30 days.</p>
     <div class="row" style="justify-content:flex-end"><button type="button" class="btn b-navy" data-close>Close</button></div>
   </div>
@@ -541,7 +670,7 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
     <p id="leaveText" class="bigtext"></p>
     <div class="bigbtns">
       <button type="button" class="btn b-teal" id="btnLeaveSave">Save all students now</button>
-      <button type="button" class="btn b-navy" id="btnLeavePrint">Print all students</button>
+      <button type="button" class="btn b-navy" id="btnLeavePrint">Print / Save all as PDF</button>
       <button type="button" class="btn b-ghost" data-close>Keep working</button>
     </div>
   </div>
@@ -561,7 +690,8 @@ textarea#ipaText{font-family:var(--ipa);font-size:1.02rem}
   <div class="modal big">
     <div class="bigicon" aria-hidden="true">!</div>
     <h2 id="clearTitle">Delete all students?</h2>
-    <p class="bigtext">This deletes every recording, transcript and mark on this computer. You cannot undo this. Save them first if you need them.</p>
+    <p class="bigtext">This deletes every recording, transcript and result on this computer. You cannot undo this. Save them first if you need them.</p>
+    <div class="clearinfo" id="clearInfo"></div>
     <div class="bigbtns">
       <button type="button" class="btn b-teal" id="btnClearSave">Save all students first</button>
       <button type="button" class="btn b-rec" id="btnClearYes">Delete everything</button>
@@ -993,7 +1123,7 @@ const PRINT_ROWS = {
   }
 };
 
-/* phrase banks used by Suggest marks (VU23519 role plays) */
+/* phrase banks used by Check against criteria (VU23519 role plays) */
 const BANK = {
   greet: ["hi","hello","hey","good morning","good afternoon","good evening","how are you","how are you going","how's it going","how was your weekend","nice to meet you","nice to meet you too","my name's","my name is","g'day"],
   smallTalk: ["how are you","how are you going","how's it going","nice to meet you","nice to meet you too","isn't it","how was your weekend","nice day","lovely day"],
@@ -1451,8 +1581,8 @@ async function renderMicState() {
   const el = $("#micState"); if (!el) return;
   const info = await micInfo();
   const btn = $("#btnAllowMic");
-  if (info.perm === "granted") { el.textContent = "Microphone: ready \u2713"; el.className = "micstate ok"; btn.hidden = true; }
-  else if (info.perm === "denied") { el.textContent = "Microphone: blocked. Press Allow the microphone to see how to fix it."; el.className = "micstate err"; btn.hidden = false; }
+  if (info.perm === "granted") { el.textContent = "Microphone: ready \u2713"; el.className = "micstate ok"; btn.hidden = true; const r1 = $("#rstep1"); if (r1) r1.classList.add("done"); }
+  else if (info.perm === "denied") { const r1 = $("#rstep1"); if (r1) r1.classList.remove("done"); el.textContent = "Microphone: blocked. Press Allow the microphone to see how to fix it."; el.className = "micstate err"; btn.hidden = false; }
   else if (info.inputs === 0) { el.textContent = "Microphone: none found yet. Plug one in, or press Allow the microphone."; el.className = "micstate warn"; btn.hidden = false; }
   else { el.textContent = "Microphone: press Allow the microphone first."; el.className = "micstate warn"; btn.hidden = false; }
 }
@@ -1533,7 +1663,7 @@ async function startRecording() {
     return;
   }
   if (cur.audio) {
-    setStatus("#recStatus", "This student already has a recording. To record again, press Delete and start again.", "warn");
+    setStatus("#recStatus", "This student already has a recording. To record again, press Start again.", "warn");
     return;
   }
   ensureCtx();
@@ -1629,13 +1759,13 @@ function finishRecording(recId, blob, mime, dur) {
   setTimeout(() => { try { persistSoon(); } catch (e) {} }, 0);
   if (r === cur) {
     const noText = !r.english.trim();
-    const srNote = noText ? " No words appeared. In Step 3, press Make text from the recording." : "";
+    const srNote = noText ? " No words appeared. In Step 3, press Transcribe the recording." : "";
     $("#btnWhisper").classList.toggle("glow", noText);
     if (!noText) setSrState("Done. Check the transcript.", "ok");
-    else if ($("#srState").className.indexOf("err") === -1) setSrState("No words appeared. Press Make text from the recording.", "warn");
+    else if ($("#srState").className.indexOf("err") === -1) setSrState("No words appeared. Press Transcribe the recording.", "warn");
     setStatus("#recStatus", "Recording saved (" + fmtTime(dur) + "). Now check the transcript in Step 3." + srNote, srNote ? "warn" : "");
     if (noText && $("#chkAutoWhisper").checked) {
-      setStatus("#recStatus", "Recording saved (" + fmtTime(dur) + "). No words appeared, so the app is now making text from the recording in Step 3.", "warn");
+      setStatus("#recStatus", "Recording saved (" + fmtTime(dur) + "). No words appeared, so the app is now transcribing the recording in Step 3.", "warn");
       setTimeout(() => { if (cur === r && !r.english.trim()) whisperTranscribe(); }, 300);
     }
     loadAudio();
@@ -1679,7 +1809,7 @@ const SR_ERR = {
   "aborted": "the browser stopped it."
 };
 function srFail(n) {
-  return "Words cannot show here: " + (SR_ERR[n] || "the browser said " + n + ".") + " The recording is still fine. After Stop, press Make text from the recording.";
+  return "Words cannot show here: " + (SR_ERR[n] || "the browser said " + n + ".") + " The recording is still fine. After Stop, press Transcribe the recording.";
 }
 /* Which browser is this? The online speech service only works in some of them. */
 function browserName() {
@@ -1715,7 +1845,7 @@ async function findOnDeviceLang() {
 async function onNetworkFail(recId) {
   const why = networkReason();
   if (!hasOnDevice()) {
-    setSrState("Words cannot show here. " + why + " After Stop, press Make text from the recording.", "err");
+    setSrState("Words cannot show here. " + why + " After Stop, press Transcribe the recording.", "err");
     if (REC.state === "recording") setStatus("#recStatus", "Still recording. Words cannot show in this browser, but the recording is fine.", "warn");
     return;
   }
@@ -1727,16 +1857,16 @@ async function onNetworkFail(recId) {
     setSrState("Words are showing again (no internet needed).", "ok");
   } else if (f) {
     SR.pendingLang = f.lang;
-    setSrState("Words cannot show here. " + why + " To fix it once, press Set up words without internet. For now, press Make text from the recording after Stop.", "err");
+    setSrState("Words cannot show here. " + why + " To fix it once, press Set up words without internet. For now, press Transcribe the recording after Stop.", "err");
     $("#btnOnDevice").hidden = false;
   } else {
-    setSrState("Words cannot show here. " + why + " After Stop, press Make text from the recording.", "err");
+    setSrState("Words cannot show here. " + why + " After Stop, press Transcribe the recording.", "err");
   }
   if (REC.state === "recording" && !SR.local) setStatus("#recStatus", "Still recording. Words cannot show in this browser, but the recording is fine.", "warn");
 }
 async function setupOnDevice() {
   const btn = $("#btnOnDevice");
-  if (!hasOnDevice()) { setSrState("This browser cannot do this. Use Google Chrome, or press Make text from the recording.", "warn"); return; }
+  if (!hasOnDevice()) { setSrState("This browser cannot do this. Use Google Chrome, or press Transcribe the recording.", "warn"); return; }
   btn.disabled = true; btn.textContent = "Downloading the speech pack ...";
   try {
     const f = SR.pendingLang ? {lang: SR.pendingLang} : await findOnDeviceLang();
@@ -1749,11 +1879,11 @@ async function setupOnDevice() {
     setSrState("Ready. Words will show while you record, even with no internet.", "ok");
     if (REC.state === "recording" && $("#chkLive").checked) startSR(REC.recId);
   } catch (e) {
-    setSrState("That did not work (" + (e.message || e.name) + "). After Stop, press Make text from the recording.", "err");
+    setSrState("That did not work (" + (e.message || e.name) + "). After Stop, press Transcribe the recording.", "err");
   } finally { btn.disabled = false; btn.textContent = "Set up words without internet"; }
 }
 function startSR(recId) {
-  if (!SR.available) { setSrState("Words cannot show in this browser. After Stop, press Make text from the recording.", "warn"); return; }
+  if (!SR.available) { setSrState("Words cannot show in this browser. After Stop, press Transcribe the recording.", "warn"); return; }
   if (SR.r) { try { SR.r.onend = null; SR.r.stop(); } catch (e) {} SR.r = null; }
   clearTimeout(SR.watch);
   SR.recId = recId; SR.wanted = true; SR.lastErr = ""; SR.results = 0; SR.fails = 0; SR.restarts = 0;
@@ -1803,7 +1933,7 @@ function startSR(recId) {
   setSrState("Starting ...", "");
   SR.watch = setTimeout(() => {
     if (SR.r === r && !SR.results && REC.state === "recording") {
-      setSrState("No words yet. If the student is talking, words cannot show on this computer. The recording is still fine. After Stop, press Make text from the recording.", "warn");
+      setSrState("No words yet. If the student is talking, words cannot show on this computer. The recording is still fine. After Stop, press Transcribe the recording.", "warn");
     }
   }, 12000);
 }
@@ -1889,7 +2019,7 @@ async function whisperTranscribe() {
   if (cur.english.trim() && Date.now() - whisperArmed > 5000) {
     whisperArmed = Date.now();
     $("#btnWhisper").textContent = "Tap again to replace the transcript";
-    setTimeout(() => { if (!ASR.busy) $("#btnWhisper").textContent = "Make text from the recording"; }, 5000);
+    setTimeout(() => { if (!ASR.busy) $("#btnWhisper").textContent = "Transcribe the recording"; }, 5000);
     return;
   }
   whisperArmed = 0;
@@ -1936,7 +2066,7 @@ async function whisperTranscribe() {
     else if (stage === "decode") whisperMsg("The browser could not read this recording (" + n + "). Try Chrome or Edge.");
     else whisperMsg("Transcribing failed (" + n + ").");
   } finally {
-    ASR.busy = false; btn.disabled = false; btn.textContent = "Make text from the recording";
+    ASR.busy = false; btn.disabled = false; btn.textContent = "Transcribe the recording";
     setTimeout(() => { if (!ASR.busy) $("#whisperBar").classList.remove("show"); }, 1500);
   }
 }
@@ -2184,7 +2314,7 @@ function suggest(kind, s, prof) {
       return {level: null, evidence: "Listen to the recording and judge." + (s.conf !== null ? " Recogniser confidence " + Math.round(s.conf * 100) + "%." : "")};
     case "clarify": {
       const a = s.clarAsk.length, g = s.clarGive.length;
-      if (!a && !g) return {level: null, subs: {}, evidence: "None heard. If it was not needed, tick both boxes (not required) and mark 3 Meets."};
+      if (!a && !g) return {level: null, subs: {}, evidence: "None heard. If it was not needed, tick both boxes (not required) and select 3 Meets."};
       return {level: a && g ? 4 : 3, subs: {gave: g > 0 ? true : undefined, asked: a > 0 ? true : undefined}, evidence: (a ? "Asked: " + q(s.clarAsk.slice(0, 3)) + ". " : "") + (g ? "Clarified: " + q(s.clarGive.slice(0, 3)) + "." : "")};
     }
     case "vocab": {
@@ -2261,13 +2391,13 @@ function renderEval() {
   const tile = (k, v, sub) => '<div class="tile"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="s">' + (sub || "") + "</div></div>";
   const chips = (title, arr) => '<div class="chipset"><b>' + title + "</b>" + (arr && arr.length ? arr.map(a => '<span class="chip">' + esc(a) + "</span>").join("") : '<span class="chip none">none heard</span>') + "</div>";
   const warn = !s.hasLabels
-    ? '<div class="status warn">No speaker labels yet, so the teacher\'s words are counted as the student\'s. Mark each line as Student (S:) or Teacher (T:) in Step 3, then press Suggest marks again.</div>'
+    ? '<div class="status warn">No speaker labels yet, so the teacher\'s words are counted as the student\'s. Mark each line as Student (S:) or Teacher (T:) in Step 3, then press Check against criteria again.</div>'
     : (s.unlabelled ? '<div class="status warn">' + s.unlabelled + " line" + (s.unlabelled > 1 ? "s have" : " has") + " no label and " + (s.unlabelled > 1 ? "were" : "was") + " counted as the student.</div>" : "");
   out.innerHTML = warn + '<div class="tiles">' +
     tile("Length", s.duration ? fmtTime(s.duration) : "n/a", prof.targetText) +
     tile("Student words", s.words, s.hasLabels ? "on S: lines" : "all lines") +
     tile("Turns", s.hasLabels ? s.sTurnCount + " / " + s.tTurnCount : "n/a", "student / teacher") +
-    ipaTile(s) +
+    (ipaOn() ? ipaTile(s) : "") +
     '</div><details class="more"><summary>See what the app found</summary><div class="chips">' + prof.chips.map(c => chips(c[0], s[c[1]])).join("") + "</div></details>";
 }
 
@@ -2279,17 +2409,83 @@ function renderGrid() {
   $("#grid").innerHTML = prof.criteria.map((c, i) => {
     const lv = cur.levels[c.id] || 0, src = cur.levelSrc[c.id];
     const su = lv ? (lv >= 3 ? '<span class="su s">S</span>' : '<span class="su u">U/S</span>') : '<span class="su n">n/a</span>';
-    const tag = !c.auto ? '<span class="src obs">You decide</span>' : (src === "auto" ? '<span class="src auto">Suggested</span>' : "");
+    const tag = !c.auto ? '<span class="src obs">Assessor to mark</span>' : (src === "auto" ? '<span class="src auto">Suggested</span>' : "");
     return '<div class="crit" data-c="' + c.id + '">' +
       '<div><div class="lbl">' + (i + 1) + ". " + esc(c.label) + tag + '</div><div class="det">' + esc(c.detail) + "</div>" +
       (c.subs ? '<div class="subs">' + c.subs.map(sb => { const on = !!(cur.subs[c.id] && cur.subs[c.id][sb.id]); return '<button type="button" class="subbtn' + (cur.subSrc[c.id + "." + sb.id] === "auto" ? " auto" : "") + '" data-sub="' + sb.id + '" aria-pressed="' + on + '">' + esc(sb.label) + "</button>"; }).join("") + "</div>" : "") +
       "</div>" +
-      '<div class="seg" role="group" aria-label="' + esc(c.label) + '">' + LEVELS.map(L => '<button type="button" data-l="' + L.l + '" aria-pressed="' + (lv === L.l) + '"><b>' + L.l + "</b>" + L.t + "</button>").join("") + "</div>" +
+      lvSliderHTML(c, lv, src) +
       '<div class="ev">' + su + '<input type="text" data-ev="' + c.id + '" placeholder="Evidence or comment" value="' + esc(cur.evidence[c.id] || "") + '"></div>' +
       "</div>";
   }).join("");
   renderOverall();
 }
+const LV_POS = l => ((l - 1) / 3 * 100) + "%";
+function lvSliderHTML(c, lv, src) {
+  const auto = lv && src === "auto";
+  return '<div class="lvs' + (lv ? " has" : "") + (auto ? " auto" : "") + '" role="slider" tabindex="0" data-lv="' + c.id + '" aria-label="' + esc(c.label) + '" aria-valuemin="1" aria-valuemax="4"' +
+    (lv ? ' aria-valuenow="' + lv + '" aria-valuetext="' + lv + " " + LEVELS[lv - 1].t + (auto ? ", suggested" : "") + '"' : ' aria-valuetext="Not assessed"') + ">" +
+    '<div class="zl"><span>U/S</span><span>S</span></div>' +
+    '<div class="rail"><div class="trk"></div><div class="mid"></div><div class="fill" style="width:' + (lv ? LV_POS(lv) : "0") + '"></div>' +
+    LEVELS.map(L => '<span class="stop" style="left:' + LV_POS(L.l) + '">' + L.l + "</span>").join("") +
+    '<div class="thumb' + (lv ? " l" + lv : "") + '" style="left:' + (lv ? LV_POS(lv) : "0") + '">' + (lv || "") + "</div></div>" +
+    '<div class="names">' + LEVELS.map(L => '<span class="' + (lv === L.l ? "on" : "") + '" style="left:' + LV_POS(L.l) + '">' + L.t + "</span>").join("") + "</div>" +
+    '<div class="hintl">' + (!lv ? "Not assessed. Tap or drag to select a level." : auto ? "Suggested. Tap " + lv + " to confirm." : "") + "</div></div>";
+}
+/* set or confirm a level; tapping the confirmed level again clears it */
+function setLevel(id, l, isTap) {
+  if (isTap && cur.levels[id] === l && cur.levelSrc[id] === "teacher") { delete cur.levels[id]; delete cur.levelSrc[id]; }
+  else { cur.levels[id] = l; cur.levelSrc[id] = "teacher"; }
+  cur.saved = false; renderGrid(); renderList();
+  if (cur.fbAuto && (cur.stats || cur.well || cur.improve)) buildFeedback();
+  const el = document.querySelector('.lvs[data-lv="' + id + '"]'); if (el && el.dataset.keep) el.focus();
+}
+function lvFromX(el, x) {
+  const r = el.querySelector(".rail").getBoundingClientRect();
+  return Math.max(1, Math.min(4, Math.round((x - r.left) / r.width * 3) + 1));
+}
+function lvPreview(el, l) {
+  el.classList.add("has"); el.classList.remove("auto");
+  el.querySelector(".fill").style.width = LV_POS(l);
+  const t = el.querySelector(".thumb"); t.style.left = LV_POS(l); t.className = "thumb l" + l; t.textContent = l;
+  el.querySelectorAll(".names span").forEach((s, i) => s.classList.toggle("on", i + 1 === l));
+}
+(function wireSlider() {
+  let drag = null;
+  const grid = document.getElementById("grid");
+  grid.addEventListener("pointerdown", e => {
+    const el = e.target.closest(".lvs"); if (!el || e.button > 0) return;
+    e.preventDefault(); el.focus();
+    drag = {el, id: el.dataset.lv, x0: e.clientX, moved: false, l: lvFromX(el, e.clientX)};
+    try { el.setPointerCapture(e.pointerId); } catch (er) {}
+    el.classList.add("dragging"); lvPreview(el, drag.l);
+  });
+  grid.addEventListener("pointermove", e => {
+    if (!drag) return;
+    if (Math.abs(e.clientX - drag.x0) > 6) drag.moved = true;
+    const l = lvFromX(drag.el, e.clientX); if (l !== drag.l) { drag.l = l; lvPreview(drag.el, l); }
+  });
+  const end = e => {
+    if (!drag) return; const d = drag; drag = null;
+    if (e.type === "pointercancel") { renderGrid(); return; }
+    d.el.dataset.keep = "1"; setLevel(d.id, d.l, !d.moved);
+  };
+  grid.addEventListener("pointerup", end); grid.addEventListener("pointercancel", end);
+  grid.addEventListener("keydown", e => {
+    const el = e.target.closest(".lvs"); if (!el) return;
+    const id = el.dataset.lv, now = cur.levels[id] || 0; let l = null, tap = false;
+    if (e.key === "ArrowRight" || e.key === "ArrowUp") l = Math.min(4, (now || 0) + 1);
+    else if (e.key === "ArrowLeft" || e.key === "ArrowDown") l = Math.max(1, (now || 2) - 1);
+    else if (e.key === "Home") l = 1; else if (e.key === "End") l = 4;
+    else if (/^[1-4]$/.test(e.key)) { l = +e.key; tap = true; }
+    else if ((e.key === "Enter" || e.key === " ") && now) { l = now; tap = cur.levelSrc[id] !== "auto"; if (tap) return e.preventDefault(); }
+    else if (e.key === "Delete" || e.key === "Backspace") { if (now) { delete cur.levels[id]; delete cur.levelSrc[id]; cur.saved = false; renderGrid(); renderList(); } e.preventDefault(); const n = document.querySelector('.lvs[data-lv="' + id + '"]'); if (n) n.focus(); return; }
+    if (l === null) return;
+    e.preventDefault(); el.dataset.keep = "1";
+    const nel = el; setLevel(id, l, tap);
+    const again = document.querySelector('.lvs[data-lv="' + id + '"]'); if (again) again.focus();
+  });
+})();
 function overallOf(r) {
   const prof = profileById(r.profileId);
   const n = prof.criteria.length;
@@ -2304,8 +2500,8 @@ function overallOf(r) {
 function renderOverall() {
   const o = overallOf(cur);
   $("#overall").innerHTML = '<span>Overall result</span><span class="res ' + o.res + '">' + o.txt + "</span><span style=\"flex:1\"></span>" +
-    "<span>" + o.met + " of " + o.n + " criteria met</span><span>Score " + o.total + " / " + o.max + "</span>" +
-    (o.scored < o.n ? "<span>" + (o.n - o.scored) + " not marked yet</span>" : "");
+    "<span>" + o.met + " of " + o.n + " criteria met</span>" +
+    (o.scored < o.n ? "<span>" + (o.n - o.scored) + " not assessed yet</span>" : "");
 }
 $("#grid").addEventListener("click", e => {
   const sb = e.target.closest("[data-sub]");
@@ -2315,12 +2511,6 @@ $("#grid").addEventListener("click", e => {
     cur.subs[cid][k] = !cur.subs[cid][k]; cur.subSrc[cid + "." + k] = "teacher"; cur.saved = false;
     renderGrid(); return;
   }
-  const b = e.target.closest(".seg button"); if (!b) return;
-  const id = b.closest(".crit").dataset.c, l = +b.dataset.l;
-  if (cur.levels[id] === l && cur.levelSrc[id] === "teacher") { delete cur.levels[id]; delete cur.levelSrc[id]; }
-  else { cur.levels[id] = l; cur.levelSrc[id] = "teacher"; }
-  cur.saved = false; renderGrid(); renderList();
-  if (cur.fbAuto && (cur.stats || cur.well || cur.improve)) buildFeedback();
 });
 $("#grid").addEventListener("input", e => {
   const id = e.target.dataset.ev; if (!id) return;
@@ -2344,16 +2534,16 @@ function buildFeedback() {
   if (!impr.length && well.length) impr.push("- Keep practising. Next time, ask one more question and add one more detail.");
   cur.well = well.join("\n"); cur.improve = impr.join("\n"); cur.fbAuto = true;
   $("#fbWell").value = cur.well; $("#fbImprove").value = cur.improve;
-  $("#fbHint").textContent = well.length || impr.length ? "Draft written from the grid. Edit it freely." : "Mark the grid first. Then press this button.";
+  $("#fbHint").textContent = well.length || impr.length ? "Feedback generated from the checklist. Review and edit as required." : "Complete the checklist first, then press Generate feedback.";
 }
 let fbArmed = 0;
 $("#btnRebuildFb").addEventListener("click", () => {
   if (!cur.fbAuto && (cur.well.trim() || cur.improve.trim()) && Date.now() - fbArmed > 4000) {
-    fbArmed = Date.now(); $("#btnRebuildFb").textContent = "Tap again to replace your feedback";
-    setTimeout(() => { $("#btnRebuildFb").textContent = "Write feedback for me"; }, 4000);
+    fbArmed = Date.now(); $("#btnRebuildFb").textContent = "Tap again to replace the current feedback";
+    setTimeout(() => { $("#btnRebuildFb").textContent = "Generate feedback"; }, 4000);
     return;
   }
-  fbArmed = 0; $("#btnRebuildFb").textContent = "Write feedback for me";
+  fbArmed = 0; $("#btnRebuildFb").textContent = "Generate feedback";
   buildFeedback(); cur.saved = false;
 });
 $("#fbWell").addEventListener("input", () => { cur.well = $("#fbWell").value; cur.fbAuto = false; cur.saved = false; });
@@ -2410,7 +2600,7 @@ async function audioForSave(r) {
     return r.audio.blob;
   }
 }
-function busySave(on) { ["#btnSave", "#btnSaveSep"].forEach(id => { $(id).disabled = on; }); }
+function busySave(on) { ["#btnSave"].forEach(id => { const b = $(id); if (b) b.disabled = on; }); }
 function subsText(r, c, on, off) {
   if (!c.subs) return "";
   return c.subs.map(sb => ((r.subs[c.id] && r.subs[c.id][sb.id]) ? on : off) + " " + sb.label).join("   ");
@@ -2422,16 +2612,17 @@ function toTXT(r) {
   L.push("Student:   " + r.name, "Date:      " + fmtDateAU(r.date), "Teacher:   " + ($("#teacherName").value.trim() || ""), "Attempt:   " + r.attempt);
   L.push("Length:    " + (r.audio ? fmtTime(r.audio.duration) : "no recording") + "    Student words: " + s.words + "    Turns (student / teacher): " + (s.hasLabels ? s.sTurnCount + " / " + s.tTurnCount : "n/a"));
   L.push("Audio:     " + (r.audio ? audioFileName(r) : "(no recording)"), "");
-  L.push("RESULT: " + o.txt + "   (" + o.met + " of " + o.n + " criteria met, score " + o.total + " / " + o.max + ")", "");
-  L.push("RUBRIC SCORES");
+  L.push("RESULT: " + o.txt + "   (" + o.met + " of " + o.n + " criteria met)", "");
+  L.push("CRITERIA");
   prof.criteria.forEach((c, i) => {
     const l = r.levels[c.id];
-    L.push((i + 1) + ". " + c.label + ": " + (l ? l + " " + LEVELS[l - 1].t + " (" + (l >= 3 ? "S" : "U/S") + ")" : "not marked"));
+    L.push((i + 1) + ". " + c.label + ": " + (l ? l + " " + LEVELS[l - 1].t + " (" + (l >= 3 ? "S" : "U/S") + ")" : "not assessed"));
     if (c.subs) L.push("   Checklist: " + subsText(r, c, "[x]", "[ ]"));
     if (r.evidence[c.id]) L.push("   Evidence: " + r.evidence[c.id]);
   });
   L.push("", "WHAT WAS DONE WELL", r.well || "(none)", "", "WHAT NEEDS IMPROVEMENT", r.improve || "(none)", "");
-  L.push("PLAIN ENGLISH TRANSCRIPT (edited; S = student, T = teacher)", r.english || "(empty)", "", "PHONETIC IPA TRANSCRIPT (edited)", r.ipa || "(empty)", "");
+  L.push("PLAIN ENGLISH TRANSCRIPT (edited; S = student, T = teacher)", r.english || "(empty)", "");
+  if (ipaOn()) L.push("PHONETIC IPA TRANSCRIPT (edited)", r.ipa || "(empty)", "");
   return L.join("\r\n");
 }
 
@@ -2515,7 +2706,7 @@ function speakerHTML(t) {
 }
 function reportHTML(r) {
   const prof = profileById(r.profileId), o = overallOf(r), s = r.stats || analyse(r);
-  const withIpa = $("#chkPrintIpa").checked;
+  const withIpa = ipaOn();
   const ON = "☑", OFF = "☐";
   const ev = String(prof.short || "").split("|").pop().trim();
   const fld = (lab, val, cls) => '<div' + (cls ? ' class="' + cls + '"' : "") + '><div class="pr-lab">' + lab + '</div><div class="pr-fld">' + val + "</div></div>";
@@ -2543,7 +2734,7 @@ function reportHTML(r) {
       fld("Teacher/assessor", esc($("#teacherName").value.trim()), "w2") + fld("Recording length", '<span style="font-family:var(--mono)">' + (r.audio ? fmtTime(r.audio.duration) : "n/a") + "</span>") +
       fld("Student words", '<span style="font-family:var(--mono)">' + s.words + "</span>") +
       fld("Turns (student / teacher)", '<span style="font-family:var(--mono)">' + (s.hasLabels ? s.sTurnCount + " / " + s.tTurnCount : "n/a") + "</span>", "w2") +
-      fld("Score", '<span style="font-family:var(--mono)">' + o.total + " / " + o.max + "</span> (" + o.met + " of " + o.n + " criteria met)", "w2") +
+      fld("Criteria met", '<span style="font-family:var(--mono)">' + o.met + " of " + o.n + "</span>", "w2") +
     "</div>" +
     '<div class="pr-h2">Checklist</div><div class="pr-p">Your teacher/assessor will complete this checklist while they observe you completing your assessment. Read the checklist to understand what skills you need to demonstrate. You must meet all the criteria.</div><div class="pr-p">Note that S = Satisfactory and U/S = Unsatisfactory.</div><div class="pr-cap">Levels 3 Meets and 4 Strong = S. Levels 1 Not yet and 2 Developing = U/S.</div>' +
     '<table class="pr-ck"><thead><tr><th class="n">#</th><th class="cr">Did the student do the following?</th><th class="tk2">S</th><th class="tk2">U/S</th><th>Assessor comments and student speech samples</th></tr></thead><tbody>' + rows + "</tbody></table>" +
@@ -2579,15 +2770,21 @@ function fitPrint() {
   setPageFooter(String((cur && cur.name) || "") + "  |  Speaking Assessment Report");
   return pages;
 }
+/* the browser uses the page title as the PDF file name */
+const ORIG_TITLE = document.title;
+function asmtTag() { const p = profileById((cur && cur.profileId) || PROFILES[0].id); const m = String(p.short || "").match(/(VU\d+).*?event (\d+)/i); return m ? m[1] + "_Assessment_" + m[2] : "Speaking_Assessment"; }
+function setPdfTitle(t) { document.title = t; }
+window.addEventListener("afterprint", () => { document.title = ORIG_TITLE; });
 $("#btnPrint").addEventListener("click", () => {
   buildPrint();
+  setPdfTitle(safeName((cur && cur.name) || "Student") + "_" + asmtTag() + "_Report");
   const n = +$("#printArea").dataset.pages || 1;
   setStatus("#saveStatus", n > 1 ? "The report prints on " + n + " pages so the full transcript fits at a readable size." : "The report fits on one page.");
   setTimeout(() => window.print(), 50);
 });
-window.addEventListener("beforeprint", () => { if (cur && !PRINT_ALL) buildPrint(); });
+window.addEventListener("beforeprint", () => { if (cur && !PRINT_ALL) { buildPrint(); if (document.title === ORIG_TITLE) setPdfTitle(safeName(cur.name || "Student") + "_" + asmtTag() + "_Report"); } });
 $("#btnSave").addEventListener("click", savePackage);
-$("#btnSaveSep").addEventListener("click", saveSeparate);
+
 
 /* =========================================================
    11. UI WIRING
@@ -2603,7 +2800,7 @@ function renderRecUI() {
   b.disabled = st === "stopping" || st === "paused";
   $("#recLabel").textContent = st === "recording" ? "Recording ..." : st === "paused" ? "Paused" : st === "stopping" ? "Saving ..." : "Start recording";
   $("#btnPause").disabled = !(st === "recording" || st === "paused");
-  $("#btnPause").textContent = st === "paused" ? "Resume" : "Pause";
+  ($("#btnPause .lbl").textContent = st === "paused" ? "Resume" : "Pause", $("#btnPause .ic").className = "ic " + (st === "paused" ? "ic-play" : "ic-pause"));
   $("#btnStop").disabled = !(st === "recording" || st === "paused");
   $("#btnNewStudent").disabled = st !== "idle";
   $("#attemptTag").textContent = "Try " + (cur ? cur.attempt : 1);
@@ -2616,7 +2813,7 @@ function renderList() {
     const o = overallOf(r);
     const tags = [];
     tags.push(r.audio ? '<span class="tag ok">Audio ' + fmtTime(r.audio.duration) + "</span>" : '<span class="tag">No audio</span>');
-    if (o.scored) tags.push('<span class="tag ' + (o.res === "s" ? "ok" : o.res === "u" ? "bad" : "warn") + '">' + (o.res === "s" ? "S" : o.res === "u" ? "U/S" : o.scored + "/" + o.n + " marked") + "</span>");
+    if (o.scored) tags.push('<span class="tag ' + (o.res === "s" ? "ok" : o.res === "u" ? "bad" : "warn") + '">' + (o.res === "s" ? "S" : o.res === "u" ? "U/S" : o.scored + "/" + o.n + " assessed") + "</span>");
     tags.push(r.saved ? '<span class="tag ok">Saved</span>' : (r.audio ? '<span class="tag warn">Not saved</span>' : ""));
     return '<li><button type="button" class="pick" data-id="' + r.id + '" aria-current="' + (r === cur) + '"><span class="nm">' + esc(r.name || "(no name yet)") + '</span><span class="tags">' + tags.join("") + "</span></button></li>";
   }).join("") || '<li class="hint">No students yet.</li>';
@@ -2630,7 +2827,7 @@ function loadRecord(r) {
   $("#saveStatus").style.display = "none";
   $("#wc").textContent = wordCount(r.english) + " words";
   renderIpaStatus(); renderProfileInfo(); loadAudio();
-  setSrState(r.english.trim() ? "Check the transcript." : (SR.available ? "Words will appear while you record." : "Words cannot show in this browser. After Stop, press Make text from the recording."), r.english.trim() ? "ok" : (SR.available ? "" : "warn"));
+  setSrState(r.english.trim() ? "Check the transcript." : (SR.available ? "Words will appear while you record." : "Words cannot show in this browser. After Stop, press Transcribe the recording."), r.english.trim() ? "ok" : (SR.available ? "" : "warn"));
   $("#btnWhisper").classList.toggle("glow", !!r.audio && !r.english.trim()); renderEval(); renderGrid(); renderRecUI(); renderList();
   setStatus("#recStatus", r.audio ? "Recording loaded for " + (r.name || "this student") + "." : "Type the student's name. Then press Start recording.");
 }
@@ -2779,7 +2976,7 @@ $("#btnMicTest").addEventListener("click", async () => {
 
 $("#btnSrTest").addEventListener("click", () => {
   const m = $("#srTestMsg");
-  if (!SR.available) { m.textContent = "This browser cannot show words. Use Make text from the recording instead."; renderDiag({"Words on screen test": "not available"}); return; }
+  if (!SR.available) { m.textContent = "This browser cannot show words. Use Transcribe the recording instead."; renderDiag({"Words on screen test": "not available"}); return; }
   if (REC.state !== "idle") { m.textContent = "Stop the recording first."; return; }
   let r, heard = "", err = "";
   try { r = new SR.Ctor(); } catch (e) { m.textContent = "Could not start (" + (e.name || "Error") + ")."; return; }
@@ -2788,7 +2985,7 @@ $("#btnSrTest").addEventListener("click", () => {
   r.onerror = e => { err = e.error || "error"; };
   r.onend = () => {
     const ok = !!heard.trim();
-    m.textContent = ok ? "Working. Heard: " + heard : "Not working" + (err ? " (" + err + ")" : "") + ". " + (err ? (SR_ERR[err] || "") : "No words came back.") + " Use Make text from the recording instead.";
+    m.textContent = ok ? "Working. Heard: " + heard : "Not working" + (err ? " (" + err + ")" : "") + ". " + (err ? (SR_ERR[err] || "") : "No words came back.") + " Use Transcribe the recording instead.";
     renderDiag({"Words on screen test": ok ? "working" : "failed" + (err ? " (" + err + ")" : ", no words")});
   };
   m.textContent = "Speak now ...";
@@ -2798,6 +2995,19 @@ $("#btnSrTest").addEventListener("click", () => {
 
 /* warn before closing with unsaved recordings */
 
+/* IPA on/off switch: when off, the IPA is hidden and left out of print and save */
+function ipaOn() { return !document.body.classList.contains("no-ipa"); }
+function setIpa(on, keep) {
+  document.body.classList.toggle("no-ipa", !on);
+  document.querySelectorAll(".ipasw").forEach(b => { b.setAttribute("aria-checked", on ? "true" : "false"); b.querySelector(".lab").textContent = on ? "IPA on" : "IPA off"; });
+  if (keep !== false) store("eal19_speak_ipa", on ? "1" : "0");
+  try { if (cur && cur.stats) renderEval(); } catch (e) {}
+}
+document.querySelectorAll(".ipasw").forEach(b => b.addEventListener("click", () => setIpa(!ipaOn())));
+
+/* sections scroll to just below the fixed top area */
+(function topH() { const f = () => { const t = document.getElementById("topFix"); if (t) document.documentElement.style.setProperty("--topH", t.offsetHeight + "px"); }; f(); window.addEventListener("resize", f); if (window.ResizeObserver) { const t = document.getElementById("topFix"); if (t) new ResizeObserver(f).observe(t); } })();
+
 /* =========================================================
    12. START
    ========================================================= */
@@ -2806,6 +3016,7 @@ $("#btnSrTest").addEventListener("click", () => {
   $("#profileSel").value = APP_PROFILE;
   { const p = profileById(APP_PROFILE); $("#asmtEy").textContent = p.short; $("#asmtTitle").textContent = p.title.replace(/^.*?of \d+:\s*/, ""); }
   const sl = store("eal19_speak_lang"); if (sl) $("#langSel").value = sl;
+  setIpa(store("eal19_speak_ipa") !== "0", false);
   const st = store("eal19_speak_teacher"); if (st) $("#teacherName").value = st;
   const fs = store("eal19_speak_fs"); if (fs) { const b = $('.sz button[data-fs="' + fs + '"]'); if (b) b.click(); }
   if (!SR.available) { $("#chkLive").checked = false; $("#chkLive").disabled = true; $("#chkLive").parentNode.title = "This browser has no live transcription"; }
@@ -2826,6 +3037,7 @@ function printAll() {
   PRINT_ALL = true;
   $("#printArea").innerHTML = list.map(r => '<div class="pr-one">' + reportHTML(r) + "</div>").join("");
   setPageFooter("Speaking Assessment Report");
+  setPdfTitle(asmtTag() + "_All_Students_" + (($("#assessDate").value || todayISO()).replace(/-/g, "")));
   setStatus("#saveStatus", "Printing " + list.length + " report" + (list.length > 1 ? "s" : "") + ". Each student starts on a new page.");
   setTimeout(() => window.print(), 80);
 }
@@ -2961,15 +3173,29 @@ async function restoreSession() {
   showKeepNote();
   setInterval(persist, 3000);
   const n = restored.length;
-  $("#welcomeText").textContent = n + " student" + (n > 1 ? "s" : "") + " from last time " + (n > 1 ? "were" : "was") + " kept on this computer, with " + (n > 1 ? "their" : "the") + " recordings and marks.";
+  $("#welcomeText").textContent = n + " student" + (n > 1 ? "s" : "") + " from last time " + (n > 1 ? "were" : "was") + " kept on this computer, with " + (n > 1 ? "their" : "the") + " recordings and results.";
   openOv("#ovWelcome");
 }
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") persist(); });
 window.addEventListener("pagehide", () => { persist(); });
 
 /* Clear all students (asks first in a big window) */
-$("#btnClearAll").addEventListener("click", () => openOv("#ovClear"));
-$("#btnWelcomeFresh").addEventListener("click", () => { $("#ovWelcome").classList.remove("show"); openOv("#ovClear"); });
+function openClearAll() {
+  syncFromUI();
+  const all = records.filter(r => r.name || r.audio || (r.english || "").trim());
+  const unsaved = all.filter(r => !r.saved);
+  const nm = r => esc(r.name || "(no name yet)");
+  $("#clearInfo").innerHTML = !all.length
+    ? "There are no students with work on this computer."
+    : "<div>Students on this computer: <b>" + all.length + "</b></div>" +
+      (unsaved.length
+        ? "<div>Not saved yet: <b>" + unsaved.length + "</b></div><ul>" + unsaved.slice(0, 8).map(r => "<li>" + nm(r) + "</li>").join("") + (unsaved.length > 8 ? "<li>and " + (unsaved.length - 8) + " more</li>" : "") + "</ul>"
+        : "<div>All of them have been saved.</div>");
+  openOv("#ovClear");
+  setTimeout(() => { const c = $("#ovClear [data-close]"); if (c) c.focus(); }, 30);
+}
+$("#btnClearAll").addEventListener("click", openClearAll);
+$("#btnWelcomeFresh").addEventListener("click", () => { $("#ovWelcome").classList.remove("show"); openClearAll(); });
 $("#btnClearSave").addEventListener("click", async () => { await saveAll(); });
 $("#btnClearYes").addEventListener("click", async () => {
   if (REC.state !== "idle") return;
@@ -2999,7 +3225,7 @@ window.addEventListener("beforeunload", e => {
   setTimeout(() => {
     $("#leaveText").textContent = (REC.state !== "idle" ? "A recording is still running. " : "") +
       (n ? n + " student" + (n > 1 ? "s are" : " is") + " not saved as a file yet. " : "") +
-      (PS.ok ? "Your work is kept on this computer, but please save it as a file before you close." : "If you close this page now, the recordings and marks will be lost.");
+      (PS.ok ? "Your work is kept on this computer, but please save it as a file before you close." : "If you close this page now, the recordings and results will be lost.");
     openOv("#ovLeave");
   }, 400);
 });
@@ -3034,7 +3260,7 @@ $("#btnDeleteOne").addEventListener("click", () => {
   syncFromUI();
   const nm = studentLabel(cur);
   $("#delOneTitle").textContent = "Delete " + nm + "?";
-  $("#delOneText").textContent = "This deletes " + (cur.name ? cur.name + "'s" : "this student's") + " recording, transcript, marks and feedback from this computer. The other students stay. You cannot undo this." + (cur.saved ? "" : " This student is not saved as a file yet.");
+  $("#delOneText").textContent = "This deletes " + (cur.name ? cur.name + "'s" : "this student's") + " recording, transcript, results and feedback from this computer. The other students stay. You cannot undo this." + (cur.saved ? "" : " This student is not saved as a file yet.");
   $("#btnDelOneSave").hidden = !!cur.saved;
   $("#btnDelOneYes").textContent = "Delete " + nm;
   openOv("#ovDelOne");
