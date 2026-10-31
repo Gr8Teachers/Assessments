@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>VU23524 Assessment 2 Speaking Assessment</title>
 <style>
 :root{
@@ -408,9 +409,70 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
 .pr-ck thead{display:table-header-group}
 .pr-h{break-after:avoid;page-break-after:avoid}
 .pr-box{box-decoration-break:clone;-webkit-box-decoration-break:clone;orphans:3;widows:3}
+
+/* ===== printed report laid out like the assessment document ===== */
+#printArea{font-family:Calibri,Carlito,"Segoe UI",Arial,sans-serif;font-size:10.5pt;line-height:1.4;color:#22272B}
+.pd-doc + .pd-doc,.pr-one + .pr-one{break-before:page;page-break-before:always}
+.pd{display:block}
+.pd + .pd{break-before:page;page-break-before:always}
+.pd.pd-rest{break-before:auto;page-break-before:auto}
+.pd-ck + .pd-rest{margin-top:5mm}
+.pd-t1{font-size:19pt;color:#2E808E;line-height:1.25;margin:0 0 3mm;font-weight:400}
+.pd-cover.pj .pd-t1{font-size:24pt;margin-bottom:4mm}
+.pd-t2{font-size:19pt;color:#22272B;font-weight:400;line-height:1.2;margin:5mm 0 3mm}
+.pd-h{font-size:14pt;font-weight:700;color:#495054;margin:5mm 0 2.5mm}
+.pd-h3{font-size:14pt;font-weight:700;color:#2E808E;margin:4mm 0 2mm}
+.pd-h4{font-size:14pt;font-weight:700;color:#2E808E;margin:6mm 0 2mm}
+.pd-lab{font-size:9.5pt;font-weight:700;color:#2E808E;margin:3.5mm 0 1.2mm}
+.pd-lab.big{font-size:13pt;margin-top:4mm}
+.pd-lab.dark{color:#22272B;font-size:10.5pt}
+.pd-box{border:.3mm solid #2E808E;padding:1.2mm 2.2mm;min-height:6.5mm;font-size:10pt;box-sizing:border-box}
+.pd.pj .pd-box{border-color:#495054}
+.pd-box.tall{min-height:10mm;padding-top:2.2mm}
+.pd-det{display:grid;grid-template-columns:1fr 1fr 1fr;column-gap:4mm;margin-top:6mm}
+.pd-det .pd-lab{color:#495054;font-size:9pt}
+.pd-det .pd-box{border-color:#C9CFD2;font-size:9.5pt;min-height:6mm}
+.pd-p{font-size:10.5pt;margin:0 0 2mm}
+.pd-ck .pr-p{font-size:10.5pt;margin:0 0 2mm}
+.pd-ck .pr-p b{font-weight:700}
+.pd-cap{font-size:7.5pt;color:#495054;margin:3mm 0 1mm}
+.pd-note{font-size:8pt;color:#495054;margin-top:1.5mm}
+.pd-ul{margin:0 0 3mm;padding-left:6mm;font-size:10.5pt}
+.pd-ul li{margin-bottom:1mm}
+.pd-tk{font-size:12pt;margin-right:1mm}
+.pd-tk.on{color:#0B3F47;font-weight:700}
+.pd-oc .pd-tk + .pd-tk,.pd-oc .pd-tk:nth-of-type(2){margin-left:6mm}
+.pd-gap{display:inline-block;width:45mm}
+/* the checklist table, like the document's table */
+.pd .pr-ck{width:100%;border-collapse:collapse;font-size:10.5pt;border:.3mm solid #2E808E}
+.pd .pr-ck th{background:#2E808E;color:#fff;font-weight:700;font-size:10.5pt;text-align:left;vertical-align:middle;padding:2.2mm 2mm;border:.3mm solid #2E808E}
+.pd .pr-ck th .thn{font-size:8pt;font-weight:700;margin-top:.6mm;line-height:1.3}
+.pd .pr-ck td{border:.3mm solid #2E808E;padding:2mm 2mm 3mm;vertical-align:top;line-height:1.45}
+.pd .pr-ck .tk2{width:7mm;text-align:center;font-size:12pt;padding-left:1mm;padding-right:1mm}
+.pd .pr-ck th.tk2{font-size:10.5pt}
+.pd .pr-ck .n{width:9mm;text-align:left;font-family:inherit}
+.pd .pr-ck .tn{width:15mm;white-space:nowrap}
+.pd .pr-ck .cr{width:33%}
+.pd .pr-ck .sb{margin-bottom:1.2mm}
+.pd .pr-ck .sb span{font-size:11.5pt;margin-right:1.2mm}
+.pd .pr-ck .ev2{margin-top:1.5mm}
+.pd .pr-ck ul.bl{margin:1mm 0 0;padding-left:5mm}
+.pd .pr-ck ul.bl.tk{padding-left:1mm}
+.pd .pr-ck tr{break-inside:avoid;page-break-inside:avoid}
+.pd .pr-ck thead{display:table-header-group}
+.pd.pd-ck.pj .pr-ck .cr{width:30%}
+/* feedback and transcript after the checklist */
+.pd-rest .pr-h{font-size:14pt;font-weight:700;color:#495054;border:0;margin:5mm 0 2mm;padding:0;font-family:inherit}
+.pd-rest .pr-fb .h{font-size:10.5pt}
+.pd-rest .pr-fb .b{font-size:10pt;min-height:12mm}
+.pd-rest .pr-box{font-size:9.5pt;line-height:1.45;background:#fff;border-color:#C9CFD2}
+.pd-rest .pr-box.ipa{font-size:10pt}
+.pd-rest .pr-note{font-size:8.5pt;margin-top:1.5mm}
+.pd-out .pd-box{min-height:8mm}
+.pd-out .pd-box.tall{min-height:11mm}
 </style>
 </head>
-<body>
+<body class="no-ipa">
 
 <div class="topfix" id="topFix">
 <header class="bar">
@@ -558,7 +620,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
     </section>
 
     <section class="card" id="sec3">
-      <div class="sec-h"><span class="stepn">3</span><h2>Transcript</h2><span class="grow"></span><button type="button" class="ipasw onbar" role="switch" aria-checked="true" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA on</span></button></div>
+      <div class="sec-h"><span class="stepn">3</span><h2>Transcript</h2><span class="grow"></span><button type="button" class="ipasw onbar" role="switch" aria-checked="false" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA off</span></button></div>
       <div class="trtools">
         <button type="button" class="btn b-amber" id="btnWhisper">Transcribe the recording</button>
         <span class="msg" id="whisperMsg">Use this if no words appeared while you recorded.</span>
@@ -628,7 +690,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
         <button type="button" class="btn b-teal" id="btnSaveAll">Save all students</button>
       </div>
       </div>
-      <div class="check" style="margin-top:.4rem"><button type="button" class="ipasw" role="switch" aria-checked="true" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA on</span></button><span class="hint">When IPA is on, it is printed and saved in the report.</span></div>
+      <div class="check" style="margin-top:.4rem"><button type="button" class="ipasw" role="switch" aria-checked="false" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA off</span></button><span class="hint">When IPA is on, it is printed and saved in the report.</span></div>
       <p class="hint" style="margin:.6rem 0 0"><b>Print / Save as PDF</b> opens the print window. Choose a printer, or choose <b>Save as PDF</b> as the destination. <b>Save to this computer</b> keeps the recording (MP3) and a text report in one ZIP file. You can print and save as many times as you like.</p>
       <div class="status" id="saveStatus" style="display:none"></div>
     </section>
@@ -2944,7 +3006,7 @@ function clip(t, n) { t = String(t || "").trim(); return t.length > n ? t.slice(
 function speakerHTML(t) {
   return esc(String(t || "").trim()).replace(/^\s*(S|Student)\s*:\s*/gim, '<b class="spS">Student:</b> ').replace(/^\s*(T|Teacher)\s*:\s*/gim, '<b class="spT">Teacher:</b> ');
 }
-function reportHTML(r) {
+function reportHTML0(r) {
   const prof = profileById(r.profileId), o = overallOf(r), s = r.stats || analyse(r);
   const withIpa = ipaOn();
   const ON = "☑", OFF = "☐";
@@ -2991,12 +3053,96 @@ function reportHTML(r) {
     '<div class="pr-end"><div class="pr-note">Audio file: ' + esc(r.audio ? audioFileName(r) : "none") + ".</div>" +
     '<div class="pr-sign"><div>Teacher/assessor signature</div><div>Student signature</div></div></div>';
 }
+const PRINT_DOCS = [{"style": "skills", "t1": "Assessment event 2 of 3: Skills", "t2": "", "f1": "Document title: VU23524_AE_Sk2of3", "f2": "Resource ID: POP_2024_002_VU23524_AE_Sk2of3", "copy": ""}];
+
+/* =========================================================
+   PRINTED REPORT LAID OUT LIKE THE ASSESSMENT DOCUMENT
+   Cover details, checklist, feedback and transcript, then the
+   assessment outcome page, with the document's own footer.
+   ========================================================= */
+function pdReshape(html, r) {
+  const t = document.createElement("div"); t.innerHTML = html;
+  const grps = Array.from(t.querySelectorAll(".pr-grp"));
+  const parts = grps.length ? grps : [t];
+  return parts.map((g, gi) => pdOne(g, r, PRINT_DOCS[gi] || PRINT_DOCS[0], gi)).join("");
+}
+function pdOne(g, r, D, gi) {
+  const q = s => g.querySelector(s), qa = s => Array.from(g.querySelectorAll(s));
+  const fields = {};
+  qa(".pr-lab").forEach(l => { const v = l.nextElementSibling; if (v && v.classList.contains("pr-fld")) fields[l.textContent.trim()] = v.innerHTML; });
+  const unit = fields["Unit code and name"] || "", qual = fields["Qualification/Course code and name"] || "";
+  const resEl = q(".pr-res"), res = resEl ? (resEl.classList.contains("s") ? "s" : resEl.classList.contains("u") ? "u" : "n") : "n";
+  const resTxt = resEl ? resEl.textContent.trim() : "";
+  const heads = qa(".pr-h2").filter(h => h.textContent.trim() !== "Student details");
+  const ckHead = heads[0] ? heads[0].textContent.trim() : "Checklist";
+  const intro = qa(".pr-p").map(p => p.outerHTML).join("");
+  const table = q(".pr-ck");
+  /* everything after the checklist: feedback, transcript, IPA, audio note */
+  const rest = [];
+  qa(".pr-h, .pr-fb, .pr-box, .pr-note").forEach(el => { if (!el.parentElement.closest(".pr-fb")) rest.push(el.outerHTML); });
+  const box = (v, cls) => '<div class="pd-box' + (cls ? " " + cls : "") + '">' + (v || "") + "</div>";
+  const lab = (t, cls) => '<div class="pd-lab' + (cls ? " " + cls : "") + '">' + esc(t) + "</div>";
+  const P = D.style === "project";
+  /* the first document uses the default page, so no blank page comes first */
+  const pg = gi ? "pd-p" + gi : "auto", pgL = P ? "pd-l" + gi : pg;
+  const detail = [["Date", fields["Date"]], ["Attempt", fields["Attempt"]], ["Teacher/assessor", fields["Teacher/assessor"]], ["Recording length", fields["Recording length"]], ["Student words", fields["Student words"]],
+    Object.keys(fields).filter(k => /^Turns|^Pace/.test(k)).map(k => [k, fields[k]])[0] || ["", ""]].filter(x => x[0] && x[1] !== undefined);
+  const cover = '<section class="pd pd-cover ' + (P ? "pj" : "sk") + '" style="page:' + pg + '">' +
+    '<div class="pd-t1">' + esc(D.t1) + "</div>" + (D.t2 ? '<div class="' + (P ? "pd-t2" : "pd-t1") + '">' + esc(D.t2) + "</div>" : "") +
+    (P ? "" : '<div class="pd-h">Criteria</div>') +
+    lab("Unit code and name", "big") + box(unit) +
+    lab(P ? "Qualification or course code and name" : "Qualification/Course code and name", "big") + box(qual) +
+    '<div class="' + (P ? "pd-t2" : "pd-h") + '">Student details</div>' +
+    lab("Student name", P ? "big" : "") + box(esc(r.name || ""), "tall") +
+    lab(P ? "Student name and number" : "Student number", P ? "big" : "") + box("", "tall") +
+    '<div class="pd-det">' + detail.map(x => '<div><div class="pd-lab">' + esc(x[0]) + "</div>" + box(x[1]) + "</div>").join("") + "</div>" +
+    "</section>";
+  const ck = '<section class="pd pd-ck ' + (P ? "pj" : "sk") + '" style="page:' + pgL + '">' +
+    '<div class="' + (P ? "pd-t2" : "pd-h") + '">' + esc(ckHead) + "</div>" + intro +
+    '<div class="pd-cap">Checklist</div>' + (table ? table.outerHTML : "") +
+    '<div class="pd-note">Levels 3 Meets and 4 Strong = S. Levels 1 Not yet and 2 Developing = U/S.</div></section>';
+  const after = rest.length ? '<section class="pd pd-rest" style="page:' + pg + '">' + rest.join("") + "</section>" : "";
+  const ON = "☑", OFF = "☐", tk = on => '<span class="pd-tk' + (on ? " on" : "") + '">' + (on ? ON : OFF) + "</span>";
+  const h3 = t => '<div class="' + (P ? "pd-t2" : "pd-h3") + '">' + esc(t) + "</div>";
+  const h4 = t => '<div class="' + (P ? "pd-h4" : "pd-h3") + '">' + esc(t) + "</div>";
+  const lb = t => '<div class="' + (P ? "pd-lab dark" : "pd-lab") + '">' + esc(t) + "</div>";
+  const teacher = ($("#teacherName") && $("#teacherName").value.trim()) || "";
+  const met = fields["Criteria met"] ? fields["Criteria met"].replace(/<[^>]+>/g, "") : "";
+  const out = '<section class="pd pd-out ' + (P ? "pj" : "sk") + '" style="page:' + pg + '">' +
+    h3("Student assessment declaration") +
+    '<div class="pd-p">This assessment is my original work and has not been:</div><ul class="pd-ul"><li>copied from any source without proper referencing</li><li>written for me by any other person except where such collaboration has been approved by a teacher or assessor.</li></ul>' +
+    lb("Student signature and date") + box("", "tall") +
+    h4("Reasonable adjustment") +
+    '<div class="pd-p">' + tk(false) + " Reasonable adjustment was in place for this assessment event.</div>" +
+    '<div class="pd-p">If so, please provide details of any reasonable adjustment strategies that were implemented:</div>' + box("", "tall") +
+    h4("Assessment outcome") +
+    '<div class="pd-p pd-oc">' + tk(res === "s") + " Satisfactory" + tk(res === "u") + " Unsatisfactory</div>" +
+    lb("Comments") + box(res === "n" ? "" : esc(resTxt + (met ? ". " + met + " criteria met." : "."))) +
+    lb("Assessor name, signature and date") + box(teacher ? esc(teacher) + '<span class="pd-gap"></span>' + esc(fields["Date"] || "") : "", "tall") +
+    lb("Student acknowledgement of assessment outcome") + box("", "tall") +
+    lb("Student name, signature and date") + box(esc(r.name || ""), "tall") +
+    "</section>";
+  return '<div class="pd-doc">' + cover + ck + after + out + "</div>";
+}
+function reportHTML(r) { return pdReshape(reportHTML0(r), r); }
+/* footer and page numbers in the page margins, like the assessment document */
+function setPageFooter() {
+  let st = $("#prPageStyle");
+  if (!st) { st = document.createElement("style"); st.id = "prPageStyle"; document.head.appendChild(st); }
+  const q = s => '"' + String(s || "").replace(/["\\]/g, " ") + '"';
+  const foot = D => '@bottom-left{content:' + q(D.f1) + ' "\\A" ' + q(D.f2) + ';white-space:pre;font-family:Calibri,Carlito,Arial,sans-serif;font-size:7.5pt;color:#22272B;vertical-align:top;padding-top:5mm}' +
+    '@bottom-right{content:"Page " counter(page) " of " counter(pages)' + (D.copy ? ' "\\A" ' + q(D.copy) : "") + ';white-space:pre;text-align:right;font-family:Calibri,Carlito,Arial,sans-serif;font-size:7.5pt;color:#22272B;vertical-align:top;padding-top:5mm}';
+  st.textContent = "@page{size:A4 portrait;margin:20mm 21mm 22mm 21mm;" + foot(PRINT_DOCS[0]) + "}" +
+    PRINT_DOCS.map((D, i) => "@page pd-p" + i + "{size:A4 portrait;margin:20mm 21mm 22mm 21mm;" + foot(D) + "}" +
+      "@page pd-l" + i + "{size:A4 landscape;margin:16mm 18mm 20mm 18mm;" + foot(D) + "}").join("");
+}
+
 function buildPrint() {
   syncFromUI();
   $("#printArea").innerHTML = reportHTML(cur);
   fitPrint();
 }
-function setPageFooter(label) {
+function setPageFooter0(label) {
   let st = $("#prPageStyle");
   if (!st) { st = document.createElement("style"); st.id = "prPageStyle"; document.head.appendChild(st); }
   label = String(label || "").replace(/["\\\n]/g, " ");
@@ -3247,7 +3393,7 @@ function ipaOn() { return !document.body.classList.contains("no-ipa"); }
 function setIpa(on, keep) {
   document.body.classList.toggle("no-ipa", !on);
   document.querySelectorAll(".ipasw").forEach(b => { b.setAttribute("aria-checked", on ? "true" : "false"); b.querySelector(".lab").textContent = on ? "IPA on" : "IPA off"; });
-  if (keep !== false) store("eal19_speak_ipa", on ? "1" : "0");
+  if (keep !== false) store("eal_speak_ipa_v2", on ? "1" : "0");
   try { if (cur && cur.stats) renderEval(); } catch (e) {}
 }
 document.querySelectorAll(".ipasw").forEach(b => b.addEventListener("click", () => setIpa(!ipaOn())));
@@ -3263,7 +3409,7 @@ document.querySelectorAll(".ipasw").forEach(b => b.addEventListener("click", () 
   $("#profileSel").value = APP_PROFILE;
   { const p = profileById(APP_PROFILE); $("#asmtEy").textContent = p.short; $("#asmtTitle").textContent = p.title.replace(/^.*?of \d+:\s*/, ""); }
   const sl = store("eal19_speak_lang"); if (sl) $("#langSel").value = sl;
-  setIpa(store("eal19_speak_ipa") !== "0", false);
+  setIpa(store("eal_speak_ipa_v2") === "1", false); /* IPA is off unless the teacher turns it on */
   const st = store("eal19_speak_teacher"); if (st) $("#teacherName").value = st;
   const fs = store("eal19_speak_fs"); if (fs) { const b = $('.sz button[data-fs="' + fs + '"]'); if (b) b.click(); }
   if (!SR.available) { $("#chkLive").checked = false; $("#chkLive").disabled = true; $("#chkLive").parentNode.title = "This browser has no live transcription"; }
