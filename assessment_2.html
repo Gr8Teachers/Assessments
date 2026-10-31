@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>VU23492 Assessment 2 Speaking Assessment</title>
+<title>VU23496 Assessment 2 Speaking Assessment</title>
 <style>
 :root{
   --navy:#0B3F47; --navy-2:#14555F; --teal:#2E808E; --teal-d:#236A76; --teal-t:#E7F7F9;
@@ -479,7 +479,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
 <div class="topfix" id="topFix">
 <header class="bar">
   <h1>Speaking Assessment</h1>
-  <span class="unit">VU23492 Assessment 2</span>
+  <span class="unit">VU23496 Assessment 2</span>
   <div class="grow"></div>
   <div class="sz" role="group" aria-label="Text size">
     <button type="button" data-fs="16" aria-pressed="false" title="Smaller text">A-</button>
@@ -491,7 +491,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
 </header>
 
 <section class="asmt" aria-label="Assessment">
-  <div class="ey" id="asmtEy">VU23492 | Assessment event 2 of 2</div>
+  <div class="ey" id="asmtEy">VU23496 | Assessment event 2 of 2</div>
   <h2 id="asmtTitle">Skills, Conversation role play (meeting a new student)</h2>
 </section>
 
@@ -1132,7 +1132,7 @@ const IS_WEBKIT = (() => {
 const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent || "") || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 /* =========================================================
-   1. RUBRIC PROFILES (from VU23492 assessment guides)
+   1. RUBRIC PROFILES (from VU23496 assessment guides)
    ========================================================= */
 /* name of the second voice: "Teacher" by default, "Audience" for presentations */
 function tName() { try { return profileById(cur ? cur.profileId : PROFILES[0].id).tName || "Teacher"; } catch (e) { return "Teacher"; } }
@@ -1146,27 +1146,21 @@ const AC_LABEL = "Assessor’s comment (if required):";
 const AC = {comments: 1, label: AC_LABEL};
 const PRINT_CONF = {
   style: "task", heading: "Checklist",
-  intro: ["The assessor will use this checklist while observing you completing your assessment. Read the checklist to understand what skills you need to demonstrate/ items you need to complete or submit. You must meet all the criteria.", "Note that S = Satisfactory and U/S = Unsatisfactory."],
-  numHead: "Task number", commentHead: "Assessor comments", commentNote: "Describe the student’s ability in demonstrating the required skills and knowledge. Record your observations in enough detail to demonstrate your judgement of the student’s performance against the criteria required."
+  intro: ["Your teacher/assessor will complete this checklist while they observe you completing your assessment. Read the checklist to understand what skills you need to demonstrate. You must meet all the criteria.", "Note that S = Satisfactory and U/S = Unsatisfactory."],
+  numHead: "Task number", commentHead: "Assessor comments and student speech sample", commentNote: "Describe the student’s ability in demonstrating the required skills and knowledge. Record your observations in enough detail to demonstrate your judgement of the student’s performance against the criteria required."
 };
-const PT = ["Part 1", "Task 1"], PT2 = ["Part 1", "Task 2"], DC = [{date: 1}, {comments: 1, label: "Comments:"}];
 const PRINT_ROWS = {
-  sk1: {
-    greet:   {task: PT,  blocks: [{t: "Respond to greeting and 3 questions."}], comment: DC},
-    gesture: {task: PT2, blocks: [{t: "Use appropriate gestures to respond to questions."}], comment: DC}
-  },
-  sk2: {
-    follow:  {task: PT, blocks: [{t: "Follow a one-step instruction to participate in a learning activity"}], comment: DC},
-    repeat:  {task: PT, blocks: [{t: "Repeat information to check meaning"}], comment: DC},
-    answer:  {task: PT, blocks: [{t: "Respond to an extremely familiar question about a learning activity"}], comment: DC},
-    words:   {task: PT, blocks: [{t: "Use extremely familiar words related to a learning activity"}], comment: DC}
-  }
+  sk2: {"help": {"task": ["Part 1", "Task 1"], "blocks": [{"t": "Responded after the TAFE staff said ‘Good morning/afternoon. How can I help you?’"}], "comment": [{"date": 1}, {"sample": "Speech sample:"}, AC]}, "now": {"task": ["Part 1", "Task 1"], "blocks": [{"t": "Answered the question after the TAFE staff asked, ‘When do you have lessons now?’"}], "comment": [{"date": 1}, {"sample": "Speech sample:"}, {"text": "The student responded to inquiries by using:"}, {"sub": "sent", "t": "simple sentences"}, {"sub": "present", "t": "present tense"}, {"sub": "tp", "t": "time and place words"}, AC]}, "want": {"task": ["Part 1", "Task 1"], "blocks": [{"t": "Answered the question after the TAFE staff asked, ‘What days do you want to attend lessons?’"}], "comment": [{"date": 1}, {"sample": "Speech sample:"}, {"text": "The student responded to inquiries by using:"}, {"sub": "sent", "t": "simple sentences"}, {"sub": "present", "t": "present tense"}, {"sub": "tp", "t": "time and place words"}, AC]}, "repeat": {"task": ["Part 1", "Task 1"], "blocks": [{"t": "Asked the TAFE staff to repeat after they say they have a few questions while speaking too quickly"}], "comment": [{"date": 1}, {"sample": "Speech sample:"}, AC]}, "like": {"task": ["Part 1", "Task 1"], "blocks": [{"t": "Answered the TAFE staff’s question ‘Do you like your lessons?’"}], "comment": [{"date": 1}, {"sample": "Speech sample:"}, AC]}, "full": {"task": ["Part 1", "Task 1"], "blocks": [{"t": "Said their full name after the TAFE staff asked ‘What’s your full name?’"}], "comment": [{"date": 1}, {"sample": "Speech sample:"}, AC]}, "room": {"task": ["Part 1", "Task 1"], "blocks": [{"t": "Said their classroom number after the TAFE staff asked ‘What is your classroom number?’ (for students attending campus)"}], "comment": [{"date": 1}, {"sample": "Speech sample:"}, AC]}, "book": {"task": ["Part 1", "Task 1"], "blocks": [{"t": "Answered the TAFE staff’s question ‘Do you have a workbook?’"}], "comment": [{"date": 1}, {"sample": "Speech sample:"}, AC]}, "close": {"task": ["Part 1", "Task 1"], "blocks": [{"t": "Replied after the TAFE staff said they will change the lesson days"}], "comment": [{"date": 1}, {"sample": "Speech sample:"}, AC]}}
 };
 
-/* phrase banks used by Check against criteria (VU23492 interview and classroom role play) */
+/* phrase banks used by Check against criteria (VU23496) */
 const BANK = {
-  class92: ["pen","pens","pencil","pencils","notebook","notebooks","book","books","page","pages","paper","write","writing","read","reading","open","close","name","my name","teacher","student","class","classroom","desk","table","chair","bag","ruler","eraser","rubber","board","whiteboard","number","numbers","letter","letters","word","words","draw","copy","listen","repeat","look","sit","stand","line","date","today","here","this","yes","no","okay","ok","thank you","please","sorry"],
-  ack92: ["ok","okay","yes","yeah","done","finished","here","this","here you are","like this","ready","alright","all right"],
+  class92: ["pen","pencil","notebook","book","page","write","read","open","close","name","teacher","student","class","lesson","lessons","day","days","form","email","post","address","street","number","phone","room","workbook","workbooks"],
+  weather97: ["weather","sunny","sun","rain","raining","rainy","cloudy","clouds","cloud","windy","wind","hot","cold","warm","cool","storm","stormy","snow","degrees","temperature","umbrella","jacket","coat","hat","summer","winter","spring","autumn","nice day","beautiful day","forecast","humid","foggy","fog","dry","wet","sky","blue sky"],
+  likes97: ["i like","i love","i don't like","i do not like","i hate","i enjoy","my favourite","my favorite","i prefer","i really like","i don't love","not my favourite","i like it","i don't like it"],
+  unclear97: ["i don't understand","i do not understand","sorry","pardon","what","i'm not sure","not sure","what does","what is that","huh"],
+  para97: ["mm","mmm","hmm","mm-hm","uh-huh","oh","ah","aha","wow","yeah","uh","um","oh no","oh yes","oh ok"],
+  polite97: ["please","thank you","thanks","sorry","excuse me","you're welcome","nice to meet you","good morning","good afternoon","hello","have a nice day"],
   intro01: ["my name is","my name's","i'm","i am","nice to meet you","welcome","welcome to"],
   timePlace: ["last year","this year","next year","last month","last week","years ago","year ago","months ago","month ago","weeks ago","every day","every week","every morning","every weekend","on monday","on tuesday","on wednesday","on thursday","on friday","on saturday","on sunday","on the weekend","on weekends","in the morning","in the afternoon","in the evening","at night","before","after","now","today","tomorrow","yesterday","sometimes","always","usually","often","here","there","in australia","in sydney","at home","at school","at tafe","near","from","in my country"],
   future01: ["i will","i'll","i'm going to","i am going to","going to","next year","next week","in the future","i want to","i'd like to","i would like to","i hope to","i plan to"],
@@ -1254,56 +1248,14 @@ const BANK = {
   presentSimple: ["it washes","it drains","it doesn't","it does","it makes","it is","it's","it works","it spins","it won't","i live","i have","i need","my name is","my name's","my number is","my address is","i'm","i am"]
 };
 
-const UNIT_NAME = "VU23492 | Participate in extremely familiar spoken exchanges";
-const QUAL_NAME = "22636VIC_280 | Course in Initial EAL";
+const UNIT_NAME = "VU23496 | Communicate basic personal details and needs";
+const QUAL_NAME = "22637VIC | Course in EAL";
 
 const APP_PROFILE = "sk2"; /* this file marks one assessment event only */
 
+const R96 = {"hello": "\\b(hello|hi|hey|good (morning|afternoon|evening)|g'?day)\\b", "name": "\\b(my name is|my name's|i am [a-z]+|i'm [a-z]+|call me)\\b", "yes": "^\\W*(yes|yeah|yep|ok|okay|sure|alright|all right|no problem|of course|that's fine|fine)\\b", "days": "\\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mondays|tuesdays|wednesdays|thursdays|fridays|weekend|weekdays?|every day)\\b", "postemail": "\\b(post|email|e-mail|mail)\\b", "address": "(\\d+\\s*\\/?\\s*\\d*\\s+[a-z]+(\\s[a-z]+)?\\s+(street|st|road|rd|avenue|ave|parade|pde|place|pl|drive|dr|crescent|cres|lane|ln|way|close|court|ct|highway|hwy|boulevard|terrace)\\b)|\\b(street|road|avenue|parade|drive|crescent|lane|terrace|boulevard)\\b", "clar": "\\b(sorry|pardon|repeat|say (that|it) again|again,? please|more slowly|slowly,? please|slow down|what do you mean|i don'?t understand|i do not understand|can you explain|excuse me)\\b", "numbers": "\\d|\\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|zero|oh)\\b", "plural": "\\b(workbooks|books|lessons|days|classes|mondays|tuesdays|wednesdays|thursdays|fridays|students|questions|forms|pens|emails|teachers|rooms)\\b|\\b(two|three|four|2|3|4)\\s+[a-z]+s\\b", "pref": "\\b(i want|i'd like|i would like|i like|i prefer|by email,? please|by post,? please|email,? please|post,? please|i choose)\\b", "sent": "\\b(i|my|it|we|they)\\b\\s+\\S+\\s+\\S+", "present": "\\b(i have|i am|i'm|i go|i come|i study|i want|i like|i need|it is|it's|i do|i learn)\\b", "timeplace": "\\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekend|morning|afternoon|evening|night|today|tomorrow|now|o'?clock|am|pm|room|class|campus|here|online|\\d{1,2}(:\\d\\d)?)\\b", "thanks": "\\b(thank you|thanks|bye|goodbye|see you|ok|okay|great|good|you're welcome|have a nice day)\\b", "likes": "\\b(yes|no|i like|i love|i don'?t|i do|good|great|ok|okay|very good|fun|interesting|not really)\\b", "change": "\\b(change|want|days|day|lesson|lessons|class|time|please|help)\\b", "room": "\\d|\\b(room|one|two|three|four|five|six|seven|eight|nine|ten|hundred)\\b", "fullname": "\\b(my (full )?name is|my name's|it's|i am|i'm)\\b|^\\W*[a-z]+\\s+[a-z]+\\W*$", "letters": "(\\b[a-z]\\b[\\s,.\\-]*){3,}"};
 const PROFILES = [
-  {
-    id: "sk1",
-    title: "VU23492 Assessment event 1 of 2: Skills, Interview (greeting, questions and yes/no gestures)",
-    short: "VU23492 | Assessment event 1 of 2",
-    task: "Interview: respond to a greeting and 3 questions, then answer yes or no with a nod or a shake of the head",
-    target: [30, 300], targetText: "Aim: a short interview (under 5 minutes)",
-    tense: "present", vocab: "class92", vocabName: "familiar words",
-    keepTip: "Keep practising. Next time, answer with 2 or 3 words. For example: My name is Ana.",
-    info: "Interview with the teacher. Task 1: the teacher says hello and asks 3 simple questions; the student responds. Task 2: the teacher asks yes/no questions; the student says yes and nods, or says no and shakes their head.",
-    chips: [["Greeting","greetReply92"],["Answers to the teacher's questions","answerSamples92"],["Yes and no answers","yesNo92"],["Questions the teacher asked","tQs92"]],
-    criteria: [
-      {id:"greet", label:"Respond to greeting and 3 questions", detail:"Part 1, Task 1. The student says hello back and answers 3 simple questions, for example name, country, how are you.", auto:"greet92",
-        good:"You said hello and answered the teacher's questions.",
-        tip:"Say hello back to the teacher, then answer each question. For example: Hello. My name is Ana. I am from Vietnam."},
-      {id:"gesture", label:"Use appropriate gestures to respond to questions", detail:"Part 1, Task 2. Says yes and nods, or says no and shakes the head. Watch the student: gestures cannot be heard in the recording.", auto:"gest92", observe:true,
-        good:"You said yes and nodded, and said no and shook your head.",
-        tip:"Nod your head when you say yes. Shake your head when you say no."}
-    ]
-  },
-  {
-    id: "sk2",
-    title: "VU23492 Assessment event 2 of 2: Skills, Role play (classroom with a notebook and pen)",
-    short: "VU23492 | Assessment event 2 of 2",
-    task: "Role play: classroom. Listen to the teacher, follow instructions with a notebook and pen, and answer questions",
-    target: [60, 300], targetText: "Time allowed: 5 minutes",
-    tense: "present", vocab: "class92", vocabName: "classroom words",
-    keepTip: "Keep practising. Next time, say one more classroom word. For example: This is my notebook.",
-    info: "Classroom role play with the teacher. The student has a notebook and a pen. The teacher gives one-step instructions (for example: Open your notebook. Write your name.) and asks simple questions. The student follows the instructions, repeats to check (Page 5?), answers, and uses classroom words.",
-    chips: [["Instructions the teacher gave","instr92"],["Student repeated to check","repeat92"],["Answers to the teacher's questions","answerSamples92"],["Classroom words","classWords92"]],
-    criteria: [
-      {id:"follow", label:"Follow a one-step instruction to participate in a learning activity", detail:"For example: Open your notebook. Write your name. Watch the student: actions cannot be heard in the recording.", auto:"instr92", observe:true,
-        good:"You listened and followed the teacher's instructions.",
-        tip:"Listen to the instruction, then do it. For example: Open your notebook."},
-      {id:"repeat", label:"Repeat information to check meaning", detail:"For example: Page 5? Write my name?", auto:"repeat92",
-        good:"You repeated words to check what the teacher said.",
-        tip:"Repeat the teacher's words to check. For example: Page 5? Write my name?"},
-      {id:"answer", label:"Respond to an extremely familiar question about a learning activity", detail:"For example: Do you have a pen? Yes. What is this? A notebook.", auto:"answer92",
-        good:"You answered the teacher's questions about the class activity.",
-        tip:"Answer the teacher's question. For example: Do you have a pen? Yes, I have a pen."},
-      {id:"words", label:"Use extremely familiar words related to a learning activity", detail:"For example: pen, pencil, notebook, book, page, write, read, open, close, name.", auto:"words92",
-        good:"You used classroom words like pen, notebook and page.",
-        tip:"Learn and use classroom words: pen, pencil, notebook, book, page, write, open, close."}
-    ]
-  }
+{"id": "sk2", "title": "VU23496 Assessment event 2 of 2: Skills, Conversation role play (changing lesson days)", "short": "VU23496 | Assessment event 2 of 2", "task": "Conversation role play: the student asks a staff member to change their lesson days and answers questions", "target": [60, 300], "targetText": "Up to 5 minutes role play time", "tense": "present", "vocab": "class92", "vocabName": "familiar words", "keepTip": "Keep practising. Next time, give one more detail. For example: I want Tuesday and Thursday, in the morning.", "info": "The staff member asks: How can I help you? When do you have lessons now? (says they have a few questions too quickly) What days do you want to attend? Do you like your lessons? Full name? Classroom number? Do you have a workbook? and ends: OK, I will change your lesson days for you.", "chips": [["Greeting", "greetHits"], ["Asked to repeat or explain", "clarAsk"], ["Questions the student asked", "questions"]], "criteria": [{"id": "help", "label": "Responded to ‘How can I help you?’", "detail": "Responded after the staff member said ‘Good morning/afternoon. How can I help you?’ For example: I want to change my days, please.", "auto": "turn96", "trig": "help you", "want": "\\b(change|want|days|day|lesson|lessons|class|time|please|help)\\b", "q": "How can I help you?", "good": "You said what you need: to change your days.", "tip": "Say what you need. For example: Good morning. I want to change my days, please."}, {"id": "now", "label": "Said when they have lessons now", "detail": "Answered the question ‘When do you have lessons now?’", "auto": "turn96", "trig": "lessons now|when do you have (your )?lessons", "want": "\\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mondays|tuesdays|wednesdays|thursdays|fridays|weekend|weekdays?|every day)\\b", "q": "When do you have lessons now?", "subs": [{"id": "sent", "label": "Simple sentences"}, {"id": "present", "label": "Present tense"}, {"id": "tp", "label": "Time and place words"}], "subsRe": {"sent": "\\b(i|my|it|we|they)\\b\\s+\\S+\\s+\\S+", "present": "\\b(i have|i am|i'm|i go|i come|i study|i want|i like|i need|it is|it's|i do|i learn)\\b", "tp": "\\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekend|morning|afternoon|evening|night|today|tomorrow|now|o'?clock|am|pm|room|class|campus|here|online|\\d{1,2}(:\\d\\d)?)\\b"}, "subFb": {"sent": {"good": "You answered with a sentence.", "tip": "Answer with a sentence. For example: I have lessons on Monday."}, "present": {"good": "You used present tense.", "tip": "Use present tense. For example: I have, I want, I go."}, "tp": {"good": "You used time and place words.", "tip": "Use time and place words. For example: on Monday, in the morning, in room 5."}}, "good": "You said when you have lessons now.", "tip": "Say your lesson days now. For example: I have lessons on Monday and Wednesday."}, {"id": "want", "label": "Said what days they want to attend", "detail": "Answered the question ‘What days do you want to attend lessons?’", "auto": "turn96", "trig": "what days do you want|want to (attend|come)|which days", "want": "\\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mondays|tuesdays|wednesdays|thursdays|fridays|weekend|weekdays?|every day)\\b", "q": "What days do you want to attend lessons?", "subs": [{"id": "sent", "label": "Simple sentences"}, {"id": "present", "label": "Present tense"}, {"id": "tp", "label": "Time and place words"}], "subsRe": {"sent": "\\b(i|my|it|we|they)\\b\\s+\\S+\\s+\\S+", "present": "\\b(i have|i am|i'm|i go|i come|i study|i want|i like|i need|it is|it's|i do|i learn)\\b", "tp": "\\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekend|morning|afternoon|evening|night|today|tomorrow|now|o'?clock|am|pm|room|class|campus|here|online|\\d{1,2}(:\\d\\d)?)\\b"}, "subFb": {"sent": {"good": "You answered with a sentence.", "tip": "Answer with a sentence. For example: I have lessons on Monday."}, "present": {"good": "You used present tense.", "tip": "Use present tense. For example: I have, I want, I go."}, "tp": {"good": "You used time and place words.", "tip": "Use time and place words. For example: on Monday, in the morning, in room 5."}}, "good": "You said the days you want.", "tip": "Say the days you want. For example: I want Tuesday and Thursday, please."}, {"id": "repeat", "label": "Asked the staff member to repeat", "detail": "Asked the staff member to repeat after they said they have a few questions while speaking too quickly. For example: Sorry, can you repeat, please?", "auto": "turn96", "trig": "(a few|some) questions|questions for you", "want": "\\b(sorry|pardon|repeat|say (that|it) again|again,? please|more slowly|slowly,? please|slow down|what do you mean|i don'?t understand|i do not understand|can you explain|excuse me)\\b", "window": 2, "anyClar": true, "q": "I have a few questions ...", "good": "You asked the staff member to repeat when they spoke too quickly.", "tip": "When someone speaks too quickly, say: Sorry, can you repeat that, please?"}, {"id": "like", "label": "Answered ‘Do you like your lessons?’", "detail": "Answered the staff member’s question ‘Do you like your lessons?’", "auto": "turn96", "trig": "do you like", "want": "\\b(yes|no|i like|i love|i don'?t|i do|good|great|ok|okay|very good|fun|interesting|not really)\\b", "q": "Do you like your lessons?", "good": "You said if you like your lessons.", "tip": "Answer yes or no and add a word. For example: Yes, I like my lessons."}, {"id": "full", "label": "Said their full name", "detail": "Said their full name after the staff member asked ‘What’s your full name?’", "auto": "turn96", "trig": "full name", "want": "\\b(my (full )?name is|my name's|it's|i am|i'm)\\b|^\\W*[a-z]+\\s+[a-z]+\\W*$", "q": "What's your full name?", "good": "You said your full name.", "tip": "Say your full name. For example: My name is Ana Lopez."}, {"id": "room", "label": "Said their classroom number", "detail": "Said their classroom number after the staff member asked ‘What is your classroom number?’ (for students attending campus).", "auto": "turn96", "trig": "classroom number|room number|which room|what room", "want": "\\d|\\b(room|one|two|three|four|five|six|seven|eight|nine|ten|hundred)\\b", "q": "What is your classroom number?", "good": "You said your classroom number.", "tip": "Say your classroom number. For example: Room 12."}, {"id": "book", "label": "Answered ‘Do you have a workbook?’", "detail": "Answered the staff member’s question ‘Do you have a workbook?’", "auto": "turn96", "trig": "have a workbook|workbook\\?", "want": "\\b(yes|no|yeah|i have|i don'?t|not yet)\\b", "q": "Do you have a workbook?", "good": "You answered the question about your workbook.", "tip": "Answer yes or no. For example: Yes, I have a workbook."}, {"id": "close", "label": "Replied when the staff member said they will change the days", "detail": "Replied after the staff member said they will change the lesson days. For example: Thank you very much.", "auto": "turn96", "trig": "change your|will change", "last": true, "want": "\\b(thank you|thanks|bye|goodbye|see you|ok|okay|great|good|you're welcome|have a nice day)\\b", "q": "OK, I will change your lesson days for you.", "good": "You thanked the staff member at the end.", "tip": "Say thank you at the end. For example: Thank you very much. Bye."}]}
 ];
 const profileById = id => PROFILES.find(p => p.id === id) || PROFILES[0];
 
@@ -2304,7 +2256,7 @@ function analyse(r) {
   if (/\b(how much|cost|price|fee)\b/.test(text)) det.push("asked the cost");
   s.detailHits = det;
   if (prof.single) singleSpeakerStats(s, sRaw, text, words, dur, prof);
-  else { roleplayStats24(s, sRaw, text, words, sp, sTurns, prof); projectStats25(s, sRaw, text, words, sp, sTurns, dur); cert1Stats01(s, sRaw, text, words, sp, sTurns); stats92(s, sRaw, text, words, sp, sTurns); }
+  else { roleplayStats24(s, sRaw, text, words, sp, sTurns, prof); projectStats25(s, sRaw, text, words, sp, sTurns, dur); cert1Stats01(s, sRaw, text, words, sp, sTurns); stats9x(s, sRaw, text, words, sp, sTurns); }
   return s;
 }
 
@@ -2378,41 +2330,41 @@ function projectStats25(s, sRaw, text, words, sp, sTurns, dur) {
 }
 
 
-/* VU23492: Course in Initial EAL interview and classroom role play */
-function stats92(s, sRaw, text, words, sp, sTurns) {
-  const T = sp.turns, isQ = t => /\?\s*$/.test(t.trim()) || Q_START.test(t.trim());
-  const STOP92 = new Set("a an the is are am i you your my me it this that to of and or what do does please can yes no ok okay".split(" "));
-  const content = t => norm(t).trim().split(" ").filter(w => w && !STOP92.has(w));
-  const firstS = sTurns.length ? norm(sTurns.slice(0, 2).map(t => t.t).join(" ")) : " ";
-  s.greetReply92 = hits(firstS, BANK.greet).slice(0, 3);
-  s.tQs92 = [], s.answerSamples92 = [], s.answered92 = 0, s.longAns92 = 0, s.yesNo92 = [], s.instr92 = [], s.repeat92 = [], s.followReply92 = [];
-  T.forEach((t, i) => {
-    if (t.sp === "T") {
-      const sents = sentencesOf(t.t);
-      sents.filter(isQ).forEach(x => s.tQs92.push(x.split(/\s+/).slice(0, 8).join(" ")));
-      sents.filter(x => /^(now\s+|ok\s+|okay\s+|please\s+|can you\s+)?(open|close|write|take|show|give|put|pick|point|look|read|listen|repeat|copy|draw|circle|underline|turn|find|sit|stand|hold|get|choose|tick|say)\b/i.test(x.replace(/^[,.\s]+/, ""))).forEach(x => s.instr92.push(x.split(/\s+/).slice(0, 8).join(" ").replace(/[.,;:!]+$/, "")));
-      return;
+/* VU23496 and VU23497: replies to the teacher, likes, weather */
+function stats9x(s, sRaw, text, words, sp, sTurns) {
+  s._turns = sp.turns;
+  s.likeHits97 = hits(text, BANK.likes97).slice(0, 6);
+  s.unclearHits97 = hits(text, BANK.unclear97).slice(0, 6);
+  s.paraHits97 = hits(text, BANK.para97).slice(0, 6);
+  s.politeHits97 = hits(text, BANK.polite97).slice(0, 6);
+  s.weatherHits97 = hits(text, BANK.weather97).slice(0, 12);
+  /* the teacher asked the student to repeat, and the student answered */
+  const askRep = /\b(can you repeat|could you repeat|say (that|it) again|sorry\?|pardon\??|what did you say|again\?|can you say|one more time|i didn'?t (hear|catch))/i;
+  s.repeatResp97 = [];
+  sp.turns.forEach((t, i) => { if (t.sp === "S" && i > 0 && sp.turns[i - 1].sp === "T" && askRep.test(sp.turns[i - 1].t)) s.repeatResp97.push(t.t.split(/\s+/).slice(0, 10).join(" ")); });
+  s.repeatResp97 = s.repeatResp97.slice(0, 4);
+}
+/* find the teacher's line (trigger), then the student's reply */
+function turnReply(s, c) {
+  const T = s._turns || [], ci = x => new RegExp(x, "i");
+  let ti = -1;
+  if (c.first) ti = T.findIndex(t => t.sp === "T");
+  else T.forEach((t, i) => { if (t.sp === "T" && ci(c.trig).test(t.t) && (c.last || ti < 0)) ti = i; });
+  if (ti < 0) return null;
+  /* the student's reply up to the next teacher line; for some rows (for example asking to repeat, then the address)
+     keep reading the next exchanges until the expected answer is heard */
+  const out = [], want = c.want ? new RegExp(c.want, "i") : null, max = c.window || 1;
+  let k = ti + 1, exch = 1;
+  while (k < T.length) {
+    if (T[k].sp === "S") out.push(T[k].t.trim());
+    else {
+      const sofar = norm(out.join(" "));
+      if (exch >= max || !out.length || (want && want.test(sofar) && !(c.need || []).some(n => c.subsRe && c.subsRe[n] && !new RegExp(c.subsRe[n], "i").test(sofar)))) break;
+      exch++;
     }
-    const prev = i > 0 && T[i - 1].sp === "T" ? T[i - 1].t : null;
-    if (!prev) return;
-    const ans = t.t.trim(), n = norm(ans).trim().split(" ").filter(Boolean).length;
-    const short = ans.split(/\s+/).slice(0, 8).join(" ");
-    /* repeated the teacher's words to check: a short turn using the teacher's words, often as a question */
-    const pc = new Set(content(prev)), mine = content(ans), shared = mine.filter(w => pc.has(w));
-    const prevQ = sentencesOf(prev).some(isQ);
-    const isRepeat = n <= 7 && shared.length >= 1 && (/\?\s*$/.test(ans) || (!prevQ && shared.length >= Math.max(1, Math.ceil(mine.length * 0.6))));
-    const noAnswer = /^(i don'?t know|i do not know|don'?t know|sorry|pardon|what|huh|um+|i don'?t understand)[.?!]*$/i.test(ans.replace(/\s+/g, " "));
-    if (isRepeat && !s.repeat92.includes(short)) s.repeat92.push(short);
-    if (prevQ && !noAnswer && !(isRepeat && /\?\s*$/.test(ans))) {
-      s.answered92++; if (n >= 2) s.longAns92++;
-      if (s.answerSamples92.length < 6) s.answerSamples92.push(short);
-    }
-    if (/^(yes|yeah|yep|no|nope|not)\b/i.test(ans)) s.yesNo92.push(short);
-    if (sentencesOf(prev).some(x => /^(now\s+|ok\s+|okay\s+|please\s+|can you\s+)?(open|close|write|take|show|give|put|pick|point|look|read|copy|draw|circle|turn|find|hold|get|choose|tick)\b/i.test(x))) s.followReply92.push(short);
-  });
-  s.tQs92 = uniq(s.tQs92).slice(0, 8); s.instr92 = uniq(s.instr92).slice(0, 8); s.yesNo92 = uniq(s.yesNo92).slice(0, 8);
-  s.repeat92 = s.repeat92.slice(0, 6); s.followReply92 = uniq(s.followReply92).slice(0, 6);
-  s.classWords92 = hits(text, BANK.class92.filter(w => !["yes","no","okay","ok","thank you","please","sorry","this","here","today","my name"].includes(w))).slice(0, 12);
+    k++;
+  }
+  return {tq: T[ti].t, reply: out.join(" ").trim()};
 }
 
 /* VU23501: Certificate I conversation and deli transaction */
@@ -2477,32 +2429,40 @@ function singleSpeakerStats(s, sRaw, text, words, dur, prof) {
 
 const q = arr => arr.map(x => '"' + x + '"').join(", ");
 const labelNote = s => s.hasLabels ? "" : " No speaker labels, so the " + tName().toLowerCase() + "'s words are counted too.";
-function suggest(kind, s, prof) {
+function suggest(kind, s, prof, crit) {
   switch (kind) {
-    case "greet92": {
-      const g = s.greetReply92.length, a = s.answered92, l = s.longAns92;
-      const lvl = !s.hasLabels ? (g && s.words >= 8 ? 3 : g || s.words >= 4 ? 2 : 1) : g && a >= 3 && l >= 2 ? 4 : g && a >= 3 ? 3 : (g || a >= 1) ? 2 : 1;
-      return {level: lvl, evidence: (g ? "Greeted the teacher: " + q(s.greetReply92) + "." : "No greeting heard from the student.") + (s.hasLabels ? " Answered " + a + " of the teacher's questions" + (s.answerSamples92.length ? ", for example " + q(s.answerSamples92.slice(0, 3)) : "") + "." : "") + labelNote(s)};
+    case "turn96": {
+      const c = crit;
+      if (!s.hasLabels) return {level: null, evidence: "Mark each line as Student (S:) or Teacher (T:) so the app can find the student's reply." + labelNote(s)};
+      const f = turnReply(s, c);
+      if (!f) return {level: null, evidence: "The question (" + c.q + ") was not found in the transcript. Mark this row yourself."};
+      if (!f.reply) return {level: 1, evidence: "No reply after: \"" + f.tq.split(/\s+/).slice(0, 10).join(" ") + "\"."};
+      const nr = norm(f.reply), allTxt = norm(s._turns.filter(t => t.sp === "S").map(t => t.t).join(" "));
+      const ok = !c.want || new RegExp(c.want, "i").test(c.want === R96.letters ? f.reply.toLowerCase() : nr) || (c.anyClar && s.clarAsk.length > 0);
+      const subs = {};
+      Object.entries(c.subsRe || {}).forEach(([k, re]) => { const all = k.startsWith("all:"); const id = all ? k.slice(4) : k; subs[id] = new RegExp(re, "i").test(all ? allTxt : nr); });
+      const needOk = (c.need || []).every(k => subs[k]);
+      const n = nr.trim().split(" ").filter(Boolean).length;
+      const lvl = ok && needOk ? (n >= (c.long || 4) ? 4 : 3) : (ok || needOk) ? 2 : 1;
+      return {level: lvl, subs: Object.keys(subs).length ? subs : undefined, evidence: "\"" + f.reply.split(/\s+/).slice(0, 30).join(" ") + "\"" + (ok ? "" : " (the expected answer was not heard)") + (c.need && !needOk ? " (not heard: " + c.need.filter(k => !subs[k]).map(k => (c.subs.find(x => x.id === k) || {label: k}).label.toLowerCase()).join(", ") + ")" : "") + "."};
     }
-    case "gest92": {
-      const y = s.yesNo92;
-      return {level: null, evidence: (y.length ? "Yes/no answers heard: " + q(y.slice(0, 5)) + "." : "No yes/no answers heard.") + " Gestures cannot be heard: mark from what you saw (nod for yes, shake for no)."};
+    case "t197": {
+      const listen = s.responded >= 2, like = s.likeHits97.length > 0, repeat = s.repeatResp97.length > 0, ask = s.clarAsk.length > 0;
+      const n = [listen, like, repeat, ask].filter(Boolean).length;
+      return {level: n === 4 ? 4 : n === 3 ? 3 : n === 2 ? 2 : 1, subs: {listen, like, repeat, ask},
+        evidence: "Answered the assessor " + s.responded + " time" + (s.responded === 1 ? "" : "s") + ". Likes or dislikes: " + (like ? q(s.likeHits97) : "none heard") + ". Repeated when asked: " + (repeat ? q(s.repeatResp97.slice(0, 2)) : "not heard") + ". Asked to repeat: " + (ask ? q(s.clarAsk.slice(0, 3)) : "not heard") + ". Judge clear speech from the recording." + labelNote(s)};
     }
-    case "instr92": {
-      const i = s.instr92, f = s.followReply92;
-      return {level: null, evidence: (i.length ? "Instructions given: " + q(i.slice(0, 4)) + "." : "No instructions found in the transcript.") + (f.length ? " Student replied: " + q(f.slice(0, 3)) + "." : "") + " Mark from what the student did."};
+    case "t297": {
+      const req = s.clarAsk.length > 0, unclear = s.unclearHits97.length > 0, like = s.likeHits97.length > 0, resp = s.repeatResp97.length > 0, para = s.paraHits97.length > 0;
+      const n = [req, unclear, like, resp].filter(Boolean).length;
+      return {level: n === 4 ? 4 : n === 3 ? 3 : n === 2 ? 2 : 1, subs: {req, unclear, like, resp, para: para || undefined},
+        evidence: "Asked for repetition or clarification: " + (req ? q(s.clarAsk.slice(0, 3)) : "not heard") + ". Said meaning was unclear: " + (unclear ? q(s.unclearHits97.slice(0, 3)) : "not heard") + ". Like or dislike: " + (like ? q(s.likeHits97.slice(0, 3)) : "not heard") + ". Responded to a repetition request: " + (resp ? q(s.repeatResp97.slice(0, 2)) : "not heard") + ". Sounds: " + (para ? q(s.paraHits97.slice(0, 4)) : "none in the transcript; gestures cannot be heard") + "." + labelNote(s)};
     }
-    case "repeat92": {
-      const n = s.repeat92.length;
-      return {level: n >= 2 ? 4 : n === 1 ? 3 : 1, evidence: n ? "Repeated to check: " + q(s.repeat92.slice(0, 4)) + "." : "The student did not repeat the teacher's words to check." + labelNote(s)};
-    }
-    case "answer92": {
-      const a = s.answered92;
-      return {level: !s.hasLabels ? null : a >= 3 ? 4 : a >= 1 ? 3 : 1, evidence: s.hasLabels ? "Answered " + a + " of the teacher's questions" + (s.answerSamples92.length ? ": " + q(s.answerSamples92.slice(0, 4)) : "") + "." : "Mark each line as Student (S:) or Teacher (T:) so the app can find the answers."};
-    }
-    case "words92": {
-      const n = s.classWords92.length;
-      return {level: n >= 6 ? 4 : n >= 3 ? 3 : n >= 1 ? 2 : 1, evidence: n ? "Classroom words: " + q(s.classWords92.slice(0, 10)) + "." : "No classroom words heard from the student." + labelNote(s)};
+    case "info97": {
+      const w = s.weatherHits97.length, subject = w >= 1, simple = s.statements.length >= 2 && s.words >= 10, polite = s.politeHits97.length > 0, ask = s.clarAsk.length > 0;
+      const n = [subject, simple, polite].filter(Boolean).length;
+      return {level: n === 3 ? (w >= 4 ? 4 : 3) : n === 2 ? 2 : 1, subs: {subject, simple, polite, ask: ask || undefined},
+        evidence: "Weather words: " + (w ? q(s.weatherHits97.slice(0, 8)) : "none heard") + ". " + s.statements.length + " statements, " + s.words + " words. Polite words: " + (polite ? q(s.politeHits97.slice(0, 4)) : "none heard") + ". Asked for repetition: " + (ask ? q(s.clarAsk.slice(0, 3)) : "not heard (tick the box if it was not needed)") + "." + labelNote(s)};
     }
     case "open": {
       const g = s.greetHits.length, st = s.smallTalk.length;
@@ -2788,7 +2748,7 @@ function evaluate() {
   const s = analyse(cur); cur.stats = s;
   prof.criteria.forEach(c => {
     if (!c.auto) return;
-    const sug = suggest(c.auto, s, prof);
+    const sug = suggest(c.auto, s, prof, c);
     if (sug.level && !c.observe && cur.levelSrc[c.id] !== "teacher") { cur.levels[c.id] = sug.level; cur.levelSrc[c.id] = "auto"; }
     if (sug.evidence && (cur.evidenceSrc[c.id] !== "teacher" || !cur.evidence[c.id])) { cur.evidence[c.id] = sug.evidence; cur.evidenceSrc[c.id] = "auto"; }
     if (sug.subs) {
@@ -3190,7 +3150,7 @@ function reportHTML0(r) {
     '<div class="pr-end"><div class="pr-note">Audio file: ' + esc(r.audio ? audioFileName(r) : "none") + ".</div>" +
     '<div class="pr-sign"><div>Teacher/assessor signature</div><div>Student signature</div></div></div>';
 }
-const PRINT_DOCS = [{"style": "skills", "land": true, "t1": "Assessment event 2 of 2: Skills", "t2": "", "f1": "Document title: VU23492_AE_Sk2of2", "f2": "Resource ID: POP_2024_002_AE_Sk2of2", "copy": ""}];
+const PRINT_DOCS = [{"style": "skills", "land": true, "t1": "Assessment event 2 of 2: Skills", "t2": "", "f1": "Document title: VU23496_AE_Sk2of2", "f2": "Resource ID: POP_2024_002_VU23496_AE_Sk2of2", "copy": ""}];
 
 /* =========================================================
    PRINTED REPORT LAID OUT LIKE THE ASSESSMENT DOCUMENT
@@ -3615,7 +3575,7 @@ $("#btnSaveAllSide").addEventListener("click", saveAll);
    Recordings, transcripts and marks are kept in this browser,
    so closing the page or a crash does not lose them.
    ========================================================= */
-const DB_NAME = "eal_speaking_vu23492_ae2";
+const DB_NAME = "eal_speaking_vu23496_ae2";
 const KEEP_DAYS = 30;
 const PS = {db: null, ok: false, sig: "", timer: 0};
 function openDB() {
