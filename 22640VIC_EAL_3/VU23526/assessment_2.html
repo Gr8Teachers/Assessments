@@ -665,6 +665,23 @@ svg .pml{cursor:pointer}
 .pd-newp{break-before:page;page-break-before:always}
 .pd-part,.pd-cap{break-after:avoid;page-break-after:avoid}
 
+/* pop-up code list next to a mark on the photo */
+.pmmenu{position:fixed;z-index:70;background:#fff;border:1.5px solid var(--line);border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.22);padding:.45rem .5rem .5rem;width:min(94vw,560px);max-height:min(70vh,520px);overflow:auto}
+.pmmenu[hidden]{display:none}
+.pmmenu .mh{display:flex;align-items:center;justify-content:space-between;font-weight:700;color:var(--navy);font-size:.95rem;margin:0 0 .35rem}
+.pmmenu .mx{border:0;background:transparent;font-size:1.4rem;line-height:1;color:var(--grey);width:36px;height:36px;border-radius:8px;cursor:pointer}
+.pmmenu .mx:hover{background:var(--panel)}
+.pmmenu .mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.3rem}
+.pmmenu .mc{display:flex;align-items:center;gap:.4rem;border:1.5px solid #D9A3A3;background:#fff;border-radius:9px;min-height:40px;padding:.15rem .45rem;text-align:left;cursor:pointer;font-size:.8rem;color:var(--ink)}
+.pmmenu .mc b{font-size:.95rem;color:#8B0000;min-width:2.1rem}
+.pmmenu .mc.g{border-color:#9FCFD6}
+.pmmenu .mc.g b{color:var(--teal-d)}
+.pmmenu .mc:hover,.pmmenu .mc:focus-visible{background:var(--panel);outline:2px solid var(--teal);outline-offset:0}
+.pmmenu .mc.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.pmmenu .mc.on b{color:#fff}
+.pmmenu .ms{font-weight:700;color:var(--navy);font-size:.85rem;margin:.5rem 0 .3rem}
+.pmmenu .mf{margin-top:.5rem;display:flex;justify-content:flex-end}
+
 </style>
 </head>
 <body>
@@ -966,6 +983,8 @@ svg .pml{cursor:pointer}
     <div class="bigbtns"><button type="button" class="btn b-navy" data-close>OK</button></div>
   </div>
 </div>
+
+<div class="pmmenu" id="pmMenu" role="dialog" aria-label="Choose an error code" hidden></div>
 
 <div class="toast" id="toast"><span id="toastMsg"></span><button type="button" id="toastBtn">Undo</button></div>
 
@@ -1408,7 +1427,7 @@ function renderMarking() {
   $("#photoMark").hidden = MM !== "photo";
   $("#markView").hidden = MM !== "text";
   $("#markHint").textContent = MM === "photo"
-    ? "Draw on the photo with your finger, pen or mouse (underline or circle the error), then tap a code below. A single tap adds a ^ (for a missing word). Tap a code label to change or remove it."
+    ? "Draw on the photo with your finger, pen or mouse (underline or circle the error). A list of codes opens next to the mark: tap one. A single tap adds a ^ (for a missing word). Tap a code label (or ?) to change or remove it."
     : "Tap a word (tap a second word to mark a phrase), then tap a code. Tap a code label in the text to change or remove it.";
   if (MM === "photo") renderPhotoMark(); else renderMarks();
 }
@@ -1458,6 +1477,37 @@ function renderPhotoSelBar() {
   $("#btnMarkDel").hidden = !m; $("#btnMarkDel").textContent = "Remove mark";
   $$(".cbtn").forEach(b => { b.disabled = !m; b.classList.toggle("on", !!(m && m.code === b.dataset.code)); });
 }
+/* pop-up list of codes next to the selected mark on the photo */
+function closeCodeMenu() { const m = $("#pmMenu"); if (m) m.hidden = true; }
+function openCodeMenu() {
+  const pm = selPhotoMark(), lab = PSEL && document.querySelector('#pmSvg [data-pm="' + PSEL + '"]');
+  const menu = $("#pmMenu"); if (!pm || !menu) return;
+  const btn = (x, good) => '<button type="button" class="mc' + (good ? " g" : "") + (pm.code === x.c ? " on" : "") + '" data-mcode="' + esc(x.c) + '"><b>' + esc(good ? x.l : x.c) + "</b><span>" + esc(x.n) + "</span></button>";
+  menu.innerHTML = '<div class="mh"><span>Choose a code</span><button type="button" class="mx" data-mclose aria-label="Close">×</button></div>' +
+    '<div class="mg">' + ERR_CODES.map(x => btn(x, false)).join("") + "</div>" +
+    '<div class="ms">Good use</div><div class="mg">' + GOOD_CODES.map(x => btn(x, true)).join("") + "</div>" +
+    '<div class="mf"><button type="button" class="small-btn b-x" data-mdel>Remove this mark</button></div>';
+  menu.hidden = false;
+  const r = (lab || $("#pmStage")).getBoundingClientRect(), mw = menu.offsetWidth, mh = menu.offsetHeight, vw = innerWidth, vh = innerHeight;
+  let x = Math.min(Math.max(8, r.left), vw - mw - 8), y = r.bottom + 6;
+  if (y + mh > vh - 8) y = Math.max(8, r.top - mh - 6);
+  if (y + mh > vh - 8) y = Math.max(8, vh - mh - 8);
+  menu.style.left = x + "px"; menu.style.top = y + "px";
+  const first = menu.querySelector(".mc.on") || menu.querySelector(".mc"); if (first) first.focus({preventScroll: true});
+}
+(function wireCodeMenu() {
+  const menu = $("#pmMenu");
+  menu.addEventListener("click", e => {
+    const b = e.target.closest("[data-mcode]");
+    if (b) { applyPhotoCode(b.dataset.mcode); closeCodeMenu(); return; }
+    if (e.target.closest("[data-mdel]")) { closeCodeMenu(); deletePhotoMark(); return; }
+    if (e.target.closest("[data-mclose]")) closeCodeMenu();
+  });
+  document.addEventListener("pointerdown", e => { if (!menu.hidden && !menu.contains(e.target) && !e.target.closest("#pmSvg [data-pm]")) closeCodeMenu(); }, true);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeCodeMenu(); });
+  window.addEventListener("resize", closeCodeMenu);
+  $("#pmBox").addEventListener("scroll", closeCodeMenu);
+})();
 function applyPhotoCode(code) {
   const m = selPhotoMark(); if (!m) return;
   m.code = code; if (isGood(code)) m.fix = "";
@@ -1480,7 +1530,7 @@ $("#pmZoomOut").addEventListener("click", () => { PZOOM = Math.max(1, PZOOM - 0.
   box.addEventListener("pointerdown", e => {
     const p = curPhoto(); if (!p || e.button > 0) return;
     const lab = e.target.closest("[data-pm]");
-    if (lab) { e.preventDefault(); PSEL = PSEL === lab.dataset.pm ? null : lab.dataset.pm; drawPhotoMarks(); renderSelBar(); return; }
+    if (lab) { e.preventDefault(); e.stopPropagation(); PSEL = lab.dataset.pm; drawPhotoMarks(); renderSelBar(); openCodeMenu(); return; }
     if (PMOVE) return;
     e.preventDefault();
     try { box.setPointerCapture(e.pointerId); } catch (er) {}
@@ -1506,6 +1556,7 @@ $("#pmZoomOut").addEventListener("click", () => { PZOOM = Math.max(1, PZOOM - 0.
     d.p.marks = d.p.marks || []; d.p.marks.push(m);
     PSEL = m.id; touch();
     drawPhotoMarks(); renderSelBar(); renderTally(); renderPhotos(); renderTabs();
+    openCodeMenu(); /* choose the code right next to the mark, no scrolling */
   };
   box.addEventListener("pointerup", end); box.addEventListener("pointercancel", end);
 })();
