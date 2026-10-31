@@ -1471,21 +1471,25 @@ function renderMarking() {
   $("#photoMark").hidden = MM !== "photo";
   $("#markView").hidden = MM !== "text";
   $("#markHint").textContent = MM === "photo"
-    ? "Draw on the photo with your finger, pen or mouse (underline or circle the error). A list of codes opens next to the mark: tap one. A single tap adds a ^ (for a missing word). Tap a code label (or ?) to change or remove it."
+    ? "Draw on the photo with your finger, pen or mouse (underline or circle the error). A list of codes opens next to the mark: tap one. A single tap adds a ^ (missing word); a double tap adds an upside-down ^. Hold the pen still at the end of a line, circle or box to make it neat. Tap a code label (or ?) to change or remove it, or drag it to move it off the writing."
     : "Tap a word (tap a second word to mark a phrase), then tap a code. Tap a code label in the text to change or remove it.";
   if (MM === "photo") renderPhotoMark(); else renderMarks();
 }
 $$(".mmbtn").forEach(b => b.addEventListener("click", () => { if (b.disabled) return; MM = b.dataset.mm; PSEL = null; SEL.a = SEL.b = null; SEL.mark = null; renderMarking(); }));
 const curPhoto = () => curStage().photos[PAGE];
 const selPhotoMark = () => { const p = curPhoto(); return p && PSEL ? (p.marks || []).find(m => m.id === PSEL) : null; };
+const LABEL_POS = {};
 function markSVG(p, live) {
   const w = p.w || 1000, h = p.h || 1400, sw = Math.max(2, w / 450), fs = Math.max(10, w / 90);
   let out = "";
   (p.marks || []).forEach(m => {
     const good = isGood(m.code), codeCol = !m.code ? "#B33A3A" : good ? "#2E808E" : "#8B0000";
-    const T = penTool(m.tool || "pen"), lineCol = m.color || codeCol, lw = sw * T.w * (m.size || 1);
-    /* the label keeps the pen colour, but a highlighter's light colour is too pale for text */
-    const col = m.color && T.id !== "hl" ? m.color : codeCol;
+    const T = penTool(m.tool || "pen"), lw = sw * T.w * (m.size || 1);
+    /* errors keep the pen colour; good use is always teal with a light teal label, so it stands apart from errors.
+       A highlighter's light colour is too pale for text, so its label uses the code colour */
+    const lineCol = good && T.id !== "hl" ? "#2E808E" : (m.color || codeCol);
+    /* labels look like the code buttons: dark red on a pink border for errors, dark teal on a light teal border for good use */
+    const col = good ? "#236A76" : "#8B0000", edge = good ? "#9FCFD6" : "#D9A3A3";
     const sel = live && m.id === PSEL;
     const pts = m.pts.map(q => q[0].toFixed(1) + "," + q[1].toFixed(1)).join(" ");
     if (sel) out += '<polyline points="' + pts + '" fill="none" stroke="#8CDBE5" stroke-width="' + (lw + sw * 2.5) + '" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>';
@@ -1494,8 +1498,16 @@ function markSVG(p, live) {
     const txt = m.code ? codeLabel(m.code) + (m.fix ? "  " + m.fix : "") : (live ? "?" : "");
     if (!txt) return;
     const tw = Array.from(txt).reduce((t, ch) => t + (/[MW]/.test(ch) ? 0.9 : /[A-Z#✓]/.test(ch) ? 0.68 : /[mw]/.test(ch) ? 0.8 : /[ilj.,']/.test(ch) ? 0.3 : ch === " " ? 0.28 : 0.55), 0) * fs + fs * 0.75, th = fs * 1.35;
-    const lx = Math.max(0, Math.min(w - tw, last[0] + sw * 1.5)), ly = Math.max(0, Math.min(h - th, last[1] - th - sw));
-    out += '<g class="pml"' + (live ? ' data-pm="' + m.id + '"' : "") + '><rect x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" width="' + tw.toFixed(1) + '" height="' + th.toFixed(1) + '" rx="' + (fs * 0.25).toFixed(1) + '" fill="#fff" fill-opacity=".85" stroke="' + (sel ? "#0B3F47" : col) + '" stroke-width="' + (sel ? sw * 1.6 : Math.max(1, sw * 0.5)) + '"/><text x="' + (lx + fs * 0.35).toFixed(1) + '" y="' + (ly + th * 0.74).toFixed(1) + '" font-family="Calibri,Carlito,Arial,sans-serif" font-weight="400" font-size="' + fs.toFixed(1) + '" fill="' + col + '">' + esc(txt) + "</text></g>";
+    /* label just to the right of where the mark ends, level with it, so it does not cover the writing */
+    /* a label the teacher dragged somewhere else stays there, with a thin line back to its mark */
+    const moved = typeof m.lx === "number";
+    const lx = Math.max(0, Math.min(w - tw, moved ? m.lx : last[0] + sw * 2 + fs * 0.15)), ly = Math.max(0, Math.min(h - th, moved ? m.ly : last[1] - th * 0.5));
+    if (live) LABEL_POS[m.id] = [lx, ly];
+    if (moved) {
+      const tx = Math.max(lx, Math.min(lx + tw, last[0])), ty = Math.max(ly, Math.min(ly + th, last[1]));
+      if (Math.hypot(tx - last[0], ty - last[1]) > fs * 0.8) out += '<line x1="' + last[0].toFixed(1) + '" y1="' + last[1].toFixed(1) + '" x2="' + tx.toFixed(1) + '" y2="' + ty.toFixed(1) + '" stroke="' + edge + '" stroke-width="' + Math.max(1, sw * 0.5) + '" stroke-dasharray="' + (sw * 1.5) + " " + sw + '"/>';
+    }
+    out += '<g class="pml"' + (live ? ' data-pm="' + m.id + '"' : "") + '><rect x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" width="' + tw.toFixed(1) + '" height="' + th.toFixed(1) + '" rx="' + (fs * 0.25).toFixed(1) + '" fill="#fff" fill-opacity=".92" stroke="' + (sel ? "#0B3F47" : edge) + '" stroke-width="' + (sel ? sw * 1.6 : Math.max(1, sw * 0.5)) + '"/><text x="' + (lx + fs * 0.35).toFixed(1) + '" y="' + (ly + th * 0.74).toFixed(1) + '" font-family="Calibri,Carlito,Arial,sans-serif" font-weight="700" font-size="' + fs.toFixed(1) + '" fill="' + col + '">' + esc(txt) + "</text></g>";
   });
   return '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' + out + "</svg>";
 }
@@ -1575,41 +1587,119 @@ renderPenTools(); renderPenSizes();
 $("#pmMove").addEventListener("click", () => { PMOVE = true; renderPhotoMark(); });
 $("#pmZoomIn").addEventListener("click", () => { PZOOM = Math.min(3, PZOOM + 0.5); renderPhotoMark(); });
 $("#pmZoomOut").addEventListener("click", () => { PZOOM = Math.max(1, PZOOM - 0.5); renderPhotoMark(); });
+/* hold the pen still at the end of a stroke and it turns into a neat shape:
+   a straight line, a circle or oval, or a rectangle */
+function shapeFrom(pts) {
+  if (pts.length < 4) return null;
+  const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys), w = x1 - x0, h = y1 - y0, D = Math.hypot(w, h);
+  if (D < 4) return null;
+  const s = pts[0], e = pts[pts.length - 1], chord = Math.hypot(e[0] - s[0], e[1] - s[1]);
+  let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+  const closed = chord < 0.3 * D && L > 1.8 * D;
+  if (!closed) {
+    if (!chord) return null;
+    const dev = Math.max(...pts.map(q => Math.abs((e[0] - s[0]) * (s[1] - q[1]) - (s[0] - q[0]) * (e[1] - s[1])) / chord));
+    if (dev / chord >= 0.1) return null;
+    /* nearly flat or nearly upright lines are made exactly flat or upright */
+    const ang = Math.abs(Math.atan2(e[1] - s[1], e[0] - s[0]) * 180 / Math.PI);
+    if (ang < 6 || ang > 174) { const y = (s[1] + e[1]) / 2; return [[s[0], y], [e[0], y]]; }
+    if (Math.abs(ang - 90) < 6) { const x = (s[0] + e[0]) / 2; return [[x, s[1]], [x, e[1]]]; }
+    return [s.slice(), e.slice()];
+  }
+  const m = Math.max(1, Math.min(w, h));
+  const edge = pts.reduce((a, q) => a + Math.min(q[0] - x0, x1 - q[0], q[1] - y0, y1 - q[1]), 0) / pts.length / m;
+  const near = (cx, cy) => pts.some(q => Math.hypot(q[0] - cx, q[1] - cy) < 0.22 * Math.max(w, h));
+  if (edge < 0.07 && near(x0, y0) && near(x1, y0) && near(x1, y1) && near(x0, y1)) return [[x1, y0], [x1, y1], [x0, y1], [x0, y0], [x1, y0]];
+  /* a roughly round shape becomes a perfect circle; a longer one becomes a neat oval */
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, out = [], round = Math.min(w, h) / Math.max(w, h) > 0.8;
+  const rx = round ? (w + h) / 4 : w / 2, ry = round ? rx : h / 2;
+  for (let i = 0; i <= 64; i++) { const a = i / 64 * 2 * Math.PI; out.push([cx + rx * Math.cos(a), cy + ry * Math.sin(a)]); }
+  return out;
+}
 (function wirePhotoDraw() {
-  const box = $("#pmStage"); let dr = null;
+  const box = $("#pmStage"); let dr = null, ld = null;
+  /* single tap = ^ (missing word); a second tap in the same place straight away turns it into an upside-down ^ */
+  let lastTap = null;
   const toImg = (e, p) => { const r = box.getBoundingClientRect(); return [Math.max(0, Math.min(p.w, (e.clientX - r.left) / r.width * p.w)), Math.max(0, Math.min(p.h, (e.clientY - r.top) / r.height * p.h))]; };
   box.addEventListener("pointerdown", e => {
     const p = curPhoto(); if (!p || e.button > 0) return;
     const lab = e.target.closest("[data-pm]");
-    if (lab) { e.preventDefault(); e.stopPropagation(); PSEL = lab.dataset.pm; drawPhotoMarks(); renderSelBar(); openCodeMenu(); return; }
+    if (lab) {
+      /* tap a label to choose a code; drag it to move it off the writing */
+      e.preventDefault(); e.stopPropagation();
+      const id = lab.dataset.pm, m = (p.marks || []).find(x => x.id === id), lp = LABEL_POS[id] || [0, 0];
+      PSEL = id; closeCodeMenu();
+      try { box.setPointerCapture(e.pointerId); } catch (er) {}
+      ld = {m, p, x0: e.clientX, y0: e.clientY, lx: lp[0], ly: lp[1], moved: false};
+      drawPhotoMarks(); renderSelBar();
+      return;
+    }
     if (PMOVE) return;
     e.preventDefault();
+    if (lastTap && Date.now() - lastTap.t < 400 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 14) {
+      const lt = lastTap; lastTap = null; clearTimeout(lt.timer);
+      const m = (lt.p.marks || []).find(x => x.id === lt.id);
+      if (m) {
+        const c = m.pts[1], k = c[0] - m.pts[0][0];
+        m.pts = [[c[0] - k, c[1] - k], [c[0], c[1]], [c[0] + k, c[1] - k]]; m.kind = "vcaret";
+        PSEL = m.id; touch(); drawPhotoMarks(); renderSelBar(); openCodeMenu();
+      }
+      return;
+    }
     try { box.setPointerCapture(e.pointerId); } catch (er) {}
     const pt = toImg(e, p);
-    dr = {p, pts: [pt], x0: e.clientX, y0: e.clientY, far: 0};
+    dr = {p, pts: [pt], x0: e.clientX, y0: e.clientY, far: 0, hx: e.clientX, hy: e.clientY, hold: 0, snapped: false};
     const svg = box.querySelector("svg");
     if (svg) { const pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline"); pl.setAttribute("fill", "none"); const T = penTool(PEN.tool); pl.setAttribute("stroke", PEN.col[T.id]); pl.setAttribute("stroke-width", Math.max(2, p.w / 450) * T.w * penSize(PEN.size)); if (T.op < 1) pl.setAttribute("stroke-opacity", T.op); pl.setAttribute("stroke-linecap", T.id === "hl" ? "butt" : "round"); pl.setAttribute("stroke-linejoin", "round"); pl.setAttribute("points", pt.join(",")); svg.appendChild(pl); dr.pl = pl; }
   });
+  const snap = d => {
+    if (dr !== d || d.snapped || d.far < 15) return;
+    const sh = shapeFrom(d.pts); if (!sh) return;
+    d.pts = sh; d.snapped = true;
+    if (d.pl) d.pl.setAttribute("points", d.pts.map(q => q.join(",")).join(" "));
+    try { navigator.vibrate && navigator.vibrate(12); } catch (er) {}
+  };
   box.addEventListener("pointermove", e => {
-    if (!dr) return;
+    if (ld) {
+      const dx = e.clientX - ld.x0, dy = e.clientY - ld.y0;
+      if (!ld.moved && Math.hypot(dx, dy) < 5) return;
+      ld.moved = true;
+      const r = box.getBoundingClientRect(), k = ld.p.w / r.width;
+      ld.m.lx = ld.lx + dx * k; ld.m.ly = ld.ly + dy * k;
+      drawPhotoMarks();
+      return;
+    }
+    if (!dr || dr.snapped) return;
     const pt = toImg(e, dr.p), last = dr.pts[dr.pts.length - 1];
     dr.far = Math.max(dr.far, Math.hypot(e.clientX - dr.x0, e.clientY - dr.y0));
+    if (Math.hypot(e.clientX - dr.hx, e.clientY - dr.hy) > 3) { dr.hx = e.clientX; dr.hy = e.clientY; clearTimeout(dr.hold); const d = dr; dr.hold = setTimeout(() => snap(d), 550); }
     if (Math.hypot(pt[0] - last[0], pt[1] - last[1]) < dr.p.w / 400) return;
     dr.pts.push(pt);
     if (dr.pl) dr.pl.setAttribute("points", dr.pts.map(q => q.join(",")).join(" "));
   });
   const end = e => {
-    if (!dr) return; const d = dr; dr = null;
+    if (!dr) return; const d = dr; dr = null; clearTimeout(d.hold);
     if (e.type === "pointercancel") { drawPhotoMarks(); return; }
     let pts = d.pts;
-    if (d.far < 8 || pts.length < 2) { const c = pts[0], k = d.p.w / 70; pts = [[c[0] - k, c[1] + k], c, [c[0] + k, c[1] + k]]; }
+    const tap = !d.snapped && (d.far < 8 || pts.length < 2);
+    if (tap) { const c = pts[0], k = d.p.w / 180; pts = [[c[0] - k, c[1] + k], c, [c[0] + k, c[1] + k]]; }
     const m = {id: uid(), pts: pts.map(q => [Math.round(q[0] * 10) / 10, Math.round(q[1] * 10) / 10]), code: "", fix: "", tool: PEN.tool, color: PEN.col[PEN.tool], size: penSize(PEN.size)};
+    if (tap) m.kind = "caret";
     d.p.marks = d.p.marks || []; d.p.marks.push(m);
     PSEL = m.id; touch();
     drawPhotoMarks(); renderSelBar(); renderTally(); renderPhotos(); renderTabs();
-    openCodeMenu(); /* choose the code right next to the mark, no scrolling */
+    /* choose the code right next to the mark, no scrolling; after a tap, wait a moment in case it is a double tap */
+    if (tap) { lastTap = {t: Date.now(), x: d.x0, y: d.y0, id: m.id, p: d.p, timer: setTimeout(() => { if (lastTap && lastTap.id === m.id) { lastTap = null; openCodeMenu(); } }, 400)}; }
+    else openCodeMenu();
   };
-  box.addEventListener("pointerup", end); box.addEventListener("pointercancel", end);
+  const endLabel = e => {
+    const d = ld; ld = null;
+    if (d.moved) { touch(); drawPhotoMarks(); renderSelBar(); }
+    else openCodeMenu();
+  };
+  box.addEventListener("pointerup", e => { if (ld) return endLabel(e); end(e); });
+  box.addEventListener("pointercancel", e => { if (ld) { ld = null; drawPhotoMarks(); return; } end(e); });
 })();
 
 /* =========================================================
