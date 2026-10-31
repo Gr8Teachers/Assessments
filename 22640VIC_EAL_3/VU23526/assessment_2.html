@@ -682,6 +682,22 @@ svg .pml{cursor:pointer}
 .pmmenu .ms{font-weight:700;color:var(--navy);font-size:.85rem;margin:.5rem 0 .3rem}
 .pmmenu .mf{margin-top:.5rem;display:flex;justify-content:flex-end}
 
+/* pen types and colours */
+.pmtools{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;margin-bottom:.45rem}
+.pmtool{display:flex;gap:.3rem;flex-wrap:wrap}
+.ptb{display:inline-flex;align-items:center;gap:.35rem}
+.pti{display:inline-block;width:18px;border-radius:2px;background:currentColor}
+.pti-pen{height:2px}
+.pti-marker{height:5px}
+.pti-hl{height:10px;background:#FFE600;opacity:.8}
+.pmcols{display:flex;gap:.35rem;align-items:center;margin-left:.3rem}
+.pcol{width:30px;height:30px;border-radius:50%;border:2px solid #fff;background:var(--c);box-shadow:0 0 0 1.5px var(--line);cursor:pointer;padding:0}
+.pcol.on{box-shadow:0 0 0 3px var(--navy)}
+.pmsz-l{margin-left:.6rem}
+.pmsizes{display:flex;gap:.3rem}
+.psz{width:40px;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.pszd{display:inline-block;border-radius:50%;background:currentColor}
+
 </style>
 </head>
 <body>
@@ -810,6 +826,13 @@ svg .pml{cursor:pointer}
               <button type="button" class="small-btn" id="pmZoomOut" title="Smaller" aria-label="Zoom out">−</button>
               <span id="pmZoom" class="hint">100%</span>
               <button type="button" class="small-btn" id="pmZoomIn" title="Bigger" aria-label="Zoom in">+</button>
+            </div>
+            <div class="pmtools" role="group" aria-label="Pen">
+              <span class="mm-l">Pen:</span>
+              <span class="pmtool" id="pmTools"></span>
+              <span class="pmcols" id="pmCols"></span>
+              <span class="mm-l pmsz-l">Size:</span>
+              <span class="pmsizes" id="pmSizes"></span>
             </div>
             <div class="pmbox" id="pmBox"><div class="pmstage" id="pmStage"></div></div>
           </div>
@@ -1420,6 +1443,27 @@ $("#btnSelClear").addEventListener("click", () => { SEL.a = SEL.b = null; SEL.ma
 
 /* ---- marking on the photo ---- */
 let MM = "photo", PAGE = 0, PSEL = null, PZOOM = 1, PMOVE = false;
+/* pen types and colours for marking on the photo */
+const PEN_TOOLS = [
+  {id: "pen", t: "Pen", w: 1, op: 1, cols: ["#C00000", "#1F4E9E", "#1B7F3B", "#22272B", "#6A1B9A"]},
+  {id: "marker", t: "Marker", w: 2.4, op: 1, cols: ["#C00000", "#1F4E9E", "#1B7F3B", "#22272B", "#6A1B9A"]},
+  {id: "hl", t: "Highlighter", w: 7, op: .38, cols: ["#FFE600", "#7ED957", "#FF7AC8", "#6CCFF6", "#FFA94D"]}
+];
+const COL_NAMES = {"#C00000": "Red", "#1F4E9E": "Blue", "#1B7F3B": "Green", "#22272B": "Black", "#6A1B9A": "Purple", "#FFE600": "Yellow", "#7ED957": "Green", "#FF7AC8": "Pink", "#6CCFF6": "Blue", "#FFA94D": "Orange"};
+const PEN_SIZES = [{id: "thin", t: "Thin", k: .55, d: 6}, {id: "med", t: "Medium", k: 1, d: 10}, {id: "thick", t: "Thick", k: 1.7, d: 15}];
+let PEN = {tool: "pen", size: "thin", col: {pen: "#C00000", marker: "#C00000", hl: "#FFE600"}};
+try { const v = JSON.parse(store(STO + "pen") || "null"); if (v && v.tool && v.col) PEN = Object.assign(PEN, v); } catch (e) {}
+const penSize = id => (PEN_SIZES.find(z => z.id === id) || PEN_SIZES[0]).k;
+const penTool = id => PEN_TOOLS.find(t => t.id === id) || PEN_TOOLS[0];
+function renderPenTools() {
+  const T = penTool(PEN.tool);
+  $("#pmTools").innerHTML = PEN_TOOLS.map(t => '<button type="button" class="small-btn ptb" data-tool="' + t.id + '" aria-pressed="' + (t.id === PEN.tool) + '"><span class="pti pti-' + t.id + '" aria-hidden="true"></span>' + t.t + "</button>").join("");
+  $("#pmCols").innerHTML = T.cols.map(c => '<button type="button" class="pcol' + (c === PEN.col[T.id] ? " on" : "") + '" data-col="' + c + '" style="--c:' + c + '" title="' + COL_NAMES[c] + '" aria-label="' + COL_NAMES[c] + '" aria-pressed="' + (c === PEN.col[T.id]) + '"></button>').join("");
+}
+function renderPenSizes() {
+  $("#pmSizes").innerHTML = PEN_SIZES.map(z => '<button type="button" class="small-btn psz" data-size="' + z.id + '" aria-pressed="' + (z.id === PEN.size) + '" title="' + z.t + '" aria-label="' + z.t + '"><span class="pszd" style="width:' + z.d + "px;height:" + z.d + 'px"></span></button>').join("");
+}
+function savePen() { store(STO + "pen", JSON.stringify(PEN)); }
 function renderMarking() {
   const st = curStage();
   if (!st.photos.length) MM = "text";
@@ -1435,20 +1479,23 @@ $$(".mmbtn").forEach(b => b.addEventListener("click", () => { if (b.disabled) re
 const curPhoto = () => curStage().photos[PAGE];
 const selPhotoMark = () => { const p = curPhoto(); return p && PSEL ? (p.marks || []).find(m => m.id === PSEL) : null; };
 function markSVG(p, live) {
-  const w = p.w || 1000, h = p.h || 1400, sw = Math.max(3, w / 260), fs = Math.max(18, w / 36);
+  const w = p.w || 1000, h = p.h || 1400, sw = Math.max(2, w / 450), fs = Math.max(10, w / 90);
   let out = "";
   (p.marks || []).forEach(m => {
-    const good = isGood(m.code), col = !m.code ? "#B33A3A" : good ? "#2E808E" : "#8B0000";
+    const good = isGood(m.code), codeCol = !m.code ? "#B33A3A" : good ? "#2E808E" : "#8B0000";
+    const T = penTool(m.tool || "pen"), lineCol = m.color || codeCol, lw = sw * T.w * (m.size || 1);
+    /* the label keeps the pen colour, but a highlighter's light colour is too pale for text */
+    const col = m.color && T.id !== "hl" ? m.color : codeCol;
     const sel = live && m.id === PSEL;
     const pts = m.pts.map(q => q[0].toFixed(1) + "," + q[1].toFixed(1)).join(" ");
-    if (sel) out += '<polyline points="' + pts + '" fill="none" stroke="#8CDBE5" stroke-width="' + (sw * 3.2) + '" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>';
-    out += '<polyline points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="' + sw + '" stroke-linecap="round" stroke-linejoin="round"' + (m.code ? "" : ' stroke-dasharray="' + (sw * 2) + " " + (sw * 1.5) + '"') + "/>";
+    if (sel) out += '<polyline points="' + pts + '" fill="none" stroke="#8CDBE5" stroke-width="' + (lw + sw * 2.5) + '" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>';
+    out += '<polyline points="' + pts + '" fill="none" stroke="' + lineCol + '" stroke-width="' + lw.toFixed(1) + '" stroke-linecap="' + (T.id === "hl" ? "butt" : "round") + '" stroke-linejoin="round"' + (T.op < 1 ? ' stroke-opacity="' + T.op + '"' : "") + (m.code || T.id === "hl" ? "" : ' stroke-dasharray="' + (lw * 2) + " " + (lw * 1.5) + '"') + "/>";
     const last = m.pts[m.pts.length - 1];
     const txt = m.code ? codeLabel(m.code) + (m.fix ? "  " + m.fix : "") : (live ? "?" : "");
     if (!txt) return;
     const tw = Array.from(txt).reduce((t, ch) => t + (/[MW]/.test(ch) ? 0.9 : /[A-Z#✓]/.test(ch) ? 0.68 : /[mw]/.test(ch) ? 0.8 : /[ilj.,']/.test(ch) ? 0.3 : ch === " " ? 0.28 : 0.55), 0) * fs + fs * 0.75, th = fs * 1.35;
     const lx = Math.max(0, Math.min(w - tw, last[0] + sw * 1.5)), ly = Math.max(0, Math.min(h - th, last[1] - th - sw));
-    out += '<g class="pml"' + (live ? ' data-pm="' + m.id + '"' : "") + '><rect x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" width="' + tw.toFixed(1) + '" height="' + th.toFixed(1) + '" rx="' + (fs * 0.3).toFixed(1) + '" fill="' + col + '"' + (sel ? ' stroke="#0B3F47" stroke-width="' + sw + '"' : "") + '/><text x="' + (lx + fs * 0.35).toFixed(1) + '" y="' + (ly + th * 0.74).toFixed(1) + '" font-family="Calibri,Carlito,Arial,sans-serif" font-weight="700" font-size="' + fs.toFixed(1) + '" fill="#fff">' + esc(txt) + "</text></g>";
+    out += '<g class="pml"' + (live ? ' data-pm="' + m.id + '"' : "") + '><rect x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" width="' + tw.toFixed(1) + '" height="' + th.toFixed(1) + '" rx="' + (fs * 0.25).toFixed(1) + '" fill="#fff" fill-opacity=".85" stroke="' + (sel ? "#0B3F47" : col) + '" stroke-width="' + (sel ? sw * 1.6 : Math.max(1, sw * 0.5)) + '"/><text x="' + (lx + fs * 0.35).toFixed(1) + '" y="' + (ly + th * 0.74).toFixed(1) + '" font-family="Calibri,Carlito,Arial,sans-serif" font-weight="400" font-size="' + fs.toFixed(1) + '" fill="' + col + '">' + esc(txt) + "</text></g>";
   });
   return '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' + out + "</svg>";
 }
@@ -1521,6 +1568,10 @@ function deletePhotoMark() {
 }
 $("#pmPages").addEventListener("click", e => { const b = e.target.closest("[data-page]"); if (!b) return; PAGE = +b.dataset.page; PSEL = null; renderPhotoMark(); });
 $("#pmDraw").addEventListener("click", () => { PMOVE = false; renderPhotoMark(); });
+$("#pmTools").addEventListener("click", e => { const b = e.target.closest("[data-tool]"); if (!b) return; PEN.tool = b.dataset.tool; PMOVE = false; savePen(); renderPenTools(); renderPhotoMark(); });
+$("#pmCols").addEventListener("click", e => { const b = e.target.closest("[data-col]"); if (!b) return; PEN.col[PEN.tool] = b.dataset.col; PMOVE = false; savePen(); renderPenTools(); renderPhotoMark(); });
+$("#pmSizes").addEventListener("click", e => { const b = e.target.closest("[data-size]"); if (!b) return; PEN.size = b.dataset.size; PMOVE = false; savePen(); renderPenSizes(); renderPhotoMark(); });
+renderPenTools(); renderPenSizes();
 $("#pmMove").addEventListener("click", () => { PMOVE = true; renderPhotoMark(); });
 $("#pmZoomIn").addEventListener("click", () => { PZOOM = Math.min(3, PZOOM + 0.5); renderPhotoMark(); });
 $("#pmZoomOut").addEventListener("click", () => { PZOOM = Math.max(1, PZOOM - 0.5); renderPhotoMark(); });
@@ -1537,7 +1588,7 @@ $("#pmZoomOut").addEventListener("click", () => { PZOOM = Math.max(1, PZOOM - 0.
     const pt = toImg(e, p);
     dr = {p, pts: [pt], x0: e.clientX, y0: e.clientY, far: 0};
     const svg = box.querySelector("svg");
-    if (svg) { const pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline"); pl.setAttribute("fill", "none"); pl.setAttribute("stroke", "#B33A3A"); pl.setAttribute("stroke-width", Math.max(3, p.w / 260)); pl.setAttribute("stroke-linecap", "round"); pl.setAttribute("stroke-linejoin", "round"); pl.setAttribute("points", pt.join(",")); svg.appendChild(pl); dr.pl = pl; }
+    if (svg) { const pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline"); pl.setAttribute("fill", "none"); const T = penTool(PEN.tool); pl.setAttribute("stroke", PEN.col[T.id]); pl.setAttribute("stroke-width", Math.max(2, p.w / 450) * T.w * penSize(PEN.size)); if (T.op < 1) pl.setAttribute("stroke-opacity", T.op); pl.setAttribute("stroke-linecap", T.id === "hl" ? "butt" : "round"); pl.setAttribute("stroke-linejoin", "round"); pl.setAttribute("points", pt.join(",")); svg.appendChild(pl); dr.pl = pl; }
   });
   box.addEventListener("pointermove", e => {
     if (!dr) return;
@@ -1552,7 +1603,7 @@ $("#pmZoomOut").addEventListener("click", () => { PZOOM = Math.max(1, PZOOM - 0.
     if (e.type === "pointercancel") { drawPhotoMarks(); return; }
     let pts = d.pts;
     if (d.far < 8 || pts.length < 2) { const c = pts[0], k = d.p.w / 70; pts = [[c[0] - k, c[1] + k], c, [c[0] + k, c[1] + k]]; }
-    const m = {id: uid(), pts: pts.map(q => [Math.round(q[0] * 10) / 10, Math.round(q[1] * 10) / 10]), code: "", fix: ""};
+    const m = {id: uid(), pts: pts.map(q => [Math.round(q[0] * 10) / 10, Math.round(q[1] * 10) / 10]), code: "", fix: "", tool: PEN.tool, color: PEN.col[PEN.tool], size: penSize(PEN.size)};
     d.p.marks = d.p.marks || []; d.p.marks.push(m);
     PSEL = m.id; touch();
     drawPhotoMarks(); renderSelBar(); renderTally(); renderPhotos(); renderTabs();
