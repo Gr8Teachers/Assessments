@@ -30,7 +30,12 @@
 .spk-b button.t.on{background:#495054;border-color:#495054;color:#fff}
 .spk-tx{line-height:1.5;padding-top:.45rem;word-break:break-word}
 .spk-row.lab-S .spk-tx{color:#236A76}
-.lt-spk[aria-pressed="true"]{background:#FFFF99;border-color:#0B3F47}
+.small-btn.lt-spk{background:#8CDBE5;border-color:#2E808E;color:#0B3F47}
+.small-btn.lt-spk:hover{background:#B5EAF0}
+.small-btn.lt-spk[aria-pressed="true"]{background:#FFFF99;border-color:#0B3F47}
+.small-btn.lt-spk{display:inline-flex;align-items:center;gap:.4rem;font-style:italic}
+.lt-spk .spk-ic{width:1.25em;height:1.25em;flex:none}
+
 
 /* Record / Upload switch in the Audio heading (like Plan / Draft / Final) */
 .sec-hw{flex-wrap:wrap;row-gap:.5rem}
@@ -663,12 +668,9 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
           <textarea class="tx" id="engText" spellcheck="true" placeholder="Words appear here while you record. S: is the student. T: is the teacher. You can fix any word."></textarea>
           <div class="spk" id="spkList" hidden></div>
           <div class="linetools" id="lineTools">
-            <span class="hint" id="lineHint">Click a line and mark it as:</span>
-            <button type="button" class="small-btn lt-s" data-mark="S">Student line</button>
-            <button type="button" class="small-btn lt-t" data-mark="T">Teacher line</button>
-            <button type="button" class="small-btn" data-mark="X">No label</button>
+            <button type="button" class="small-btn lt-spk" id="btnSpk" aria-pressed="false" data-tname="Teacher"><svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h11v7H8l-3 3v-3H3z M10 15v2h6l3 3v-3h2v-7h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Mark speakers sentence by sentence</span></button>
             <button type="button" class="small-btn" id="btnSplit">One sentence per line</button>
-            <button type="button" class="small-btn lt-spk" id="btnSpk" aria-pressed="false">Mark speakers sentence by sentence</button>
+            <span id="lineHint" hidden></span>
           </div>
           <button type="button" class="btn b-teal" id="btnOnDevice" hidden>Set up words without internet</button>
           <div class="srstate" id="srState" aria-live="polite">Words will appear while you record.</div>
@@ -2317,7 +2319,7 @@ function spkText() {
 function spkRefresh() {
   if (!SPK_ON) return;
   spkSnap();
-  const tw = ($('#lineTools [data-mark="T"]') ? $('#lineTools [data-mark="T"]').textContent : "Teacher line").replace(/\s*line$/i, "");
+  const tw = ($("#btnSpk").dataset.tname || "Teacher");
   const rows = SPK_U.map((u, i) =>
     '<div class="spk-row' + (u.lab ? " lab-" + u.lab : "") + '" data-i="' + i + '"><div class="spk-b">' +
     '<button type="button" class="s' + (u.lab === "S" ? " on" : "") + '" data-l="S" aria-label="Student" aria-pressed="' + (u.lab === "S") + '">S</button>' +
@@ -2330,10 +2332,9 @@ function spkSet(on) {
   SPK_ON = on;
   $("#engText").hidden = on; $("#spkList").hidden = !on;
   $("#btnSpk").setAttribute("aria-pressed", on ? "true" : "false");
-  $("#btnSpk").textContent = on ? "Done" : "Mark speakers sentence by sentence";
+  $("#btnSpk").innerHTML = on ? '<svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Done</span>' : '<svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h11v7H8l-3 3v-3H3z M10 15v2h6l3 3v-3h2v-7h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Mark speakers sentence by sentence</span>';
   document.querySelectorAll('#lineTools [data-mark]').forEach(b => b.hidden = on);
   $("#btnSplit").hidden = on;
-  $("#lineHint").textContent = on ? "Marking speakers:" : "Click a line and mark it as:";
   spkRefresh();
 }
 $("#btnSpk").addEventListener("click", () => spkSet(!SPK_ON));
