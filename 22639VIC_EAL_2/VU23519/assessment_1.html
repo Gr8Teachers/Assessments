@@ -21,7 +21,7 @@
 /* mark speakers line by line (phone friendly, no keyboard) */
 .spk{border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:.3rem .5rem;max-height:70vh;overflow:auto}
 .spk-help{font-size:.85rem;color:#495054;margin:.2rem 0 .5rem}
-.spk-row{display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;padding:.4rem 0;border-bottom:1px solid var(--line)}
+.spk-row{width:100%;box-sizing:border-box;display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;padding:.4rem 0;border-bottom:1px solid var(--line)}
 .spk-row:last-child{border-bottom:0}
 .spk-b{display:flex;gap:.3rem}
 .spk-b button{width:44px;height:40px;border-radius:9px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:1rem;color:#495054;font-family:inherit;cursor:pointer;touch-action:manipulation}
@@ -668,7 +668,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
             <button type="button" class="small-btn lt-t" data-mark="T">Teacher line</button>
             <button type="button" class="small-btn" data-mark="X">No label</button>
             <button type="button" class="small-btn" id="btnSplit">One sentence per line</button>
-            <button type="button" class="small-btn lt-spk" id="btnSpk" aria-pressed="false">Mark speakers line by line</button>
+            <button type="button" class="small-btn lt-spk" id="btnSpk" aria-pressed="false">Mark speakers sentence by sentence</button>
           </div>
           <button type="button" class="btn b-teal" id="btnOnDevice" hidden>Set up words without internet</button>
           <div class="srstate" id="srState" aria-live="polite">Words will appear while you record.</div>
@@ -2294,41 +2294,54 @@ $("#lineTools").addEventListener("click", e => {
   onEnglishChanged(true);
 });
 
-/* mark speakers line by line: tap S or T beside each line (no keyboard, no jumping) */
-var SPK_ON = false;
-function spkLines() { return $("#engText").value.split("\n"); }
-function spkLab(l) { const m = l.match(/^\s*(S|T|Student|Teacher)\s*:\s*/i); return m ? (/^s/i.test(m[1]) ? "S" : "T") : ""; }
+/* mark speakers sentence by sentence: tap S or T beside each sentence (no keyboard, no jumping) */
+var SPK_ON = false, SPK_U = [];
+var SPK_RE = /^\s*(S|T|Student|Teacher)\s*:\s*/i;
+function spkLab(l) { const m = l.match(SPK_RE); return m ? (/^s/i.test(m[1]) ? "S" : "T") : ""; }
+function spkSnap() {
+  SPK_U = [];
+  $("#engText").value.split("\n").forEach((l, ln) => {
+    const lab = spkLab(l), body = l.replace(SPK_RE, "");
+    body.replace(/([.!?])\s+/g, "$1\n").split("\n").forEach(x => { if (x.trim()) SPK_U.push({lab: lab, t: x.trim(), ln: ln}); });
+  });
+}
+function spkText() {
+  const out = []; let prev = null;
+  SPK_U.forEach(u => {
+    if (prev && u.lab === prev.lab && (u.lab || u.ln === prev.ln)) out[out.length - 1] += " " + u.t;
+    else out.push((u.lab ? u.lab + ": " : "") + u.t);
+    prev = u;
+  });
+  return out.join("\n");
+}
 function spkRefresh() {
   if (!SPK_ON) return;
+  spkSnap();
   const tw = ($('#lineTools [data-mark="T"]') ? $('#lineTools [data-mark="T"]').textContent : "Teacher line").replace(/\s*line$/i, "");
-  const rows = spkLines().map((l, i) => {
-    const lab = spkLab(l), bare = l.replace(/^\s*(S|T|Student|Teacher)\s*:\s*/i, "");
-    if (!bare.trim()) return "";
-    return '<div class="spk-row' + (lab ? " lab-" + lab : "") + '" data-i="' + i + '"><div class="spk-b">' +
-      '<button type="button" class="s' + (lab === "S" ? " on" : "") + '" data-l="S" aria-label="Student" aria-pressed="' + (lab === "S") + '">S</button>' +
-      '<button type="button" class="t' + (lab === "T" ? " on" : "") + '" data-l="T" aria-label="' + esc(tw) + '" aria-pressed="' + (lab === "T") + '">T</button></div>' +
-      '<div class="spk-tx">' + esc(bare) + "</div></div>";
-  }).join("");
-  $("#spkList").innerHTML = '<div class="spk-help">Tap <b>S</b> (Student) or <b>T</b> (' + esc(tw) + ') at the start of each line. Tap it again to remove the label. Press <b>Done</b> to type in the transcript again.</div>' +
+  const rows = SPK_U.map((u, i) =>
+    '<div class="spk-row' + (u.lab ? " lab-" + u.lab : "") + '" data-i="' + i + '"><div class="spk-b">' +
+    '<button type="button" class="s' + (u.lab === "S" ? " on" : "") + '" data-l="S" aria-label="Student" aria-pressed="' + (u.lab === "S") + '">S</button>' +
+    '<button type="button" class="t' + (u.lab === "T" ? " on" : "") + '" data-l="T" aria-label="' + esc(tw) + '" aria-pressed="' + (u.lab === "T") + '">T</button></div>' +
+    '<div class="spk-tx">' + esc(u.t) + "</div></div>").join("");
+  $("#spkList").innerHTML = '<div class="spk-help">Each sentence is on its own row. Tap <b>S</b> (Student) or <b>T</b> (' + esc(tw) + ') beside it. Tap it again to remove the label. Press <b>Done</b> to type in the transcript again.</div>' +
     (rows || '<div class="spk-help">There is no transcript yet.</div>');
 }
 function spkSet(on) {
   SPK_ON = on;
   $("#engText").hidden = on; $("#spkList").hidden = !on;
   $("#btnSpk").setAttribute("aria-pressed", on ? "true" : "false");
-  $("#btnSpk").textContent = on ? "Done" : "Mark speakers line by line";
+  $("#btnSpk").textContent = on ? "Done" : "Mark speakers sentence by sentence";
   document.querySelectorAll('#lineTools [data-mark]').forEach(b => b.hidden = on);
+  $("#btnSplit").hidden = on;
   $("#lineHint").textContent = on ? "Marking speakers:" : "Click a line and mark it as:";
   spkRefresh();
 }
 $("#btnSpk").addEventListener("click", () => spkSet(!SPK_ON));
 $("#spkList").addEventListener("click", e => {
   const b = e.target.closest("button[data-l]"); if (!b) return;
-  const row = b.closest(".spk-row"), i = +row.dataset.i, L = spkLines();
-  const bare = L[i].replace(/^\s*(S|T|Student|Teacher)\s*:\s*/i, ""), was = spkLab(L[i]);
-  const lab = was === b.dataset.l ? "" : b.dataset.l;
-  L[i] = lab ? lab + ": " + bare : bare;
-  $("#engText").value = L.join("\n");
+  const row = b.closest(".spk-row"), u = SPK_U[+row.dataset.i]; if (!u) return;
+  const lab = u.lab === b.dataset.l ? "" : b.dataset.l; u.lab = lab;
+  $("#engText").value = spkText();
   row.className = "spk-row" + (lab ? " lab-" + lab : "");
   row.querySelectorAll("button[data-l]").forEach(x => { const on = x.dataset.l === lab; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on); });
   SPK_ON = false; onEnglishChanged(true); SPK_ON = true;
