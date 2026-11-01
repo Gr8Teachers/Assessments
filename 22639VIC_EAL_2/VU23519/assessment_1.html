@@ -18,6 +18,20 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+/* mark speakers line by line (phone friendly, no keyboard) */
+.spk{border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:.3rem .5rem;max-height:70vh;overflow:auto}
+.spk-help{font-size:.85rem;color:#495054;margin:.2rem 0 .5rem}
+.spk-row{display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;padding:.4rem 0;border-bottom:1px solid var(--line)}
+.spk-row:last-child{border-bottom:0}
+.spk-b{display:flex;gap:.3rem}
+.spk-b button{width:44px;height:40px;border-radius:9px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:1rem;color:#495054;font-family:inherit;cursor:pointer;touch-action:manipulation}
+.spk-b button.s{border-color:var(--teal);color:#236A76}
+.spk-b button.s.on{background:#2E808E;border-color:#2E808E;color:#fff}
+.spk-b button.t.on{background:#495054;border-color:#495054;color:#fff}
+.spk-tx{line-height:1.5;padding-top:.45rem;word-break:break-word}
+.spk-row.lab-S .spk-tx{color:#236A76}
+.lt-spk[aria-pressed="true"]{background:#FFFF99;border-color:#0B3F47}
+
 /* Record / Upload switch in the Audio heading (like Plan / Draft / Final) */
 .sec-hw{flex-wrap:wrap;row-gap:.5rem}
 .sec-hw .stabs{display:flex;flex-wrap:wrap;margin:0 0 0 .8rem;gap:.45rem}
@@ -647,12 +661,14 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
         <div class="tbox">
           <div class="th"><b>What was said</b><span class="grow"></span><span class="hint" id="wc">0 words</span></div>
           <textarea class="tx" id="engText" spellcheck="true" placeholder="Words appear here while you record. S: is the student. T: is the teacher. You can fix any word."></textarea>
+          <div class="spk" id="spkList" hidden></div>
           <div class="linetools" id="lineTools">
-            <span class="hint">Click a line and mark it as:</span>
+            <span class="hint" id="lineHint">Click a line and mark it as:</span>
             <button type="button" class="small-btn lt-s" data-mark="S">Student line</button>
             <button type="button" class="small-btn lt-t" data-mark="T">Teacher line</button>
             <button type="button" class="small-btn" data-mark="X">No label</button>
             <button type="button" class="small-btn" id="btnSplit">One sentence per line</button>
+            <button type="button" class="small-btn lt-spk" id="btnSpk" aria-pressed="false">Mark speakers line by line</button>
           </div>
           <button type="button" class="btn b-teal" id="btnOnDevice" hidden>Set up words without internet</button>
           <div class="srstate" id="srState" aria-live="polite">Words will appear while you record.</div>
@@ -2245,6 +2261,7 @@ function onEnglishChanged(fromUser) {
   if (!cur) return;
   if (fromUser) { cur.english = $("#engText").value; cur.saved = false; }
   $("#wc").textContent = wordCount(cur.english) + " words";
+  spkRefresh();
   if (!cur.ipaManual) {
     clearTimeout(ipaTimer);
     ipaTimer = setTimeout(() => { if (!cur.ipaManual) { const r = textToIPA(cur.english); cur.ipa = r.ipa; cur.ipaGuessed = r.guessed; cur.ipaTotal = r.total; cur.ipaGuessList = r.guessList; $("#ipaText").value = cur.ipa; renderIpaStatus(); } }, 180);
@@ -2259,6 +2276,7 @@ function renderIpaStatus() {
 $("#engText").addEventListener("input", () => onEnglishChanged(true));
 /* mark the line(s) at the cursor as Student or Teacher */
 $("#lineTools").addEventListener("mousedown", e => { if (e.target.closest("button")) e.preventDefault(); });
+$("#lineTools").addEventListener("pointerdown", e => { if (e.target.closest("[data-mark]")) e.preventDefault(); });
 $("#lineTools").addEventListener("click", e => {
   const b = e.target.closest("[data-mark]"); if (!b) return;
   const ta = $("#engText"), v = ta.value;
@@ -2272,8 +2290,48 @@ $("#lineTools").addEventListener("click", e => {
   }).join("\n");
   ta.value = v.slice(0, ls) + block + v.slice(le);
   const next = ls + block.length + 1;
-  ta.focus(); ta.setSelectionRange(Math.min(next, ta.value.length), Math.min(next, ta.value.length));
+  if (!matchMedia("(pointer:coarse)").matches) { ta.focus(); ta.setSelectionRange(Math.min(next, ta.value.length), Math.min(next, ta.value.length)); }
   onEnglishChanged(true);
+});
+
+/* mark speakers line by line: tap S or T beside each line (no keyboard, no jumping) */
+var SPK_ON = false;
+function spkLines() { return $("#engText").value.split("\n"); }
+function spkLab(l) { const m = l.match(/^\s*(S|T|Student|Teacher)\s*:\s*/i); return m ? (/^s/i.test(m[1]) ? "S" : "T") : ""; }
+function spkRefresh() {
+  if (!SPK_ON) return;
+  const tw = ($('#lineTools [data-mark="T"]') ? $('#lineTools [data-mark="T"]').textContent : "Teacher line").replace(/\s*line$/i, "");
+  const rows = spkLines().map((l, i) => {
+    const lab = spkLab(l), bare = l.replace(/^\s*(S|T|Student|Teacher)\s*:\s*/i, "");
+    if (!bare.trim()) return "";
+    return '<div class="spk-row' + (lab ? " lab-" + lab : "") + '" data-i="' + i + '"><div class="spk-b">' +
+      '<button type="button" class="s' + (lab === "S" ? " on" : "") + '" data-l="S" aria-label="Student" aria-pressed="' + (lab === "S") + '">S</button>' +
+      '<button type="button" class="t' + (lab === "T" ? " on" : "") + '" data-l="T" aria-label="' + esc(tw) + '" aria-pressed="' + (lab === "T") + '">T</button></div>' +
+      '<div class="spk-tx">' + esc(bare) + "</div></div>";
+  }).join("");
+  $("#spkList").innerHTML = '<div class="spk-help">Tap <b>S</b> (Student) or <b>T</b> (' + esc(tw) + ') at the start of each line. Tap it again to remove the label. Press <b>Done</b> to type in the transcript again.</div>' +
+    (rows || '<div class="spk-help">There is no transcript yet.</div>');
+}
+function spkSet(on) {
+  SPK_ON = on;
+  $("#engText").hidden = on; $("#spkList").hidden = !on;
+  $("#btnSpk").setAttribute("aria-pressed", on ? "true" : "false");
+  $("#btnSpk").textContent = on ? "Done" : "Mark speakers line by line";
+  document.querySelectorAll('#lineTools [data-mark]').forEach(b => b.hidden = on);
+  $("#lineHint").textContent = on ? "Marking speakers:" : "Click a line and mark it as:";
+  spkRefresh();
+}
+$("#btnSpk").addEventListener("click", () => spkSet(!SPK_ON));
+$("#spkList").addEventListener("click", e => {
+  const b = e.target.closest("button[data-l]"); if (!b) return;
+  const row = b.closest(".spk-row"), i = +row.dataset.i, L = spkLines();
+  const bare = L[i].replace(/^\s*(S|T|Student|Teacher)\s*:\s*/i, ""), was = spkLab(L[i]);
+  const lab = was === b.dataset.l ? "" : b.dataset.l;
+  L[i] = lab ? lab + ": " + bare : bare;
+  $("#engText").value = L.join("\n");
+  row.className = "spk-row" + (lab ? " lab-" + lab : "");
+  row.querySelectorAll("button[data-l]").forEach(x => { const on = x.dataset.l === lab; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on); });
+  SPK_ON = false; onEnglishChanged(true); SPK_ON = true;
 });
 $("#btnSplit").addEventListener("click", () => {
   const ta = $("#engText");
@@ -3048,7 +3106,7 @@ function renderList() {
 function loadRecord(r) {
   cur = r;
   $("#studentName").value = r.name; $("#assessDate").value = r.date; $("#profileSel").value = r.profileId;
-  $("#engText").value = r.english; $("#ipaText").value = r.ipa;
+  $("#engText").value = r.english; $("#ipaText").value = r.ipa; spkRefresh();
   $("#fbWell").value = r.well; $("#fbImprove").value = r.improve;
   $("#interim").textContent = ""; $("#studentName").classList.remove("needname");
   $("#saveStatus").style.display = "none";
