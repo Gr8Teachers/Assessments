@@ -18,6 +18,35 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+/* mark speakers line by line (phone friendly, no keyboard) */
+.spk{border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:.3rem .5rem;max-height:70vh;overflow:auto}
+.spk-help{font-size:.85rem;color:#495054;margin:.2rem 0 .5rem}
+.spk-row{width:100%;box-sizing:border-box;display:grid;grid-template-columns:auto 1fr;gap:.55rem;align-items:start;padding:.4rem 0;border-bottom:1px solid var(--line)}
+.spk-row:last-child{border-bottom:0}
+.spk-b{display:flex;gap:.3rem}
+.spk-b button{width:44px;height:40px;border-radius:9px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:1rem;color:#495054;font-family:inherit;cursor:pointer;touch-action:manipulation}
+.spk-b button.s{border-color:var(--teal);color:#236A76}
+.spk-b button.s.on{background:#2E808E;border-color:#2E808E;color:#fff}
+.spk-b button.t.on{background:#495054;border-color:#495054;color:#fff}
+.spk-tx{line-height:1.5;padding-top:.45rem;word-break:break-word}
+.spk-row.lab-S .spk-tx{color:#236A76}
+.small-btn.lt-spk{background:#8CDBE5;border-color:#2E808E;color:#0B3F47}
+.small-btn.lt-spk:hover{background:#B5EAF0}
+.small-btn.lt-spk[aria-pressed="true"]{background:#FFFF99;border-color:#0B3F47}
+.small-btn.lt-spk{display:inline-flex;align-items:center;gap:.4rem;font-style:italic}
+.lt-spk .spk-ic{width:1.25em;height:1.25em;flex:none}
+
+
+/* Record / Upload switch in the Audio heading (like Plan / Draft / Final) */
+.sec-hw{flex-wrap:wrap;row-gap:.5rem}
+.sec-hw .stabs{display:flex;flex-wrap:wrap;margin:0 0 0 .8rem;gap:.45rem}
+.sec-hw .stab{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.55);color:#fff;min-height:44px;padding:.25rem 1.05rem;font-size:1.05rem;font-weight:700;font-family:inherit;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center}
+.sec-hw .stab:hover{background:rgba(255,255,255,.22)}
+.sec-hw .stab[aria-selected="true"]{background:#FFFF99;border-color:#FFFF99;color:#0B3F47;box-shadow:0 0 0 3px rgba(255,255,153,.35)}
+#sec2.mode-up .m-rec{display:none}
+#sec2:not(.mode-up) .m-up{display:none}
+@media (max-width:700px){.sec-hw .stabs{margin-left:0;width:100%}}
+
 .modal.big{max-width:640px;text-align:center;padding:1.6rem 1.6rem 1.4rem;border-top:8px solid var(--red)}
 #ovWelcome .modal.big{border-top-color:var(--teal)}
 .modal.big h2{font-size:1.6rem;margin:.4rem 0 .6rem}
@@ -536,8 +565,8 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
     </section>
 
     <section class="card" id="sec2">
-      <div class="sec-h"><span class="stepn">2</span><h2>Record</h2><span class="grow"></span><span class="phase" id="attemptTag">Try 1</span></div>
-      <div class="rstep" id="rstep1">
+      <div class="sec-h sec-hw"><span class="stepn">2</span><h2>Audio</h2><div class="stabs" role="tablist" aria-label="Record or upload" id="audTabs"><button type="button" class="stab" role="tab" data-m="rec" aria-selected="true">Record</button><button type="button" class="stab" role="tab" data-m="up" aria-selected="false">Upload</button></div><span class="grow"></span><span class="phase" id="attemptTag">Try 1</span></div>
+      <div class="rstep m-rec" id="rstep1">
         <span class="rn" aria-hidden="true">a</span>
         <div class="rbody">
           <div class="rt">Allow the microphone</div>
@@ -548,7 +577,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
           </div>
         </div>
       </div>
-      <div class="rstep">
+      <div class="rstep m-rec">
         <span class="rn" aria-hidden="true">b</span>
         <div class="rbody">
           <div class="rt">Start recording</div>
@@ -571,7 +600,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
           </div>
         </div>
       </div>
-      <div class="rstep">
+      <div class="rstep m-rec">
         <span class="rn" aria-hidden="true">c</span>
         <div class="rbody">
           <div class="rt">Stop, pause or start again</div>
@@ -580,6 +609,17 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
             <button type="button" class="btn b-ghost" id="btnPause" disabled><span class="ic ic-pause" aria-hidden="true"></span><span class="lbl">Pause</span></button>
             <button type="button" class="btn b-red" id="btnReset"><svg class="ic ic-again" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M20.5 3.5v5h-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Start again</button>
           </div>
+        </div>
+      </div>
+      <div class="rstep m-up" id="rstepUp">
+        <span class="rn" aria-hidden="true">d</span>
+        <div class="rbody">
+          <div class="rt">Upload a recording</div>
+          <div class="row" style="align-items:center;gap:.7rem">
+            <button type="button" class="btn b-ghost" id="btnUpload"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" style="width:1.1em;height:1.1em;margin-right:.35rem"><path d="M12 16V4M7 9l5-5 5 5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Upload audio</button>
+            <span class="hint">An audio or video file from a phone or computer (MP3, M4A, WAV, WebM, MP4).</span>
+          </div>
+          <input type="file" id="inAudio" accept="audio/*,video/mp4,video/webm,video/quicktime,.mp3,.m4a,.wav,.webm,.ogg,.aac,.mp4,.mov" hidden>
         </div>
       </div>
       <div class="status" id="recStatus">Type the student's name. Then press Start recording.</div>
@@ -626,12 +666,11 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
         <div class="tbox">
           <div class="th"><b>What was said</b><span class="grow"></span><span class="hint" id="wc">0 words</span></div>
           <textarea class="tx" id="engText" spellcheck="true" placeholder="Words appear here while you record. S: is the student. T: is the teacher. You can fix any word."></textarea>
+          <div class="spk" id="spkList" hidden></div>
           <div class="linetools" id="lineTools">
-            <span class="hint">Click a line and mark it as:</span>
-            <button type="button" class="small-btn lt-s" data-mark="S">Student line</button>
-            <button type="button" class="small-btn lt-t" data-mark="T">Teacher line</button>
-            <button type="button" class="small-btn" data-mark="X">No label</button>
-            <button type="button" class="small-btn" id="btnSplit">One sentence per line</button>
+            <button type="button" class="small-btn lt-spk" id="btnSpk" aria-pressed="false" data-tname="Teacher"><svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h11v7H8l-3 3v-3H3z M10 15v2h6l3 3v-3h2v-7h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Mark speakers sentence by sentence</span></button>
+            <button type="button" class="small-btn" id="btnSplit" hidden>One sentence per line</button>
+            <span id="lineHint" hidden></span>
           </div>
           <button type="button" class="btn b-teal" id="btnOnDevice" hidden>Set up words without internet</button>
           <div class="srstate" id="srState" aria-live="polite">Words will appear while you record.</div>
@@ -1568,6 +1607,7 @@ function extFor(mime) {
   if (mime.includes("webm")) return "webm";
   if (mime.includes("ogg")) return "ogg";
   if (mime.includes("wav")) return "wav";
+  if (mime.includes("mpeg") || mime.includes("mp3")) return "mp3";
   if (mime.includes("mp4") || mime.includes("aac") || mime.includes("m4a")) return "m4a";
   return IS_WEBKIT ? "m4a" : "webm";
 }
@@ -1836,6 +1876,57 @@ function finishRecording(recId, blob, mime, dur) {
   }
   renderRecUI(); renderList();
 }
+
+/* upload a recording made on a phone or another device */
+const AUDIO_EXT = {mp3: "audio/mpeg", m4a: "audio/mp4", aac: "audio/aac", wav: "audio/wav", webm: "audio/webm", ogg: "audio/ogg", mp4: "video/mp4", mov: "video/quicktime"};
+let upArmed = 0;
+async function audioDuration(blob) {
+  try {
+    ensureCtx();
+    const ac = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const buf = await ac.decodeAudioData((await blob.arrayBuffer()).slice(0));
+    return buf.duration;
+  } catch (e) {
+    return await new Promise(res => {
+      const a = new Audio(); const u = URL.createObjectURL(blob);
+      a.preload = "metadata"; a.onloadedmetadata = () => { const d = isFinite(a.duration) ? a.duration : 0; URL.revokeObjectURL(u); res(d); };
+      a.onerror = () => { URL.revokeObjectURL(u); res(-1); }; a.src = u;
+    });
+  }
+}
+$("#btnUpload").addEventListener("click", () => {
+  if (REC.state !== "idle") { setStatus("#recStatus", "Stop the recording first.", "warn"); return; }
+  if (cur.audio && Date.now() - upArmed > 4000) {
+    upArmed = Date.now(); setStatus("#recStatus", "This student already has a recording. Press Upload audio again to replace it with a file.", "warn"); return;
+  }
+  upArmed = 0; $("#inAudio").click();
+});
+$("#inAudio").addEventListener("change", async e => {
+  const f = e.target.files && e.target.files[0]; e.target.value = ""; if (!f) return;
+  const ext = (f.name.split(".").pop() || "").toLowerCase();
+  const mime = f.type || AUDIO_EXT[ext] || "";
+  if (!/^(audio|video)\//.test(mime) && !AUDIO_EXT[ext]) { setStatus("#recStatus", "This file is not an audio file. Choose an MP3, M4A, WAV, WebM or MP4 file.", "err"); return; }
+  if (f.size > 300 * 1024 * 1024) { setStatus("#recStatus", "This file is too big (over 300 MB). Use a shorter recording.", "err"); return; }
+  setStatus("#recStatus", "Opening " + f.name + " ...");
+  const dur = await audioDuration(f);
+  if (dur < 0) { setStatus("#recStatus", "This browser cannot play this file. Try an MP3, M4A or WAV file.", "err"); return; }
+  const blob = f.type ? f : new Blob([f], {type: mime});
+  const keepName = f.name;
+  finishRecording(cur.id, blob, mime, dur);
+  if (cur.audio) { cur.audio.fromFile = keepName; setStatus("#recStatus", "Uploaded " + keepName + " (" + fmtTime(dur) + "). " + ($("#recStatus").textContent.replace(/^Recording saved \([^)]*\)\.\s*/, ""))); }
+});
+
+/* Record / Upload switch */
+var AUDMODE = "rec";
+function setAudMode(m, quiet) {
+  if (m === AUDMODE && quiet) return;
+  if (m !== AUDMODE && typeof REC !== "undefined" && REC.state !== "idle") { setStatus("#recStatus", "Stop the recording first.", "warn"); return; }
+  AUDMODE = m;
+  $("#sec2").classList.toggle("mode-up", m === "up");
+  document.querySelectorAll("#audTabs .stab").forEach(b => b.setAttribute("aria-selected", b.dataset.m === m ? "true" : "false"));
+  if (!quiet && cur && !cur.audio) setStatus("#recStatus", m === "up" ? "Type the student's name. Then press Upload audio and choose the recording." : "Type the student's name. Then press Start recording.");
+}
+document.querySelectorAll("#audTabs .stab").forEach(b => b.addEventListener("click", () => setAudMode(b.dataset.m)));
 
 function loadAudio() {
   const el = $("#audioEl");
@@ -2172,6 +2263,7 @@ function onEnglishChanged(fromUser) {
   if (!cur) return;
   if (fromUser) { cur.english = $("#engText").value; cur.saved = false; }
   $("#wc").textContent = wordCount(cur.english) + " words";
+  spkRefresh();
   if (!cur.ipaManual) {
     clearTimeout(ipaTimer);
     ipaTimer = setTimeout(() => { if (!cur.ipaManual) { const r = textToIPA(cur.english); cur.ipa = r.ipa; cur.ipaGuessed = r.guessed; cur.ipaTotal = r.total; cur.ipaGuessList = r.guessList; $("#ipaText").value = cur.ipa; renderIpaStatus(); } }, 180);
@@ -2186,6 +2278,7 @@ function renderIpaStatus() {
 $("#engText").addEventListener("input", () => onEnglishChanged(true));
 /* mark the line(s) at the cursor as Student or Teacher */
 $("#lineTools").addEventListener("mousedown", e => { if (e.target.closest("button")) e.preventDefault(); });
+$("#lineTools").addEventListener("pointerdown", e => { if (e.target.closest("[data-mark]")) e.preventDefault(); });
 $("#lineTools").addEventListener("click", e => {
   const b = e.target.closest("[data-mark]"); if (!b) return;
   const ta = $("#engText"), v = ta.value;
@@ -2199,8 +2292,59 @@ $("#lineTools").addEventListener("click", e => {
   }).join("\n");
   ta.value = v.slice(0, ls) + block + v.slice(le);
   const next = ls + block.length + 1;
-  ta.focus(); ta.setSelectionRange(Math.min(next, ta.value.length), Math.min(next, ta.value.length));
+  if (!matchMedia("(pointer:coarse)").matches) { ta.focus(); ta.setSelectionRange(Math.min(next, ta.value.length), Math.min(next, ta.value.length)); }
   onEnglishChanged(true);
+});
+
+/* mark speakers sentence by sentence: tap S or T beside each sentence (no keyboard, no jumping) */
+var SPK_ON = false, SPK_U = [];
+var SPK_RE = /^\s*(S|T|Student|Teacher)\s*:\s*/i;
+function spkLab(l) { const m = l.match(SPK_RE); return m ? (/^s/i.test(m[1]) ? "S" : "T") : ""; }
+function spkSnap() {
+  SPK_U = [];
+  $("#engText").value.split("\n").forEach((l, ln) => {
+    const lab = spkLab(l), body = l.replace(SPK_RE, "");
+    body.replace(/([.!?])\s+/g, "$1\n").split("\n").forEach(x => { if (x.trim()) SPK_U.push({lab: lab, t: x.trim(), ln: ln}); });
+  });
+}
+function spkText() {
+  const out = []; let prev = null;
+  SPK_U.forEach(u => {
+    if (prev && u.lab === prev.lab && (u.lab || u.ln === prev.ln)) out[out.length - 1] += " " + u.t;
+    else out.push((u.lab ? u.lab + ": " : "") + u.t);
+    prev = u;
+  });
+  return out.join("\n");
+}
+function spkRefresh() {
+  if (!SPK_ON) return;
+  spkSnap();
+  const tw = ($("#btnSpk").dataset.tname || "Teacher");
+  const rows = SPK_U.map((u, i) =>
+    '<div class="spk-row' + (u.lab ? " lab-" + u.lab : "") + '" data-i="' + i + '"><div class="spk-b">' +
+    '<button type="button" class="s' + (u.lab === "S" ? " on" : "") + '" data-l="S" aria-label="Student" aria-pressed="' + (u.lab === "S") + '">S</button>' +
+    '<button type="button" class="t' + (u.lab === "T" ? " on" : "") + '" data-l="T" aria-label="' + esc(tw) + '" aria-pressed="' + (u.lab === "T") + '">T</button></div>' +
+    '<div class="spk-tx">' + esc(u.t) + "</div></div>").join("");
+  $("#spkList").innerHTML = '<div class="spk-help">Each sentence is on its own row. Tap <b>S</b> (Student) or <b>T</b> (' + esc(tw) + ') beside it. Tap it again to remove the label. Press <b>Done</b> to type in the transcript again.</div>' +
+    (rows || '<div class="spk-help">There is no transcript yet.</div>');
+}
+function spkSet(on) {
+  SPK_ON = on;
+  $("#engText").hidden = on; $("#spkList").hidden = !on;
+  $("#btnSpk").setAttribute("aria-pressed", on ? "true" : "false");
+  $("#btnSpk").innerHTML = on ? '<svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Done</span>' : '<svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h11v7H8l-3 3v-3H3z M10 15v2h6l3 3v-3h2v-7h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Mark speakers sentence by sentence</span>';
+  document.querySelectorAll('#lineTools [data-mark]').forEach(b => b.hidden = on);
+  spkRefresh();
+}
+$("#btnSpk").addEventListener("click", () => spkSet(!SPK_ON));
+$("#spkList").addEventListener("click", e => {
+  const b = e.target.closest("button[data-l]"); if (!b) return;
+  const row = b.closest(".spk-row"), u = SPK_U[+row.dataset.i]; if (!u) return;
+  const lab = u.lab === b.dataset.l ? "" : b.dataset.l; u.lab = lab;
+  $("#engText").value = spkText();
+  row.className = "spk-row" + (lab ? " lab-" + lab : "");
+  row.querySelectorAll("button[data-l]").forEach(x => { const on = x.dataset.l === lab; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on); });
+  SPK_ON = false; onEnglishChanged(true); SPK_ON = true;
 });
 $("#btnSplit").addEventListener("click", () => {
   const ta = $("#engText");
@@ -2975,7 +3119,7 @@ function renderList() {
 function loadRecord(r) {
   cur = r;
   $("#studentName").value = r.name; $("#assessDate").value = r.date; $("#profileSel").value = r.profileId;
-  $("#engText").value = r.english; $("#ipaText").value = r.ipa;
+  $("#engText").value = r.english; $("#ipaText").value = r.ipa; spkRefresh();
   $("#fbWell").value = r.well; $("#fbImprove").value = r.improve;
   $("#interim").textContent = ""; $("#studentName").classList.remove("needname");
   $("#saveStatus").style.display = "none";
@@ -2984,6 +3128,7 @@ function loadRecord(r) {
   setSrState(r.english.trim() ? "Check the transcript." : (SR.available ? "Words will appear while you record." : "Words cannot show in this browser. After Stop, press Transcribe the recording."), r.english.trim() ? "ok" : (SR.available ? "" : "warn"));
   $("#btnWhisper").classList.toggle("glow", !!r.audio && !r.english.trim()); renderEval(); renderGrid(); renderRecUI(); renderList();
   setStatus("#recStatus", r.audio ? "Recording loaded for " + (r.name || "this student") + "." : "Type the student's name. Then press Start recording.");
+  setAudMode(r.audio && r.audio.fromFile ? "up" : "rec", true);
 }
 function renderProfileInfo() {
   const p = profileById(cur.profileId);
