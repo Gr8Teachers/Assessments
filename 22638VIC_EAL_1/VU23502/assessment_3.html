@@ -599,11 +599,6 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
               <div class="meter" aria-hidden="true"><i id="meterFill"></i></div>
             </div>
           </div>
-          <div class="spk" role="group" aria-label="Who is talking now">
-            <span class="spk-l">Who is talking now?</span>
-            <button type="button" class="spkbtn" data-spk="S" aria-pressed="true">Student</button>
-            <button type="button" class="spkbtn" data-spk="T" aria-pressed="false">Teacher</button>
-          </div>
         </div>
       </div>
       <div class="rstep m-rec">
@@ -2679,7 +2674,7 @@ function suggest(kind, s, prof) {
           (miss.length ? " Missing: " + miss.join(", ") + "." : "")};
     }
     case "respond02": {
-      if (!s.teacherAsked) return {level: null, subs: {played: s.words >= 15 ? true : undefined}, evidence: "No teacher questions in the transcript. If you asked questions, tap Teacher before each one (or mark the lines in Step 3). If no questions were needed, select 3 Meets."};
+      if (!s.teacherAsked) return {level: null, subs: {played: s.words >= 15 ? true : undefined}, evidence: "No teacher questions in the transcript. If you asked questions, mark your lines as T in Step 3 (Mark speakers sentence by sentence). If no questions were needed, select 3 Meets."};
       const a = s.answerCount || 0, c = s.clarGive.length;
       return {level: a >= 2 && c >= 1 ? 4 : a >= 1 ? 3 : 1, subs: {played: s.words >= 15 ? true : undefined, resp: a >= 1},
         evidence: "Answered the teacher " + a + " time" + (a === 1 ? "" : "s") + (s.answerStarts && s.answerStarts.length ? ": " + q(s.answerStarts.slice(0, 2)) : "") + "." + (c ? " Clarified: " + q(s.clarGive.slice(0, 2)) + "." : "")};
