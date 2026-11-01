@@ -709,6 +709,22 @@ svg .pml{cursor:pointer}
 .sec-hw .stab[aria-selected="true"] .sdot{background:#0B3F47}
 .sec-hw .stab .cnt{color:inherit;opacity:.85}
 @media (max-width:700px){.sec-hw .stabs{margin-left:0;width:100%}}
+[hidden]{display:none!important}
+
+/* step b: collapsible typing area */
+.rtog{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;background:none;border:0;padding:0;cursor:pointer;text-align:left;font:inherit;width:100%;min-height:2.1rem}
+.rtog .tarr{width:.55em;height:.55em;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:rotate(-45deg);transition:transform .15s;margin:0 .25rem 0 .1rem;flex:0 0 auto}
+.rtog[aria-expanded="true"] .tarr{transform:rotate(45deg) translate(-2px,-2px)}
+.rtog .tcount{margin-left:auto;font-weight:700;color:var(--teal-d)}
+.rtog:hover{color:var(--teal-d)}
+#typeBody{margin-top:.4rem}
+
+/* ready-made teacher comments */
+.cchips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.5rem}
+.cchip{border:1.5px solid var(--line);background:#fff;border-radius:999px;min-height:36px;padding:.2rem .75rem;font-size:.85rem;color:var(--navy);cursor:pointer;text-align:left}
+.cchip:hover{border-color:var(--teal)}
+.cchip[aria-pressed="true"]{background:var(--teal-t);border-color:var(--teal);color:var(--teal-d);font-weight:700}
+.cchip[aria-pressed="true"]::before{content:"\2713  "}
 
 </style>
 </head>
@@ -777,7 +793,7 @@ svg .pml{cursor:pointer}
       <div class="sec-h sec-hw"><span class="stepn">2</span><h2>Writing</h2><div class="stabs" role="tablist" aria-label="Stages" id="stageTabs"></div><span class="grow"></span><span class="phase" id="stageTag" hidden>Plan</span></div>
       <div class="stage-top">
         <div class="field" style="max-width:200px">
-          <label for="stageDate">Date of this stage</label>
+          <label for="stageDate" id="stageDateLab">Date of Plan</label>
           <input id="stageDate" type="date">
         </div>
         <div class="field" style="max-width:200px" id="wordsField">
@@ -802,10 +818,11 @@ svg .pml{cursor:pointer}
         </div>
       </div>
 
-      <div class="rstep">
+      <div class="rstep" id="stepType">
         <span class="rn" aria-hidden="true">b</span>
         <div class="rbody">
-          <div class="rt">Type the student's text <span class="hint" style="font-weight:400">(exactly as written, including errors)</span></div>
+          <button type="button" class="rt rtog" id="typeToggle" aria-expanded="false" aria-controls="typeBody"><span class="tarr" aria-hidden="true"></span>Type the student's text <span class="hint" style="font-weight:400">(optional: exactly as written, including errors)</span><span class="hint tcount" id="typeCount"></span></button>
+          <div id="typeBody" hidden>
           <div class="row" style="gap:.5rem;align-items:center;margin-bottom:.4rem">
             <button type="button" class="small-btn" id="btnHeadings" hidden>Add the headings</button>
             <button type="button" class="small-btn" id="btnFromDraft" hidden>Copy the draft text to edit</button>
@@ -815,10 +832,11 @@ svg .pml{cursor:pointer}
             <div class="typeimgs" id="typeImgs" aria-label="Photos of the writing"></div>
             <textarea class="tx wtx" id="stageText" spellcheck="false" aria-label="Student's text"></textarea>
           </div>
+          </div>
         </div>
       </div>
 
-      <div class="rstep">
+      <div class="rstep" id="stepMark">
         <span class="rn" aria-hidden="true">c</span>
         <div class="rbody">
           <div class="rt">Mark with error codes</div>
@@ -866,10 +884,12 @@ svg .pml{cursor:pointer}
       </div>
 
       <div class="rstep">
-        <span class="rn" aria-hidden="true">d</span>
+        <span class="rn" aria-hidden="true" id="stepCommentN">d</span>
         <div class="rbody">
-          <div class="rt">Teacher comment on this stage <span class="hint" style="font-weight:400">(optional)</span></div>
-          <textarea class="tx" id="stageComment" style="min-height:70px" placeholder="For example: Good structure. Check your past tense."></textarea>
+          <div class="rt"><span id="stageCommentLab">Teacher comment - Plan</span> <span class="hint" style="font-weight:400">(optional)</span></div>
+          <p class="hint" style="margin:.1rem 0 .4rem">Tap a comment to add it (tap again to take it out). Then add more details in the box if needed.</p>
+          <div class="cchips" id="commentChips"></div>
+          <textarea class="tx" id="stageComment" style="min-height:70px" placeholder="Add more details here if needed."></textarea>
         </div>
       </div>
     </section>
@@ -1061,11 +1081,11 @@ const LEVELS = [
 ];
 
 const STAGES = [
-  {id:"plan",  t:"Plan",       part:1, hint:"Part 1, Task 1: the Planning table. Type the student's notes for each stage.",
+  {id:"plan",  t:"Plan",       part:1, hint:"Part 1, Task 1: the Planning table. Take or add a photo of the student's plan.",
    head:"To:\nSubject:\nAppropriate greeting:\nParagraph 1 (Why are you writing the email?):\nParagraph 2 (What is the problem?):\nParagraph 3 (What do you want them to do about it?):\nAppropriate closing including your name:\n"},
-  {id:"draft", t:"Draft",      part:1, hint:"Part 1, Task 2: the draft email. Type it exactly as written, then mark it with the error correction code. Leave a blank line between paragraphs.",
+  {id:"draft", t:"Draft",      part:1, hint:"Part 1, Task 2: the draft email. Take a photo and mark it with the error correction code. Typing the text (b) is optional; it lets the app check the language too.",
    head:"To:\nSubject:\nMessage:\n"},
-  {id:"final", t:"Final copy", part:2, hint:"Part 2: the final copy, written after your feedback on the draft. Type it exactly as written. Mark any errors that are left.",
+  {id:"final", t:"Final copy", part:2, hint:"Part 2: the final copy, written after your feedback on the draft. Take a photo and mark any errors that are left. Typing the text (b) is optional.",
    head:"To:\nSubject:\nMessage:\n"}
 ];
 const stageById = id => STAGES.find(s => s.id === id) || STAGES[0];
@@ -1246,19 +1266,29 @@ function renderStage() {
   $("#stageTag").textContent = s.t;
   $("#stageHint").textContent = s.hint;
   $("#stageDate").value = st.date || "";
+  $("#stageDateLab").textContent = "Date of " + (STAGE === "final" ? "Final" : s.t);
+  $("#stageCommentLab").textContent = "Teacher comment - " + (STAGE === "final" ? "Final" : s.t);
   if ($("#stageText").value !== st.text) $("#stageText").value = st.text;
   $("#stageText").placeholder = STAGE === "plan" ? "Type the plan here. Press Add the headings to start with the stages from the Planning table." : "Type the " + s.t.toLowerCase() + " here, exactly as the student wrote it.";
   $("#stageComment").value = st.comment || "";
+  renderCommentChips();
   $("#btnHeadings").hidden = !!st.text.trim();
   $("#btnHeadings").textContent = STAGE === "plan" ? "Add the Planning table headings" : "Add the email headings (To, Subject, Message)";
   $("#btnFromDraft").hidden = !(STAGE === "final" && !st.text.trim() && cur.stages.draft.text.trim());
   SEL.a = SEL.b = null; SEL.mark = null;
   $("#stageWords").value = st.words || "";
+  /* the plan is only photographed and commented on: no typing or error codes */
+  const isPlan = STAGE === "plan";
+  $("#stepType").hidden = isPlan; $("#stepMark").hidden = isPlan; $("#wordsField").hidden = isPlan || !!st.text.trim();
+  $("#stepCommentN").textContent = isPlan ? "b" : "d";
+  setTypeOpen(false); /* typing the text is optional, so it starts closed */
   PSEL = null; PAGE = 0;
   if (st.photos.length && !st.text.trim()) MM = "photo"; else if (st.text.trim() && !photoMarkCount(st)) MM = "text";
   renderPhotos(); renderWordCount(); renderMarking(); renderTabs();
 }
-function renderWordCount() { const st = curStage(); $("#wordCount").textContent = wordCount(st.text) + " words"; $("#wordsField").hidden = !!st.text.trim(); }
+function setTypeOpen(open) { $("#typeBody").hidden = !open; $("#typeToggle").setAttribute("aria-expanded", String(open)); }
+$("#typeToggle").addEventListener("click", () => setTypeOpen($("#typeBody").hidden));
+function renderWordCount() { const st = curStage(); $("#wordCount").textContent = wordCount(st.text) + " words"; $("#typeCount").textContent = st.text.trim() ? wordCount(st.text) + " words typed" : ""; $("#wordsField").hidden = STAGE === "plan" || !!st.text.trim(); }
 function renderPhotos() {
   const st = curStage();
   $("#photoList").innerHTML = st.photos.map((p, k) => '<div class="photo"><img src="' + p.data + '" alt="Page ' + (k + 1) + '" data-big="' + k + '">' + ((p.marks || []).length ? '<span class="pc">' + p.marks.length + "</span>" : "") + '<div class="pl">Page ' + (k + 1) + '</div><button type="button" class="px" data-delphoto="' + k + '" title="Remove this photo" aria-label="Remove page ' + (k + 1) + '">×</button></div>').join("");
@@ -1314,7 +1344,25 @@ $("#stageTabs").addEventListener("click", e => {
 });
 $("#stageDate").addEventListener("input", () => { curStage().date = $("#stageDate").value; touch(); });
 $("#stageWords").addEventListener("input", () => { curStage().words = $("#stageWords").value; touch(); renderTally(); renderTabs(); });
-$("#stageComment").addEventListener("input", () => { curStage().comment = $("#stageComment").value; touch(); renderTabs(); });
+$("#stageComment").addEventListener("input", () => { curStage().comment = $("#stageComment").value; touch(); renderTabs(); renderCommentChips(); });
+/* ready-made comments for each stage: tap to add, tap again to take out */
+const COMMENT_BANK = {
+  plan: ["Plan completed with notes for each stage.", "Good ideas for the problem and the solution.", "Add more detail: the order number, the date and what you ordered.", "Plan your greeting and closing.", "Some stages are missing from the plan.", "Use your plan when you write the draft."],
+  draft: ["Good structure: greeting, problem, solution and closing.", "Clear subject line and opening sentence.", "Polite and formal language used well.", "Good details about the order and the problem.", "Check the error codes and correct them in your final copy.", "Check your verb tenses (WT).", "Check spelling, punctuation and capital letters.", "Organise your email into paragraphs.", "Add a polite closing and your name."],
+  final: ["All errors from the draft have been corrected.", "Most errors from the draft have been corrected.", "Some errors from the draft are still there. Check the codes again.", "Clear, polite and well-organised complaint email.", "Appropriate register for a customer service team.", "Good use of formal language and politeness markers.", "Check spelling and punctuation before you submit."]
+};
+function renderCommentChips() {
+  const st = curStage(), txt = st.comment || "";
+  $("#commentChips").innerHTML = (COMMENT_BANK[STAGE] || []).map((c, i) => '<button type="button" class="cchip" data-ci="' + i + '" aria-pressed="' + txt.includes(c) + '">' + esc(c) + "</button>").join("");
+}
+$("#commentChips").addEventListener("click", e => {
+  const b = e.target.closest("[data-ci]"); if (!b) return;
+  const st = curStage(), c = COMMENT_BANK[STAGE][+b.dataset.ci];
+  let t = st.comment || "";
+  if (t.includes(c)) t = t.replace(c, "").replace(/[ \t]{2,}/g, " ").replace(/^\s+|\s+$/g, "").replace(/\n{3,}/g, "\n\n");
+  else t = (t.trim() ? t.replace(/\s+$/, "") + " " : "") + c;
+  st.comment = t; $("#stageComment").value = t; touch(); renderTabs(); renderCommentChips();
+});
 let typeTimer = 0;
 $("#stageText").addEventListener("input", () => {
   const st = curStage();
