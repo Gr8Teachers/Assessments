@@ -669,7 +669,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
           <div class="spk" id="spkList" hidden></div>
           <div class="linetools" id="lineTools">
             <button type="button" class="small-btn lt-spk" id="btnSpk" aria-pressed="false" data-tname="Teacher"><svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h11v7H8l-3 3v-3H3z M10 15v2h6l3 3v-3h2v-7h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Mark speakers sentence by sentence</span></button>
-            <button type="button" class="small-btn" id="btnSplit">One sentence per line</button>
+            <button type="button" class="small-btn" id="btnSplit" hidden>One sentence per line</button>
             <span id="lineHint" hidden></span>
           </div>
           <button type="button" class="btn b-teal" id="btnOnDevice" hidden>Set up words without internet</button>
@@ -2334,7 +2334,6 @@ function spkSet(on) {
   $("#btnSpk").setAttribute("aria-pressed", on ? "true" : "false");
   $("#btnSpk").innerHTML = on ? '<svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Done</span>' : '<svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h11v7H8l-3 3v-3H3z M10 15v2h6l3 3v-3h2v-7h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Mark speakers sentence by sentence</span>';
   document.querySelectorAll('#lineTools [data-mark]').forEach(b => b.hidden = on);
-  $("#btnSplit").hidden = on;
   spkRefresh();
 }
 $("#btnSpk").addEventListener("click", () => spkSet(!SPK_ON));
