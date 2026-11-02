@@ -18,6 +18,21 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+/* group discussion */
+.grpbox{border:1.5px solid var(--line);border-radius:12px;padding:.7rem .9rem;margin-top:.8rem;background:#E7F7F9}
+.grph{margin-bottom:.4rem;color:#0B3F47}
+.grptabs{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin-top:.7rem}
+.grpl{font-weight:700;color:#0B3F47;margin-right:.2rem}
+#grpTabBtns{display:flex;flex-wrap:wrap;gap:.45rem}
+.grptab{min-height:44px;padding:.2rem 1rem;border-radius:999px;border:2px solid #2E808E;background:#fff;color:#0B3F47;font-weight:700;font-family:inherit;font-size:1rem;cursor:pointer}
+.grptab[aria-current="true"]{background:#FFFF99;border-color:#0B3F47}
+.spk.grp .spk-row{grid-template-columns:1fr}
+.spk.grp .spk-b{flex-wrap:wrap}
+.spk .spk-b button{width:auto;min-width:44px;padding:0 .6rem}
+.spk .spk-b button.g1.on{background:#0B3F47;border-color:#0B3F47;color:#fff}
+.spk .spk-b button.g2.on{background:#8B0000;border-color:#8B0000;color:#fff}
+.spk .spk-b button.g3.on{background:#22272B;border-color:#22272B;color:#fff}
+
 /* mark speakers line by line (phone friendly, no keyboard) */
 .spk{border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:.3rem .5rem;max-height:70vh;overflow:auto}
 .spk-help{font-size:.85rem;color:#495054;margin:.2rem 0 .5rem}
@@ -536,7 +551,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
       <ul class="slist" id="studentList"></ul>
       <button type="button" class="btn b-red" id="btnDeleteOne">Delete this student</button>
       <div class="siderow">
-        <button type="button" class="btn b-teal" id="btnNewStudent">+ Next student</button>
+        <button type="button" class="btn b-teal" id="btnNewStudent">+ Next group</button>
         <button type="button" class="btn b-ghost" id="btnSaveAllSide">Save all students</button>
         <button type="button" class="btn b-red" id="btnClearAll">Clear all students</button>
       </div>
@@ -549,8 +564,9 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
       <div class="sec-h"><span class="stepn">1</span><h2>Student</h2></div>
       <div class="row">
         <div class="field" style="flex:2;min-width:240px">
-          <label for="studentName">Student name</label>
-          <input id="studentName" type="text" autocomplete="off" placeholder="Type student name first">
+          <label for="grpName">Student group name</label>
+          <input id="grpName" type="text" autocomplete="off" placeholder="For example: Group A">
+          <input id="studentName" type="text" hidden tabindex="-1" aria-hidden="true">
         </div>
         <div class="field" style="max-width:200px">
           <label for="assessDate">Date</label>
@@ -560,6 +576,16 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
           <label for="teacherName">Teacher</label>
           <input id="teacherName" type="text" autocomplete="off" placeholder="Teacher name">
         </div>
+      </div>
+      <div class="grpbox" id="grpBox">
+        <div class="grph"><b>Students in this group</b> <span class="hint">Type each student's name. Then, in Step 3, mark who said each sentence.</span></div>
+        <div class="row">
+          <div class="field" style="min-width:150px"><label for="grp0">Student 1</label><input id="grp0" data-g="0" type="text" autocomplete="off" placeholder="Name"></div>
+          <div class="field" style="min-width:150px"><label for="grp1">Student 2</label><input id="grp1" data-g="1" type="text" autocomplete="off" placeholder="Name"></div>
+          <div class="field" style="min-width:150px"><label for="grp2">Student 3</label><input id="grp2" data-g="2" type="text" autocomplete="off" placeholder="Name"></div>
+          <div class="field" style="min-width:150px"><label for="grp3">Student 4</label><input id="grp3" data-g="3" type="text" autocomplete="off" placeholder="Name"></div>
+        </div>
+        <div class="grptabs" id="grpTabs" hidden><span class="grpl">Checklist for:</span><span id="grpTabBtns"></span></div>
       </div>
       <div class="row" hidden>
         <div class="field">
@@ -1298,7 +1324,7 @@ const PROFILES = [
     target: [240, 360], targetText: "Aim: about 5 minutes",
     tense: "present", vocab: "n_study", vocabName: "words about studies",
     keepTip: "Keep practising. Next time, ask the group one more question and sum up what the group said.",
-    info: "Group discussion of at least 3 people, about 5 minutes, on a further study topic given by the assessor (25 minutes to prepare). Mark the student being assessed as S and everyone else as T (Group member). The student outlines ideas, asks questions, agrees and disagrees, gives opinions with reasons, summarises, takes turns without dominating, and closes and thanks the group.",
+    info: "Group discussion of at least 3 people, about 5 minutes, on a further study topic given by the assessor (25 minutes to prepare). Type the group name and the 4 students' names in Step 1, record once, and mark who said each sentence by name in Step 3. Use Checklist for: to choose the student, then press Check against criteria. The student outlines ideas, asks questions, agrees and disagrees, gives opinions with reasons, summarises, takes turns without dominating, and closes and thanks the group.",
     chips: [["Opinions","n_opin"],["Reasons","n_reason"],["Summarising","n_sum"],["Questions the student asked","questions"],["Checking understanding","n_check"],["Agreeing","n_agree"],["Disagreeing","n_disagree"],["Linking words","n_coh"],["Closing and thanks","n_closeAll"]],
     criteria: [
       {id:"outline", label:"Outline ideas on the topic to the group", detail:"Gives their ideas on the topic in several sentences, with opinions.", auto:"n2outline",
@@ -2062,7 +2088,7 @@ function appendFinal(recId, text, conf, att) {
   if (att !== undefined && r.attempt !== att) return;
   const seg = tidySegment(text); if (!seg) return;
   if (typeof conf === "number" && conf > 0) r.conf.push(conf);
-  if ($("#chkLabels").checked) {
+  if ($("#chkLabels").checked && !grpOn(r)) {
     const body = r.english.replace(/\s+$/, "");
     const lines = body ? body.split("\n") : [];
     const last = lines.length ? lines[lines.length - 1] : "";
@@ -2240,14 +2266,29 @@ $("#lineTools").addEventListener("click", e => {
   onEnglishChanged(true);
 });
 
-/* mark speakers sentence by sentence: tap S or T beside each sentence (no keyboard, no jumping) */
+/* mark speakers sentence by sentence: tap who said each sentence (no keyboard, no jumping).
+   In a group discussion the buttons are the students' names and Teacher. */
 var SPK_ON = false, SPK_U = [];
-var SPK_RE = /^\s*(S|T|Student|Teacher)\s*:\s*/i;
-function spkLab(l) { const m = l.match(SPK_RE); return m ? (/^s/i.test(m[1]) ? "S" : "T") : ""; }
+function escRe(x) { return String(x).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+function grpAll(r) { r = r || cur; return r && Array.isArray(r.group) ? r.group.map(x => String(x || "").trim()).filter(Boolean) : []; }
+function grpOn(r) { return grpAll(r).length > 0; }
+function spkList() {
+  if (!grpOn()) return [{lab: "S", btn: "S", aria: "Student", cls: "s"}, {lab: "T", btn: "T", aria: ($("#btnSpk").dataset.tname || "Teacher"), cls: "t"}];
+  const me = String((cur && cur.name) || "").trim().toLowerCase(); let k = 0;
+  return grpAll().map(n => ({lab: n, btn: n, aria: n, cls: n.toLowerCase() === me ? "s" : "g" + (++k)})).concat([{lab: "Teacher", btn: "Teacher", aria: "Teacher", cls: "t"}]);
+}
+function spkRe() { return new RegExp("^\\s*(" + spkList().map(x => escRe(x.lab)).concat(["S", "T", "Student", "Teacher"]).join("|") + ")\\s*:\\s*", "i"); }
+function spkLab(l) {
+  const m = l.match(spkRe()); if (!m) return "";
+  const v = m[1].toLowerCase(), hit = spkList().find(x => x.lab.toLowerCase() === v);
+  if (hit) return hit.lab;
+  if (!grpOn()) return /^s/i.test(m[1]) ? "S" : "T";
+  return "";
+}
 function spkSnap() {
-  SPK_U = [];
+  SPK_U = []; const re = spkRe();
   $("#engText").value.split("\n").forEach((l, ln) => {
-    const lab = spkLab(l), body = l.replace(SPK_RE, "");
+    const lab = spkLab(l), body = l.replace(re, "");
     body.replace(/([.!?])\s+/g, "$1\n").split("\n").forEach(x => { if (x.trim()) SPK_U.push({lab: lab, t: x.trim(), ln: ln}); });
   });
 }
@@ -2260,24 +2301,24 @@ function spkText() {
   });
   return out.join("\n");
 }
+function spkBtns(u) {
+  return spkList().map(x => '<button type="button" class="' + x.cls + (u.lab === x.lab ? " on" : "") + '" data-l="' + esc(x.lab) + '" aria-label="' + esc(x.aria) + '" aria-pressed="' + (u.lab === x.lab) + '">' + esc(x.btn) + "</button>").join("");
+}
 function spkRefresh() {
   if (!SPK_ON) return;
   spkSnap();
-  const tw = ($("#btnSpk").dataset.tname || "Teacher");
-  const rows = SPK_U.map((u, i) =>
-    '<div class="spk-row' + (u.lab ? " lab-" + u.lab : "") + '" data-i="' + i + '"><div class="spk-b">' +
-    '<button type="button" class="s' + (u.lab === "S" ? " on" : "") + '" data-l="S" aria-label="Student" aria-pressed="' + (u.lab === "S") + '">S</button>' +
-    '<button type="button" class="t' + (u.lab === "T" ? " on" : "") + '" data-l="T" aria-label="' + esc(tw) + '" aria-pressed="' + (u.lab === "T") + '">T</button></div>' +
-    '<div class="spk-tx">' + esc(u.t) + "</div></div>").join("");
-  $("#spkList").innerHTML = '<div class="spk-help">Each sentence is on its own row. Tap <b>S</b> (Student) or <b>T</b> (' + esc(tw) + ') beside it. Tap it again to remove the label. Press <b>Done</b> to type in the transcript again.</div>' +
-    (rows || '<div class="spk-help">There is no transcript yet.</div>');
+  const G = grpOn();
+  $("#spkList").classList.toggle("grp", G);
+  const rows = SPK_U.map((u, i) => '<div class="spk-row' + (u.lab === "S" || (G && cur && u.lab.toLowerCase() === String(cur.name || "").trim().toLowerCase()) ? " lab-S" : "") + '" data-i="' + i + '"><div class="spk-b">' + spkBtns(u) + '</div><div class="spk-tx">' + esc(u.t) + "</div></div>").join("");
+  const help = G ? "Each sentence is on its own row. Tap the name of the person who said it. Tap it again to remove the name. Press <b>Done</b> to type in the transcript again."
+    : 'Each sentence is on its own row. Tap <b>S</b> (Student) or <b>T</b> (' + esc($("#btnSpk").dataset.tname || "Teacher") + ') beside it. Tap it again to remove the label. Press <b>Done</b> to type in the transcript again.';
+  $("#spkList").innerHTML = '<div class="spk-help">' + help + "</div>" + (rows || '<div class="spk-help">There is no transcript yet.</div>');
 }
 function spkSet(on) {
   SPK_ON = on;
   $("#engText").hidden = on; $("#spkList").hidden = !on;
   $("#btnSpk").setAttribute("aria-pressed", on ? "true" : "false");
   $("#btnSpk").innerHTML = on ? '<svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Done</span>' : '<svg class="spk-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h11v7H8l-3 3v-3H3z M10 15v2h6l3 3v-3h2v-7h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Mark speakers sentence by sentence</span>';
-  document.querySelectorAll('#lineTools [data-mark]').forEach(b => b.hidden = on);
   spkRefresh();
 }
 $("#btnSpk").addEventListener("click", () => spkSet(!SPK_ON));
@@ -2286,10 +2327,73 @@ $("#spkList").addEventListener("click", e => {
   const row = b.closest(".spk-row"), u = SPK_U[+row.dataset.i]; if (!u) return;
   const lab = u.lab === b.dataset.l ? "" : b.dataset.l; u.lab = lab;
   $("#engText").value = spkText();
-  row.className = "spk-row" + (lab ? " lab-" + lab : "");
   row.querySelectorAll("button[data-l]").forEach(x => { const on = x.dataset.l === lab; x.classList.toggle("on", on); x.setAttribute("aria-pressed", on); });
   SPK_ON = false; onEnglishChanged(true); SPK_ON = true;
 });
+
+/* group: one record per student; the records of a group share the recording and transcript */
+const GRP_SHARED = ["audio", "english", "ipa", "ipaManual", "ipaGuessed", "ipaTotal", "ipaGuessList", "attempt", "date", "groupName", "profileId"];
+function grpShare(src) {
+  if (!src || !src.gid) return;
+  records.forEach(x => {
+    if (x === src || x.gid !== src.gid) return;
+    GRP_SHARED.forEach(k => { x[k] = src[k]; });
+    x.conf = (src.conf || []).slice(); x.group = (src.group || []).slice();
+    x.stats = null;
+  });
+}
+function gidOf(r) { if (!r.gid) { r.gid = uid(); r.slot = 0; r.group = r.group || ["", "", "", ""]; } return r.gid; }
+function slotRec(gid, i) { return records.find(x => x.gid === gid && x.slot === i); }
+function renderGrpTabs() {
+  if (!cur || !$("#grpTabBtns")) return;
+  const list = cur.gid ? records.filter(x => x.gid === cur.gid && String(x.name || "").trim()).sort((a, b) => a.slot - b.slot) : [];
+  $("#grpTabs").hidden = list.length < 1;
+  $("#grpTabBtns").innerHTML = list.map(x => '<button type="button" class="grptab" data-rid="' + x.id + '" aria-current="' + (x === cur) + '">' + esc(x.name) + "</button>").join("");
+}
+function fillGrp(r) {
+  $("#grpName").value = r.groupName || "";
+  [0, 1, 2, 3].forEach(i => { $("#grp" + i).value = (r.group && r.group[i]) || ""; });
+  renderGrpTabs();
+}
+$("#grpName").addEventListener("input", () => {
+  if (!cur) return; cur.groupName = $("#grpName").value; gidOf(cur); cur.saved = false; grpShare(cur); renderList(); if (typeof persistSoon === "function") persistSoon();
+});
+document.querySelectorAll("#grpBox input[data-g]").forEach(inp => inp.addEventListener("input", () => {
+  if (!cur) return;
+  const gid = gidOf(cur), i = +inp.dataset.g, v = inp.value, nm = v.trim();
+  cur.group = Array.isArray(cur.group) ? cur.group.slice(0, 4) : [];
+  while (cur.group.length < 4) cur.group.push("");
+  cur.group[i] = v;
+  let r = slotRec(gid, i);
+  if (!r && nm) {
+    if (!String(cur.name || "").trim() && cur.slot !== i && !slotRec(gid, cur.slot === undefined ? 0 : cur.slot)) r = cur;
+    else { r = newRecord(); r.gid = gid; r.slot = i; records.push(r); }
+    r.slot = i;
+  }
+  if (r) {
+    if (!nm && r !== cur && !r.saved && !Object.keys(r.levels || {}).length) { records.splice(records.indexOf(r), 1); r = null; }
+    else { r.name = nm; r.saved = false; }
+  }
+  if (r === cur) $("#studentName").value = nm;
+  grpShare(cur); renderGrpTabs(); renderList(); spkRefresh();
+  if (typeof persistSoon === "function") persistSoon();
+}));
+$("#grpTabBtns").addEventListener("click", e => {
+  const b = e.target.closest("[data-rid]"); if (!b || REC.state !== "idle") return;
+  syncFromUI();
+  const r = records.find(x => x.id === b.dataset.rid); if (r && r !== cur) loadRecord(r);
+});
+function grpView(r) {
+  if (!grpOn(r)) return r;
+  const me = String(r.name || "").trim().toLowerCase();
+  const re = new RegExp("^\\s*(" + grpAll(r).concat(["Teacher"]).map(escRe).concat(["S", "T", "Student"]).join("|") + ")\\s*:\\s*", "i");
+  const eng = String(r.english || "").split("\n").map(l => {
+    if (!l.trim()) return l;
+    const m = l.match(re);
+    return (m && me && m[1].toLowerCase() === me ? "S: " : "T: ") + (m ? l.slice(m[0].length) : l.trim());
+  }).join("\n");
+  return Object.assign({}, r, {english: eng});
+}
 $("#btnSplit").addEventListener("click", () => {
   const ta = $("#engText");
   const out = [];
@@ -2410,6 +2514,7 @@ function n01Stats(s, sRaw, text, words, sp, sTurns, dur, prof) {
 }
 
 function analyse(r) {
+  r = grpView(r);
   const prof = profileById(r.profileId);
   /* one speaker (presentations): every line is the student's */
   const sp = prof.single ? {turns: String(r.english || "").trim() ? [{sp: "S", t: String(r.english).replace(LABEL_RE, "").replace(/\n\s*(S|T|Student|Teacher)\s*:\s*/gi, "\n").replace(/\s*\n\s*/g, " ").trim()}] : [], hasLabels: true, unlabelled: 0} : splitSpeakers(r.english);
@@ -3219,10 +3324,11 @@ function syncFromUI() {
   cur.name = $("#studentName").value.trim(); cur.date = $("#assessDate").value;
   cur.english = $("#engText").value; cur.ipa = $("#ipaText").value;
   cur.well = $("#fbWell").value; cur.improve = $("#fbImprove").value;
+  grpShare(cur);
 }
 function readyToSave() {
   syncFromUI();
-  if (!cur.name) { setStatus("#saveStatus", "Type the student's name in Step 1 first.", "warn"); $("#studentName").classList.add("needname"); return false; }
+  if (!cur.name) { setStatus("#saveStatus", "Type the students' names in Step 1 first.", "warn"); $("#studentName").classList.add("needname"); return false; }
   if (REC.state !== "idle") { setStatus("#saveStatus", "Stop the recording first.", "warn"); return false; }
   return true;
 }
@@ -3251,7 +3357,8 @@ async function saveSeparate() {
   setStatus("#saveStatus", "Downloading the files one by one. If the browser asks to allow several downloads, choose Allow.");
 }
 function clip(t, n) { t = String(t || "").trim(); return t.length > n ? t.slice(0, n).replace(/\s+\S*$/, "") + " ... (full text in the saved report)" : t; }
-function speakerHTML(t) {
+function speakerHTML(t, r) {
+  if (r && grpOn(r)) { const me = esc(String(r.name || "").trim().toLowerCase()); return esc(String(t || "").trim()).replace(new RegExp("^\\s*(" + grpAll(r).concat(["Teacher"]).map(x => escRe(esc(x))).join("|") + ")\\s*:\\s*", "gim"), (m0, n) => '<b class="' + (n.toLowerCase() === me ? "spS" : "spT") + '">' + n + ":</b> "); }
   return esc(String(t || "").trim()).replace(/^\s*(S|Student)\s*:\s*/gim, '<b class="spS">Student:</b> ').replace(/^\s*(T|Teacher|Audience)\s*:\s*/gim, '<b class="spT">' + tName() + ':</b> ');
 }
 function reportHTML0(r) {
@@ -3296,7 +3403,7 @@ function reportHTML0(r) {
     '<div class="pr-cap">Levels 3 Meets and 4 Strong = S. Levels 1 Not yet and 2 Developing = U/S.</div>' +
     '<table class="pr-ck"><thead><tr><th class="n tn">' + esc(PRINT_CONF.numHead) + '</th><th class="cr">' + esc(PRINT_CONF.critHead || "Did the student do the following?") + '</th><th class="tk2">S</th><th class="tk2">U/S</th><th>' + esc(PRINT_CONF.commentHead) + (PRINT_CONF.commentNote ? '<div class="thn">' + esc(PRINT_CONF.commentNote) + "</div>" : "") + "</th></tr></thead><tbody>" + rows + "</tbody></table>" +
     '<div class="pr-h">Feedback</div><div class="pr-fb"><div class="w"><div class="h">What Was Done Well</div><div class="b">' + esc(r.well) + '</div></div><div class="i"><div class="h">What Needs Improvement</div><div class="b">' + esc(r.improve) + "</div></div></div>" +
-    '<div class="pr-h">Transcript (edited by the teacher)</div><div class="pr-box">' + speakerHTML(r.english) + "</div>" +
+    '<div class="pr-h">Transcript (edited by the teacher)</div><div class="pr-box">' + speakerHTML(r.english, r) + "</div>" +
     (withIpa ? '<div class="pr-h">Phonetic IPA transcript</div><div class="pr-box ipa">' + speakerHTML(r.ipa) + "</div>" : "") +
     '<div class="pr-end"><div class="pr-note">Audio file: ' + esc(r.audio ? audioFileName(r) : "none") + ".</div>" +
     '<div class="pr-sign"><div>Teacher/assessor signature</div><div>Student signature</div></div></div>';
@@ -3530,13 +3637,13 @@ function renderList() {
     tags.push(r.audio ? '<span class="tag ok">Audio ' + fmtTime(r.audio.duration) + "</span>" : '<span class="tag">No audio</span>');
     if (o.scored) tags.push('<span class="tag ' + (o.res === "s" ? "ok" : o.res === "u" ? "bad" : "warn") + '">' + (o.res === "s" ? "S" : o.res === "u" ? "U/S" : o.scored + "/" + o.n + " assessed") + "</span>");
     tags.push(r.saved ? '<span class="tag ok">Saved</span>' : (r.audio ? '<span class="tag warn">Not saved</span>' : ""));
-    return '<li><button type="button" class="pick" data-id="' + r.id + '" aria-current="' + (r === cur) + '"><span class="nm">' + esc(r.name || "(no name yet)") + '</span><span class="tags">' + tags.join("") + "</span></button></li>";
+    return '<li><button type="button" class="pick" data-id="' + r.id + '" aria-current="' + (r === cur) + '"><span class="nm">' + esc(r.name || "(no name yet)") + (r.groupName ? ' <span class="hint">(' + esc(r.groupName) + ')</span>' : "") + '</span><span class="tags">' + tags.join("") + "</span></button></li>";
   }).join("") || '<li class="hint">No students yet.</li>';
 }
 function loadRecord(r) {
   cur = r;
   $("#studentName").value = r.name; $("#assessDate").value = r.date; $("#profileSel").value = r.profileId;
-  $("#engText").value = r.english; $("#ipaText").value = r.ipa; spkRefresh();
+  $("#engText").value = r.english; $("#ipaText").value = r.ipa; fillGrp(r); spkRefresh();
   $("#fbWell").value = r.well; $("#fbImprove").value = r.improve;
   $("#interim").textContent = ""; $("#studentName").classList.remove("needname");
   $("#saveStatus").style.display = "none";
@@ -3590,9 +3697,9 @@ $("#studentList").addEventListener("click", e => {
 $("#btnNewStudent").addEventListener("click", () => {
   if (REC.state !== "idle") return;
   syncFromUI();
-  if (!cur.name && !cur.audio && !cur.english) { $("#studentName").focus(); return; }
+  if (!cur.name && !cur.groupName && !cur.audio && !cur.english) { $("#grpName").focus(); return; }
   const r = newRecord(); r.profileId = cur.profileId; r.date = cur.date || todayISO();
-  records.push(r); loadRecord(r); $("#studentName").focus();
+  records.push(r); loadRecord(r); $("#grpName").focus();
   window.scrollTo({top: 0});
 });
 
@@ -3812,11 +3919,11 @@ function plainRecord(r, i) {
   const o = {};
   Object.keys(r).forEach(k => { if (k !== "audio") o[k] = r[k]; });
   o.order = i; o.updated = Date.now();
-  o.audio = r.audio ? {blob: r.audio.blob, mime: r.audio.mime, ext: r.audio.ext, duration: r.audio.duration, at: r.audio.at} : null;
+  o.audio = r.audio ? {blob: r.audio.blob, mime: r.audio.mime, ext: r.audio.ext, duration: r.audio.duration, at: r.audio.at, fromFile: r.audio.fromFile} : null;
   return o;
 }
 function signature() {
-  return JSON.stringify([cur && cur.id, records.map(r => [r.id, r.name, r.date, r.profileId, r.attempt, r.audio && r.audio.at, r.english, r.ipa, r.ipaManual, r.levels, r.evidence, r.subs || 0, r.well, r.improve, r.saved, r.byProf || 0])]);
+  return JSON.stringify([cur && cur.id, records.map(r => [r.id, r.name, r.date, r.profileId, r.attempt, r.audio && r.audio.at, r.english, r.ipa, r.ipaManual, r.levels, r.evidence, r.subs || 0, r.well, r.improve, r.saved, r.byProf || 0, r.group || 0, r.groupName || 0, r.gid || 0])]);
 }
 function hasContent(r) { return !!(r.name || r.audio || r.english.trim() || Object.keys(r.levels).length || r.well.trim() || r.improve.trim()); }
 async function persist() {
