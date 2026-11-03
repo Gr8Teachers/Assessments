@@ -660,6 +660,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
           <label class="check"><input type="checkbox" id="chkLive" checked> Show words while recording</label>
           <label class="check"><input type="checkbox" id="chkLabels" checked> Start each line with S: or T:</label>
           <label class="check"><input type="checkbox" id="chkAutoWhisper" checked> If no words appear, transcribe the recording after Stop</label>
+          <label class="check"><input type="checkbox" id="chkVerbatim" checked> Transcribe word for word: keep the student's mistakes and hesitations (um, uh, repeated words)</label>
           <div class="row">
             <div class="field" style="max-width:300px">
               <label for="langSel">Accent for showing words</label>
@@ -2135,7 +2136,48 @@ async function blobTo16k(blob) {
   return out.getChannelData(0);
 }
 function cleanAsr(t) {
-  return String(t || "").replace(/\[[^\]]*\]|\([^)]*\)/g, " ").replace(/\s+/g, " ").replace(/\s+([.,!?])/g, "$1").trim();
+  return String(t || "").replace(/\[[^\]]*\]/g, " ").replace(/\(([^)]*)\)/g, (m, x) => /^\s*(um+|uh+|er+|ah+|hmm+|mm+)\s*$/i.test(x) ? x : " ").replace(/\s+/g, " ").replace(/\s+([.,!?])/g, "$1").trim();
+}
+/* Word-for-word transcription: Whisper is given a short sample of learner speech (with mistakes,
+   um, uh and repeated words) before each 28-second part, plus the end of the previous part.
+   It copies that style, so it keeps more of the student's own mistakes and hesitations.
+   If anything goes wrong, the normal transcription is used instead. */
+const VERBATIM_PROMPT = "Um, so, I... I go to the shop yesterday and, uh, I buy some, some apple. Er, my friend, he don't like it. I want, I want to, um, study more English.";
+function verbatimCut(pcm, start, win, sr) {
+  const end = Math.min(pcm.length, start + win);
+  if (end >= pcm.length) return pcm.length;
+  /* cut at the quietest tenth of a second in the last 3 seconds, so a word is not split */
+  const step = Math.round(sr / 10); let best = end, bestE = Infinity;
+  for (let a = Math.max(start + step, end - 3 * sr); a + step <= end; a += step) {
+    let e = 0; for (let i = a; i < a + step; i += 4) e += pcm[i] * pcm[i];
+    if (e < bestE) { bestE = e; best = a + Math.round(step / 2); }
+  }
+  return best;
+}
+async function whisperVerbatim(pipe, pcm, onProg) {
+  const tok = pipe.tokenizer, proc = pipe.processor, model = pipe.model;
+  const tid = t => { const a = tok.added_tokens_map && tok.added_tokens_map.get(t); const v = a ? a.id : tok.model.tokens_to_ids.get(t); if (v === undefined || v === null) throw new Error("No token " + t); return v; };
+  const SOP = tid("<|startofprev|>"), SOT = tid("<|startoftranscript|>"), NOTS = tid("<|notimestamps|>");
+  const enc = t => Array.from(tok.encode(" " + t.trim(), {add_special_tokens: false})).map(Number);
+  const SR = 16000, WIN = 28 * SR, parts = [];
+  let prev = "", off = 0;
+  while (off < pcm.length) {
+    const cut = verbatimCut(pcm, off, WIN, SR);
+    const sub = pcm.subarray(off, cut);
+    if (sub.length >= SR / 2) {
+      const feats = (await proc(sub)).input_features;
+      let p = enc(VERBATIM_PROMPT + (prev ? " " + prev : ""));
+      if (p.length > 200) p = p.slice(-200);
+      const init = [SOP].concat(p, [SOT, NOTS]);
+      const out = await model.generate({inputs: feats, decoder_input_ids: init, max_new_tokens: Math.max(64, 440 - init.length)});
+      const seq = (out && out.sequences ? out.sequences : out).tolist()[0].map(Number);
+      const t = cleanAsr(tok.decode(seq.slice(init.length), {skip_special_tokens: true}));
+      if (t && t.indexOf(VERBATIM_PROMPT.slice(0, 30)) === -1) { parts.push(t); prev = t.split(/\s+/).slice(-40).join(" "); }
+    }
+    off = cut;
+    if (onProg) onProg(Math.round(Math.min(1, off / pcm.length) * 100));
+  }
+  return parts.join(" ").replace(/\s+/g, " ").trim();
 }
 async function whisperTranscribe() {
   if (ASR.busy) return;
@@ -2173,8 +2215,15 @@ async function whisperTranscribe() {
     const pcm = await blobTo16k(blob);
     stage = "run";
     whisperMsg("Writing the words. Please wait ...", 95);
-    const out = await ASR.pipe(pcm, {chunk_length_s: 30, stride_length_s: 5});
-    const text = cleanAsr(Array.isArray(out) ? out.map(o => o.text).join(" ") : out && out.text);
+    let text = "";
+    if ($("#chkVerbatim") && $("#chkVerbatim").checked) {
+      try { text = await whisperVerbatim(ASR.pipe, pcm, n => whisperMsg("Writing the words, keeping mistakes and hesitations. Please wait ... " + n + "%", 95)); }
+      catch (e) { console.warn("Word-for-word transcription failed, using normal transcription.", e); text = ""; }
+    }
+    if (!text) {
+      const out = await ASR.pipe(pcm, {chunk_length_s: 30, stride_length_s: 5});
+      text = cleanAsr(Array.isArray(out) ? out.map(o => o.text).join(" ") : out && out.text);
+    }
     const r = records.find(x => x.id === recId);
     if (!r || !r.audio || r.audio.blob !== blob) { whisperMsg("The recording was deleted, so this text was not used."); return; }
     if (!text) { whisperMsg("No words were found in the recording. Check that the playback has speech."); }
@@ -2182,7 +2231,7 @@ async function whisperTranscribe() {
       const lined = text.replace(/([.!?])\s+/g, "$1\n");
       r.english = lined; r.ipaManual = false; r.saved = false; r.stats = null;
       if (r === cur) { $("#engText").value = lined; onEnglishChanged(false); renderEval(); }
-      whisperMsg("Done. " + wordCount(text) + " words. Now click each line and press Student line or Teacher line.");
+      whisperMsg("Done. " + wordCount(text) + " words. Listen to the recording and correct any words that are different from what the student said." + ($("#btnSpk") && $("#btnSpk").offsetParent !== null ? " Then press Mark speakers sentence by sentence." : ""));
       setSrState("Done. Check the transcript.", "ok");
     }
   } catch (e) {
