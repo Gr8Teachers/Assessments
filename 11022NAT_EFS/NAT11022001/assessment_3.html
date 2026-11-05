@@ -18,6 +18,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+.ipasw{display:none!important}
 /* mark speakers line by line (phone friendly, no keyboard) */
 .spk{border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:.3rem .5rem;max-height:70vh;overflow:auto}
 .spk-help{font-size:.85rem;color:#495054;margin:.2rem 0 .5rem}
@@ -658,7 +659,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
     </section>
 
     <section class="card" id="sec3">
-      <div class="sec-h"><span class="stepn">3</span><h2>Transcript</h2><span class="grow"></span><button type="button" class="ipasw onbar" role="switch" aria-checked="false" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA off</span></button></div>
+      <div class="sec-h"><span class="stepn">3</span><h2>Transcript</h2><span class="grow"></span><button type="button" class="ipasw onbar" hidden role="switch" aria-checked="false" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA off</span></button></div>
       <div class="trtools">
         <button type="button" class="btn b-amber" id="btnWhisper">Transcribe the recording</button>
         <span class="msg" id="whisperMsg">Use this if no words appeared while you recorded.</span>
@@ -727,7 +728,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
         <button type="button" class="btn b-teal" id="btnSaveAll">Save all students</button>
       </div>
       </div>
-      <div class="check" style="margin-top:.4rem"><button type="button" class="ipasw" role="switch" aria-checked="false" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA off</span></button><span class="hint">When IPA is on, it is printed and saved in the report.</span></div>
+      <div class="check" style="margin-top:.4rem" hidden><button type="button" class="ipasw" role="switch" aria-checked="false" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA off</span></button><span class="hint">When IPA is on, it is printed and saved in the report.</span></div>
       <p class="hint" style="margin:.6rem 0 0"><b>Print / Save as PDF</b> opens the print window. Choose a printer, or choose <b>Save as PDF</b> as the destination. <b>Save to this computer</b> keeps the recording (MP3) and a text report in one ZIP file. You can print and save as many times as you like.</p>
       <div class="status" id="saveStatus" style="display:none"></div>
     </section>
@@ -3777,7 +3778,7 @@ document.querySelectorAll(".ipasw").forEach(b => b.addEventListener("click", () 
   $("#profileSel").value = APP_PROFILE;
   { const p = profileById(APP_PROFILE); $("#asmtEy").textContent = p.short; $("#asmtTitle").textContent = p.title.replace(/^.*?of \d+:\s*/, ""); }
   const sl = store("eal19_speak_lang"); if (sl) $("#langSel").value = sl;
-  setIpa(store("eal_speak_ipa_v2") === "1", false); /* IPA is off unless the teacher turns it on */
+  setIpa(false, false); /* this version has no IPA */
   const st = store("eal19_speak_teacher"); if (st) $("#teacherName").value = st;
   const fs = store("eal19_speak_fs"); if (fs) { const b = $('.sz button[data-fs="' + fs + '"]'); if (b) b.click(); }
   if (!SR.available) { $("#chkLive").checked = false; $("#chkLive").disabled = true; $("#chkLive").parentNode.title = "This browser has no live transcription"; }
