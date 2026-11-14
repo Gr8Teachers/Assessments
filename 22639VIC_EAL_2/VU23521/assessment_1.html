@@ -99,7 +99,9 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
   table.p th{background:#0B3F47;color:#fff;font-weight:700;text-align:left;padding:1.6mm 2mm;border:.3mm solid #0B3F47;font-size:10pt}
   table.p td{border:.3mm solid #8A9196;padding:1.6mm 2mm;vertical-align:top;font-size:10.5pt}
   table.p td.c{text-align:center;width:24mm}
-  table.p td.mk{text-align:center;width:15mm;font-weight:700}
+  table.p th, table.p td.c{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.p th.mkh{background:none;border:0;width:12mm}
+  table.p td.mk{text-align:center;width:12mm;font-weight:700;border:0;vertical-align:middle}
   .tk{font-size:13pt}
   .mok{color:#236A76}.mno{color:#8B0000}
   .p-p{margin:1.5mm 0}
@@ -488,15 +490,15 @@ function printQ(r, q) {
   let h = '<div class="p-qb"><div class="p-q">' + q.n + ". " + esc(q.text) + '</div><div class="p-cap">' + esc(q.table) + "</div>";
   const a = (r.x && r.x[q.id]) || "";
   if (q.type === "one" || q.type === "two") {
-    h += '<table class="p"><tr><th>Answer choices</th><th style="width:28mm">' + (q.type === "two" ? "Select correct answers" : "Select one correct answer") + '</th><th style="width:15mm">Mark</th></tr>';
+    h += '<table class="p"><tr><th>Answer choices</th><th style="width:28mm">' + (q.type === "two" ? "Select correct answers" : "Select one correct answer") + '</th><th class="mkh"></th></tr>';
     q.opts.forEach(([k, t], j) => { h += "<tr><td>" + k + ") " + esc(t) + '</td><td class="c">' + TK(a.includes(k)) + "</td>" + (j === 0 ? '<td class="mk" rowspan="' + q.opts.length + '">' + MK(qOk(r, q)) + "</td>" : "") + "</tr>"; });
     h += "</table>";
   } else if (q.type === "match") {
-    h += '<table class="p"><tr><th>Feature</th><th style="width:18mm">Answer</th><th>Information written in the text</th><th style="width:15mm">Mark</th></tr>';
+    h += '<table class="p"><tr><th>Feature</th><th style="width:18mm">Answer</th><th>Information written in the text</th><th class="mkh"></th></tr>';
     q.items.forEach((it, i) => { const v = itemAns(r, q, i); const o = q.opts[i]; h += "<tr><td>" + esc(it) + '</td><td class="c"><b>' + esc(v) + "</b></td><td>" + o[0] + ". " + esc(o[1]) + '</td><td class="mk">' + MK(itemOk(r, q, i)) + "</td></tr>"; });
     h += "</table>";
   } else {
-    h += '<table class="p"><tr><th>Statement</th><th style="width:28mm">True or False</th><th style="width:15mm">Mark</th></tr>';
+    h += '<table class="p"><tr><th>Statement</th><th style="width:28mm">True or False</th><th class="mkh"></th></tr>';
     q.items.forEach((it, i) => { const v = itemAns(r, q, i); h += "<tr><td>" + esc(it) + '</td><td class="c"><b>' + (v === "T" ? "True" : v === "F" ? "False" : "") + '</b></td><td class="mk">' + MK(itemOk(r, q, i)) + "</td></tr>"; });
     h += "</table>";
   }
@@ -508,8 +510,7 @@ function reportHTML(r) {
     '<div class="p-lab">Unit code and name</div>' + pBox(esc(ASMT.unitName)) +
     '<div class="p-lab">Qualification/Course code and name</div>' + pBox(esc(ASMT.qual)) +
     '<div class="p-h">Student details</div><div class="p-lab">Student name</div>' + pBox(esc(r.n), "tall") +
-    '<div class="p-lab">Student number</div>' + pBox(esc(r.id), "tall") +
-    '<div class="p-sum">Result: ' + s.qs + " of " + s.qn + " questions correct (" + s.itemsOk + " of " + s.items + " answers). Outcome: " + (o === "s" ? "Satisfactory" : "Unsatisfactory") + "</div></section>";
+    '<div class="p-lab">Student number</div>' + pBox(esc(r.id), "tall") + '</section>';
   PARTS.forEach(p => {
     h += '<section class="pg"><div class="p-h">' + esc(p.title) + '</div><div class="p-p">Read the text. Then answer the questions.</div><div class="p-p">Read each question carefully and answer by selecting the appropriate response.</div>' + p.qs.map(q => printQ(r, q)).join("") + "</section>";
   });

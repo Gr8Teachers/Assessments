@@ -54,6 +54,7 @@ input[type=text]:focus{outline:none;border-color:var(--teal)}
 .qrbox{background:#fff;padding:10px;border-radius:12px;display:block;width:100%;max-width:440px;margin:.8rem auto;border:2px solid var(--line)}
 .qrbox svg{display:block;width:100%;height:auto}
 .who{font-size:1.25rem;font-weight:700;color:var(--navy)}
+.qrname{font-size:1.3rem;font-weight:700;color:#000;margin-top:.4rem;word-break:break-word}
 .stack{display:flex;flex-direction:column;gap:.6rem;margin-top:1rem}
 </style>
 </head>
@@ -218,7 +219,7 @@ $("#btnFinish").addEventListener("click", () => {
 });
 function showDone() {
   const qr = qrcode(0, "M"); qr.addData(payload(), "Byte"); qr.make();
-  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true});
+  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>";
   $("#doneName").textContent = S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "");
   $("#doneInfo").textContent = ALLQ.filter(filled).length + " of " + ALLQ.length + " questions answered.";
   $("#viewAnswer").hidden = true; $("#viewDone").hidden = false; window.scrollTo(0, 0);
