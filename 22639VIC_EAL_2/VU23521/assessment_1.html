@@ -74,6 +74,7 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
 .give button{min-height:40px;padding:.15rem .9rem;border-radius:999px;border:2px solid var(--teal);background:#fff;color:var(--navy);font:inherit;font-weight:700;cursor:pointer}
 .give button[aria-pressed="true"]{background:#FFFF99;border-color:var(--navy)}
 .linkbox .qrs svg{width:150px;height:auto;display:block}
+#redoBox .qrs svg{width:230px}
 .biglink{position:fixed;inset:0;background:#fff;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:16px}
 .biglink svg{width:min(80vh,90vw);height:auto}
 .biglink h2{margin:0;color:var(--navy);font-size:2rem;text-align:center}
@@ -117,7 +118,7 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
 <div class="bar">
   <div class="ey">VU23521 | Assessment event 1 of 3</div>
   <h1>Reading: scan and mark</h1>
-  <nav class="steps"><a href="#sec1"><b>1</b>Student link</a><a href="#sec2"><b>2</b>Scan answers</a><a href="#sec3"><b>3</b>Marking</a><a href="#sec4"><b>4</b>Outcome and feedback</a><a href="#sec5"><b>5</b>Print or save</a></nav>
+  <nav class="steps"><a href="#sec1"><b>1</b>Student link</a><a href="#sec2"><b>2</b>Scan answers</a><a href="#sec3"><b>3</b>Marking</a><a href="#sec4"><b>4</b>Outcome and feedback</a><a href="#sec5"><b>5</b>Second attempt</a><a href="#sec6"><b>6</b>Print or save</a></nav>
 </div>
 <div class="wrap">
   <aside>
@@ -178,7 +179,12 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
     </section>
 
     <section class="card" id="sec5">
-      <div class="sec-h"><span class="n">5</span><h2>Print or save</h2></div>
+      <div class="sec-h"><span class="n">5</span><h2>Second attempt</h2></div>
+      <div id="redoBox"></div>
+    </section>
+
+    <section class="card" id="sec6">
+      <div class="sec-h"><span class="n">6</span><h2>Print or save</h2></div>
       <div class="row"><button type="button" class="btn" id="btnPrint">Print / Save as PDF</button></div>
       <p class="hint">The printout looks like the assessment paper: cover, the questions with the student's answers and marks, then the outcome page.</p>
       <p class="status" id="printMsg"></p>
@@ -256,7 +262,10 @@ const today = () => new Date().toISOString().slice(0, 10);
 const fmtDate = d => { if (!d) return ""; const [y, m, dd] = d.split("-"); return dd + "/" + m + "/" + y; };
 
 /* ---------- marking ---------- */
-function itemAns(rec, q, i) { const a = (rec.x && rec.x[q.id]) || ""; return q.type === "one" || q.type === "two" ? a : (a[i] && a[i] !== "-" ? a[i] : ""); }
+function effAns(rec, q) { return rec.x2 && rec.x2[q.id] !== undefined ? rec.x2[q.id] : ((rec.x && rec.x[q.id]) || ""); }
+function firstAns(rec, q, i) { const a = (rec.x && rec.x[q.id]) || ""; return q.type === "one" || q.type === "two" ? a : (a[i] && a[i] !== "-" ? a[i] : ""); }
+function redone(rec, q) { return !!(rec.x2 && rec.x2[q.id] !== undefined); }
+function itemAns(rec, q, i) { const a = effAns(rec, q); return q.type === "one" || q.type === "two" ? a : (a[i] && a[i] !== "-" ? a[i] : ""); }
 function itemKey(q, i) { const k = KEY[q.id] || ""; return q.type === "one" || q.type === "two" ? k : k[i]; }
 function autoOk(rec, q, i) {
   const a = itemAns(rec, q, i), k = itemKey(q, i);
@@ -283,12 +292,23 @@ function outcome(rec) { return rec.result || suggested(rec); }
 /* ---------- adding a scanned student ---------- */
 function addFromCode(text) {
   text = String(text || "").trim();
-  if (!text.startsWith("EALR1")) return {err: "This is not a student answer code."};
+  if (text.includes("#re=")) return {err: "This is a second attempt code. The student scans it with their phone"};
+  if (!text.startsWith("EALR1")) return {err: "This is not a student answer code"};
   let d; try { d = JSON.parse(text.slice(5)); } catch (e) { return {err: "The code could not be read. Ask the student to show it again."}; }
   if (d.a !== ASMT.code) return {err: "This code is for a different assessment (" + d.a + ")."};
   if ((d.v || 1) < 2) return {err: "This code is from an older answer sheet. Ask the student to open the link again, check their answers and press Finish."};
   const keyOf = r => (String(r.n || "").trim().toLowerCase() + "|" + String(r.id || "").trim());
   let r = RECS.find(x => keyOf(x) === keyOf(d)), updated = !!r;
+  if (d.t === 2) {
+    if (!r) return {err: "This is a second attempt, but " + (d.n || "this student") + " is not in your list. Open your saved file first, or scan their first attempt."};
+    const ids = Array.isArray(r.redo) && r.redo.length ? r.redo : Object.keys(d.x || {});
+    r.x2 = r.x2 || {}; r.over = r.over || {};
+    ids.forEach(id => { r.x2[id] = (d.x && d.x[id]) || ""; Object.keys(r.over).forEach(k => { if (k.startsWith(id + ":")) delete r.over[k]; }); });
+    r.att2At = new Date().toISOString(); r.result = "";
+    if (r.commentsAuto !== false) { r.comments = autoComments(r); r.commentsAuto = true; }
+    save(); select(r);
+    return {rec: r, updated: true, got: String(d.p || "12"), second: true};
+  }
   const got = String(d.p || "12");
   if (!r) { r = {rid: "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), over: {}, result: "", comments: "", commentsAuto: true, ra: false, raText: "", assessor: "", date: today(), x: {}, parts: ""}; RECS.push(r); }
   r.n = d.n; r.id = d.id; r.finished = d.f; r.scanned = new Date().toISOString();
@@ -304,7 +324,7 @@ function addFromCode(text) {
   save(); select(r);
   return {rec: r, updated, got};
 }
-function gotLabel(got) { return got.length > 1 ? "" : " (Part " + got + ")"; }
+function gotLabel(got, second) { return (got.length > 1 ? "" : " (Part " + got + ")") + (second ? " (second attempt)" : ""); }
 
 /* ---------- camera scanning ---------- */
 const SCAN = {stream: null, timer: null, last: "", lastAt: 0, canvas: document.createElement("canvas")};
@@ -336,9 +356,9 @@ function scanFrame() {
 }
 function gotCode(text) {
   const r = addFromCode(text);
-  if (r.err) { setMsg("#scanMsg", r.err, "warn"); return; }
+  if (r.err) { setMsg("#scanMsg", r.err.replace(/([^.])$/, "$1."), "warn"); return; }
   const s = score(r.rec);
-  setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got) + (allDone(r.rec) ? ": " + s.qs + " of " + s.qn + " questions correct." : ": waiting for " + missingParts(r.rec).join(" and ") + ".") + " Scan the next student, or press Stop scanning.", "ok");
+  setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got, r.second) + (allDone(r.rec) ? ": " + s.qs + " of " + s.qn + " questions correct." : ": waiting for " + missingParts(r.rec).join(" and ") + ".") + " Scan the next student, or press Stop scanning.", "ok");
   const box = $("#camBox"); box.classList.remove("flash"); void box.offsetWidth; box.classList.add("flash");
   try { const ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = 880; g.gain.value = .08; o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .15); } catch (e) {}
 }
@@ -372,11 +392,11 @@ async function addPictures(files) {
     const text = await decodeImage(files[i]);
     if (!text) { bad.push((files[i].name || "picture") + ": no QR code found"); continue; }
     const r = addFromCode(text);
-    if (r.err) bad.push((files[i].name || "picture") + ": " + r.err); else done.push((r.updated ? "updated " : "added ") + r.rec.n + gotLabel(r.got));
+    if (r.err) bad.push((files[i].name || "picture") + ": " + r.err.replace(/\.$/, "")); else done.push((r.updated ? "updated " : "added ") + r.rec.n + gotLabel(r.got, r.second));
   }
   const names = k => Array.from(new Set(done.filter(x => x.startsWith(k + " ")).map(x => x.slice(k.length + 1))));
   const add = names("added"), upd = names("updated").filter(n => !add.includes(n));
-  setMsg("#scanMsg", (add.length ? "Added: " + add.join(", ") + ". " : "") + (upd.length ? "Updated: " + upd.join(", ") + ". " : "") + (bad.length ? "Could not read: " + bad.join("; ") + ". Ask the student for a clearer screenshot of the whole code." : ""), bad.length ? "warn" : "ok");
+  setMsg("#scanMsg", (add.length ? "Added: " + add.join(", ") + ". " : "") + (upd.length ? "Updated: " + upd.join(", ") + ". " : "") + (bad.length ? "Could not read: " + bad.join("; ") + "." + (bad.some(x => x.includes("no QR code found")) ? " Ask the student for a clearer screenshot of the whole code." : "") : ""), bad.length ? "warn" : "ok");
 }
 $("#btnUpQr").addEventListener("click", () => $("#inQr").click());
 $("#inQr").addEventListener("change", e => { const f = e.target.files; addPictures(f).then(() => { e.target.value = ""; }); });
@@ -388,7 +408,7 @@ document.addEventListener("paste", e => {
   if (files.length) { e.preventDefault(); addPictures(files); }
 });
 $("#btnStopScan").addEventListener("click", stopScan);
-$("#btnPaste").addEventListener("click", () => { const r = addFromCode($("#pasteCode").value); if (r.err) setMsg("#scanMsg", r.err, "warn"); else { setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got) + ".", "ok"); $("#pasteCode").value = ""; } });
+$("#btnPaste").addEventListener("click", () => { const r = addFromCode($("#pasteCode").value); if (r.err) setMsg("#scanMsg", r.err.replace(/([^.])$/, "$1."), "warn"); else { setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got, r.second) + ".", "ok"); $("#pasteCode").value = ""; } });
 
 /* ---------- student link ---------- */
 const STUDENT_BASE = location.href.split("#")[0].split("?")[0].replace(/[^/]*$/, "") + "assessment_1_student.html";
@@ -410,10 +430,10 @@ $("#btnCopyLink").addEventListener("click", async () => { try { await navigator.
 /* ---------- student list ---------- */
 function renderList() {
   $("#noStudents").hidden = RECS.length > 0;
-  $("#slist").innerHTML = RECS.map(r => { const o = outcome(r); const t = o === "n" ? "Part " + PARTS.filter(p => partDone(r, p.id)).map(p => p.id).join(", ") + " only" : (o === "s" ? "S" : "U/S") + (r.result ? "" : "?"); return '<li data-rid="' + r.rid + '" aria-current="' + (r === cur) + '"><span class="nm">' + esc(r.n || "(no name)") + '</span><span class="tag ' + o + '">' + t + "</span></li>"; }).join("");
+  $("#slist").innerHTML = RECS.map(r => { const o = outcome(r); const t = o === "n" ? "Part " + PARTS.filter(p => partDone(r, p.id)).map(p => p.id).join(", ") + " only" : (o === "s" ? "S" : "U/S") + (r.result ? "" : "?") + (r.att2At ? " 2nd" : ""); return '<li data-rid="' + r.rid + '" aria-current="' + (r === cur) + '"><span class="nm">' + esc(r.n || "(no name)") + '</span><span class="tag ' + o + '">' + t + "</span></li>"; }).join("");
 }
 $("#slist").addEventListener("click", e => { const li = e.target.closest("[data-rid]"); if (li) select(RECS.find(r => r.rid === li.dataset.rid)); });
-function select(r) { cur = r || null; renderList(); renderMarks(); renderOutcome(); }
+function select(r) { cur = r || null; renderList(); renderMarks(); renderOutcome(); renderRedo(); }
 let delArmed = 0;
 $("#btnDel").addEventListener("click", () => {
   if (!cur) return;
@@ -443,10 +463,10 @@ function renderMarks() {
     if (!partDone(cur, p.id)) { h += '<p class="hint">Not handed in yet. When the student finishes this part, scan their new code and it will be added here.</p>'; return; }
     p.qs.forEach(q => {
       const ok = qOk(cur, q);
-      h += '<div class="q"><div class="qt"><b>' + q.n + ".</b> " + esc(q.text) + ' <span class="' + (ok ? "ok" : "no") + '">' + (ok ? "✓ correct" : "✗ not correct") + "</span></div>";
+      h += '<div class="q"><div class="qt"><b>' + q.n + ".</b> " + esc(q.text) + ' <span class="' + (ok ? "ok" : "no") + '">' + (ok ? "✓ correct" : "✗ not correct") + "</span>" + (redone(cur, q) ? ' <span class="tag n">2nd attempt</span>' : "") + "</div>";
       h += '<table class="m"><tr>' + (slots(q) > 1 ? "<th>" + (q.type === "tf" ? "Statement" : "Feature") + "</th>" : "") + "<th>Student's answer</th><th>Correct answer</th><th>Mark</th></tr>";
       for (let i = 0; i < slots(q); i++) {
-        h += "<tr>" + (slots(q) > 1 ? "<td>" + esc(q.items[i]) + "</td>" : "") + "<td>" + showAns(q, itemAns(cur, q, i)) + "</td><td>" + showAns(q, itemKey(q, i)) + (KEY_NOTES[q.id + ":" + i] ? '<div class="chg">Clue: ' + esc(KEY_NOTES[q.id + ":" + i]) + "</div>" : "") + "</td><td>" + mkBtns(q, i) + "</td></tr>";
+        h += "<tr>" + (slots(q) > 1 ? "<td>" + esc(q.items[i]) + "</td>" : "") + "<td>" + showAns(q, itemAns(cur, q, i)) + (redone(cur, q) ? '<div class="chg">1st attempt: ' + (firstAns(cur, q, i) ? showAns(q, firstAns(cur, q, i)).replace(/<[^>]+>/g, "") : "no answer") + "</div>" : "") + "</td><td>" + showAns(q, itemKey(q, i)) + (KEY_NOTES[q.id + ":" + i] ? '<div class="chg">Clue: ' + esc(KEY_NOTES[q.id + ":" + i]) + "</div>" : "") + "</td><td>" + mkBtns(q, i) + "</td></tr>";
       }
       h += "</table></div>";
     });
@@ -459,7 +479,7 @@ $("#marks").addEventListener("click", e => {
   cur.over = cur.over || {};
   if (v === autoOk(cur, q, i)) delete cur.over[k]; else cur.over[k] = v;
   if (cur.commentsAuto) cur.comments = autoComments(cur);
-  save(); renderMarks(); renderOutcome(); renderList();
+  save(); renderMarks(); renderOutcome(); renderList(); renderRedo();
 });
 
 /* ---------- outcome and feedback ---------- */
@@ -467,6 +487,8 @@ function autoComments(r) {
   if (!allDone(r)) return missingParts(r).join(" and ") + " not completed yet.";
   const s = score(r), wrong = [];
   PARTS.forEach(p => p.qs.forEach(q => { if (!qOk(r, q)) wrong.push(p.title.split(":")[0] + ", Question " + q.n); }));
+  const second = ALLQ.some(q => redone(r, q));
+  if (!wrong.length && second) return "Well done. In your second attempt you corrected your answers, and now all the questions are correct.";
   if (!wrong.length) return "Well done. You answered all the questions correctly. You understood the purpose, the layout and the language of both texts.";
   return "You answered " + s.qs + " of " + s.qn + " questions correctly. Please review: " + wrong.join("; ") + ". Read the text again and check the information carefully.";
 }
@@ -499,6 +521,43 @@ $("#outBox").addEventListener("input", e => {
 });
 $("#outBox").addEventListener("change", e => { if (e.target.id === "raChk" && cur) { cur.ra = e.target.checked; $("#raText").hidden = !cur.ra; save(); } });
 
+/* ---------- second attempt ---------- */
+function b64u(t) { return btoa(unescape(encodeURIComponent(t))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+function wrongQs(r) { return ALLQ.filter(q => partDone(r, partOfQ(q)) && !qOk(r, q)); }
+function redoLink(r) {
+  const redo = r.redo || [], keep = {};
+  ALLQ.filter(q => partDone(r, partOfQ(q)) && !redo.includes(q.id)).forEach(q => { const a = effAns(r, q); if (a) keep[q.id] = a; });
+  return STUDENT_BASE + "#re=" + b64u(JSON.stringify({a: ASMT.code, k: r.reK, n: r.n, id: r.id, p: partsOf(r), keep: keep, redo: redo}));
+}
+function qLabel(id) { const q = ALLQ.find(x => x.id === id); return (PARTS.find(p => p.id === partOfQ(q)) || {title: ""}).title.split(":")[0] + ", Question " + q.n; }
+function renderRedo() {
+  const box = $("#redoBox"); if (!box) return;
+  if (!cur) { box.innerHTML = '<p class="hint">Choose or scan a student.</p>'; return; }
+  if (cur.att2At) {
+    const ids = Object.keys(cur.x2 || {}), fixed = ids.filter(id => qOk(cur, ALLQ.find(q => q.id === id)));
+    box.innerHTML = '<p class="status ok" style="margin:0 0 .4rem">Second attempt received on ' + esc(fmtDate(cur.att2At.slice(0, 10))) + ".</p>" +
+      "<p>Questions tried again: " + esc(ids.map(qLabel).join("; ")) + ". Now correct: " + fixed.length + " of " + ids.length + ".</p>" +
+      '<p class="hint">The marks in Step 3 and the outcome in Step 4 now use the second attempt. The first attempt is shown under each answer.</p>';
+    return;
+  }
+  const wrong = wrongQs(cur);
+  if (!wrong.length) { box.innerHTML = '<p class="hint">' + (allDone(cur) ? "All questions are correct. No second attempt is needed." : "No incorrect questions so far.") + "</p>"; return; }
+  let h = "<p>Incorrect questions: <b>" + esc(wrong.map(q => qLabel(q.id)).join("; ")) + "</b>.</p>" +
+    '<p class="hint" style="margin-top:-.3rem">The student scans the code with their phone. Their correct answers are kept and locked; the incorrect questions are cleared so they can try again. When they finish, scan their new code in Step 2.</p>' +
+    '<div class="row"><button type="button" class="btn teal" id="btnRedo">' + (cur.redo ? "Make the code again" : "Make second attempt code") + "</button>" + (cur.redo ? '<button type="button" class="btn ghost" id="btnRedoBig">Show the code full screen</button>' : "") + "</div>";
+  if (cur.redo) h += '<div class="linkbox" style="margin-top:.8rem"><div class="qrs">' + qrSvg(redoLink(cur), 4) + '</div><div class="hint">Second attempt for <b>' + esc(cur.n) + "</b>: " + esc(cur.redo.map(qLabel).join("; ")) + "</div></div>";
+  box.innerHTML = h;
+}
+$("#redoBox").addEventListener("click", e => {
+  if (!cur) return;
+  if (e.target.id === "btnRedo") {
+    cur.redo = wrongQs(cur).map(q => q.id); cur.reK = cur.rid.slice(-5) + Date.now().toString(36).slice(-4); cur.reAt = new Date().toISOString();
+    save(); renderRedo();
+  }
+  if (e.target.id === "btnRedoBig" && cur.redo) { $("#bigTitle").textContent = "Second attempt for " + cur.n + ": scan with your phone"; $("#bigQr").innerHTML = qrSvg(redoLink(cur), 8); $("#bigLink").hidden = false; }
+});
+$("#btnBigClose").addEventListener("click", () => { renderLink(); });
+
 /* ---------- save and open ---------- */
 $("#btnSaveAll").addEventListener("click", () => {
   if (!RECS.length) { setMsg("#sideMsg", "There are no students to save.", "warn"); return; }
@@ -522,8 +581,8 @@ const TK = on => '<span class="tk">' + (on ? "☑" : "☐") + "</span>";
 const MK0 = ok => '<span class="' + (ok ? "mok" : "mno") + '">' + (ok ? "✓" : "✗") + "</span>";
 function printQ(r, q) {
   const done = partDone(r, partOfQ(q)), MK = ok => done ? MK0(ok) : "";
-  let h = '<div class="p-qb"><div class="p-q">' + q.n + ". " + esc(q.text) + '</div><div class="p-cap">' + esc(q.table) + "</div>";
-  const a = (r.x && r.x[q.id]) || "";
+  let h = '<div class="p-qb"><div class="p-q">' + q.n + ". " + esc(q.text) + (redone(r, q) ? ' <span style="font-weight:400;font-style:italic;color:#495054">(second attempt)</span>' : "") + '</div><div class="p-cap">' + esc(q.table) + "</div>";
+  const a = effAns(r, q);
   if (q.type === "one" || q.type === "two") {
     h += '<table class="p"><tr><th>Answer choices</th><th style="width:28mm">' + (q.type === "two" ? "Select correct answers" : "Select one correct answer") + '</th><th class="mkh"></th></tr>';
     q.opts.forEach(([k, t], j) => { h += "<tr><td>" + k + ") " + esc(t) + '</td><td class="c">' + TK(a.includes(k)) + "</td>" + (j === 0 ? '<td class="mk" rowspan="' + q.opts.length + '">' + MK(qOk(r, q)) + "</td>" : "") + "</tr>"; });
@@ -553,6 +612,7 @@ function reportHTML(r) {
     '<div class="p-lab">Student signature and date</div>' + pBox("", "tall") +
     '<div class="p-h">Reasonable adjustment</div><div class="p-p">' + TK(r.ra) + " Reasonable adjustment was in place for this assessment event.</div><div class=\"p-p\">If so, please provide details of any reasonable adjustment strategies that were implemented:</div>" + pBox(esc(r.ra ? r.raText : ""), "tall") +
     '<div class="p-h">Assessment outcome</div><div class="p-p">' + TK(o === "s") + " Satisfactory &nbsp;&nbsp; " + TK(o === "u") + " Unsatisfactory</div>" +
+    (r.att2At ? '<div class="p-p">Second attempt on ' + esc(fmtDate(r.att2At.slice(0, 10))) + ": " + esc(Object.keys(r.x2 || {}).map(qLabel).join("; ")) + ".</div>" : "") +
     '<div class="p-lab">Comments</div>' + pBox(esc(r.comments || autoComments(r)).replace(/\n/g, "<br>"), "tall") +
     '<div class="p-lab">Assessor name, signature and date</div>' + pBox(esc(r.assessor || "") + (r.date ? " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " + fmtDate(r.date) : ""), "tall") +
     '<div class="p-h">Student acknowledgement of assessment outcome</div><div class="p-p">Would you like to make any comments about this assessment?</div>' + pBox("", "tall") +

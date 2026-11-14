@@ -57,6 +57,11 @@ input[type=text]:focus{outline:none;border-color:var(--teal)}
 .qrname{font-size:1.3rem;font-weight:700;color:#000;margin-top:.4rem;word-break:break-word}
 .qrpart{display:inline-block;margin-top:.3rem;padding:.1rem .8rem;border-radius:999px;background:#0B3F47;color:#fff;font-weight:700;font-size:1.05rem}
 .stack{display:flex;flex-direction:column;gap:.6rem;margin-top:1rem}
+.card.locked{opacity:.6}
+.card.locked button{cursor:default}
+.lockmsg{margin:-.3rem 0 .4rem;color:#236A76;font-weight:700}
+.redomsg{margin:-.3rem 0 .4rem;color:#8B0000;font-weight:700}
+input[readonly]{background:#E7F7F9}
 </style>
 </head>
 <body>
@@ -73,7 +78,7 @@ input[type=text]:focus{outline:none;border-color:var(--teal)}
       <input type="text" id="stName" autocomplete="name" placeholder="Type your full name">
       <label class="f" for="stNum" style="margin-top:.8rem">Student number</label>
       <input type="text" id="stNum" inputmode="numeric" autocomplete="off" placeholder="Your student number">
-      <p class="hint" style="margin:.7rem 0 0">Read the texts on paper. Then answer the questions here. Your answers are kept on this device until you finish.</p>
+      <p class="hint" id="introHint" style="margin:.7rem 0 0">Read the texts on paper. Then answer the questions here. Your answers are kept on this device until you finish.</p>
     </div>
     <div id="qs"></div>
     <button type="button" class="btn big" id="btnFinish">Finish</button>
@@ -138,12 +143,21 @@ function slots(q) { return q.type === "match" || q.type === "tf" ? q.items.lengt
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+/* second attempt: the teacher's QR code opens this page with #re=... (kept correct answers and the questions to try again) */
+function b64d(t) { t = t.replace(/-/g, "+").replace(/_/g, "/"); while (t.length % 4) t += "="; return decodeURIComponent(escape(atob(t))); }
+let RE = null;
+/* opening a second attempt code in a tab that already shows this page only changes the # part, so reload */
+window.addEventListener("hashchange", () => location.reload());
+try { const m = location.hash.match(/re=([^&]+)/); if (m) { RE = JSON.parse(b64d(m[1])); if (!RE || RE.a !== ASMT.code || !Array.isArray(RE.redo)) RE = null; } } catch (e) { RE = null; }
 /* the teacher can give out one part at a time: ?part=1 or ?part=2 */
-const PART = (new URLSearchParams(location.search).get("part") || "").replace(/[^0-9]/g, "");
-const SHOWN = PARTS.some(p => p.id === PART) ? PARTS.filter(p => p.id === PART) : PARTS;
+const PART = RE ? String(RE.p || "12") : (new URLSearchParams(location.search).get("part") || "").replace(/[^0-9]/g, "");
+const SHOWN = PARTS.filter(p => PART.length === 1 ? p.id === PART : true);
 const SHOWQ = SHOWN.flatMap(p => p.qs);
 const GOT = SHOWN.map(p => p.id).join("");
-const KEY = "eal_read_" + ASMT.code + "_student_v2" + (GOT.length < PARTS.length ? "_p" + GOT : "");
+/* the questions to answer now (all of them, or only the ones to try again) */
+const ACTQ = RE ? SHOWQ.filter(q => RE.redo.includes(q.id)) : SHOWQ;
+const locked = q => !!RE && !RE.redo.includes(q.id);
+const KEY = "eal_read_" + ASMT.code + "_student_v2" + (GOT.length < PARTS.length ? "_p" + GOT : "") + (RE ? "_a2_" + RE.k : "");
 let S = {name: "", num: "", ans: {}, started: new Date().toISOString()};
 function load() { try { const v = JSON.parse(localStorage.getItem(KEY) || "null"); if (v && v.ans) S = v; } catch (e) {} }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -161,7 +175,8 @@ function render() {
     h += '<div class="ph"><h2>' + esc(p.title) + '</h2><p>Read the text. Then answer the questions.</p></div>';
     p.qs.forEach(q => {
       const a = ansOf(q);
-      h += '<div class="card" id="q' + q.id.replace(".", "_") + '" data-q="' + q.id + '"><div class="qn"><b class="num">' + q.n + '</b><div class="qt">' + esc(q.text) + "</div></div>";
+      h += '<div class="card' + (locked(q) ? " locked" : "") + '" id="q' + q.id.replace(".", "_") + '" data-q="' + q.id + '"><div class="qn"><b class="num">' + q.n + '</b><div class="qt">' + esc(q.text) + "</div></div>";
+      if (RE) h += locked(q) ? '<p class="lockmsg">✓ Correct. No change needed.</p>' : '<p class="redomsg">Try this question again.</p>';
       if (q.type === "one" || q.type === "two") {
         if (q.type === "two") h += '<p class="hint" style="margin:-.3rem 0 .3rem">Choose 2 answers.</p>';
         h += q.opts.map(([k, t]) => '<button type="button" class="opt" data-k="' + k + '" aria-pressed="' + a.includes(k) + '"><span class="l">' + k + ')</span><span>' + esc(t) + "</span></button>").join("");
@@ -184,6 +199,7 @@ function setSlot(q, i, k) {
 $("#qs").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
   const card = b.closest("[data-q]"), q = ALLQ.find(x => x.id === card.dataset.q), k = b.dataset.k;
+  if (locked(q)) return;
   if (q.type === "one") S.ans[q.id] = ansOf(q) === k ? "" : k;
   else if (q.type === "two") {
     let a = ansOf(q).split("").filter(Boolean);
@@ -200,19 +216,19 @@ $("#qs").addEventListener("click", e => {
 });
 ["stName", "stNum"].forEach(id => $("#" + id).addEventListener("input", () => { S[id === "stName" ? "name" : "num"] = $("#" + id).value; $("#" + id).classList.remove("need"); save(); }));
 function progress() {
-  const done = SHOWQ.filter(filled).length;
-  $("#progBar").style.width = (100 * done / SHOWQ.length) + "%";
-  $("#progText").textContent = done + " of " + SHOWQ.length + " questions answered";
+  const done = ACTQ.filter(filled).length;
+  $("#progBar").style.width = (100 * done / Math.max(1, ACTQ.length)) + "%";
+  $("#progText").textContent = done + " of " + ACTQ.length + " questions answered" + (RE ? " (second attempt)" : "");
 }
 /* the answers as a short text for the QR code (no answers to the questions are in this page) */
 function payload() {
-  const x = {}; SHOWQ.forEach(q => { if (S.ans[q.id]) x[q.id] = S.ans[q.id]; });
-  return "EALR1" + JSON.stringify({a: ASMT.code, v: 2, p: GOT, n: S.name.trim(), id: S.num.trim(), f: String(S.finished || "").slice(0, 16), x: x});
+  const x = {}; ACTQ.forEach(q => { if (S.ans[q.id]) x[q.id] = S.ans[q.id]; });
+  return "EALR1" + JSON.stringify(Object.assign(RE ? {t: 2, k: RE.k} : {}, {a: ASMT.code, v: 2, p: GOT, n: S.name.trim(), id: S.num.trim(), f: String(S.finished || "").slice(0, 16), x: x}));
 }
 let finishArmed = 0;
 $("#btnFinish").addEventListener("click", () => {
   if (!S.name.trim()) { $("#stName").classList.add("need"); $("#stName").focus(); $("#finishMsg").className = "msg warn"; $("#finishMsg").textContent = "Type your name first."; return; }
-  const missing = SHOWQ.filter(q => !filled(q));
+  const missing = ACTQ.filter(q => !filled(q));
   if (missing.length && Date.now() - finishArmed > 6000) {
     finishArmed = Date.now();
     document.querySelectorAll(".card.todo").forEach(c => c.classList.remove("todo"));
@@ -226,9 +242,9 @@ $("#btnFinish").addEventListener("click", () => {
 });
 function showDone() {
   const qr = qrcode(0, "M"); qr.addData(payload(), "Byte"); qr.make();
-  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>" + '<div class="qrpart">' + esc(GOT.length > 1 ? "Reading 1 and 2" : "Reading " + GOT) + "</div>";
+  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>" + '<div class="qrpart">' + esc((GOT.length > 1 ? "Reading 1 and 2" : "Reading " + GOT) + (RE ? ", 2nd attempt" : "")) + "</div>";
   $("#doneName").textContent = S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "");
-  $("#doneInfo").textContent = SHOWQ.filter(filled).length + " of " + SHOWQ.length + " questions answered" + (GOT.length < PARTS.length ? " (Part " + GOT + ")." : ".");
+  $("#doneInfo").textContent = ACTQ.filter(filled).length + " of " + ACTQ.length + " questions answered" + (GOT.length < PARTS.length ? " (Part " + GOT + ")." : ".");
   $("#viewAnswer").hidden = true; $("#viewDone").hidden = false; window.scrollTo(0, 0);
 }
 $("#btnBack").addEventListener("click", () => { $("#viewDone").hidden = true; $("#viewAnswer").hidden = false; });
@@ -236,6 +252,7 @@ let newArmed = 0;
 $("#btnNew").addEventListener("click", () => {
   if (Date.now() - newArmed > 5000) { newArmed = Date.now(); $("#btnNew").textContent = "Has your teacher scanned it? Press again to clear"; setTimeout(() => { $("#btnNew").textContent = "New student on this device"; }, 5000); return; }
   try { localStorage.removeItem(KEY); } catch (e) {}
+  if (RE) { location.replace(location.href.split("#")[0]); return; }
   S = {name: "", num: "", ans: {}, started: new Date().toISOString()};
   $("#stName").value = ""; $("#stNum").value = ""; render();
   $("#btnNew").textContent = "New student on this device";
@@ -248,7 +265,13 @@ function otherName() {
 }
 if (GOT.length < PARTS.length) { $("#title").textContent = "Reading: answer sheet, Part " + GOT; document.title += " Part " + GOT; }
 load();
-if (!S.name) { const o = otherName(); if (o) { S.name = o.name; S.num = o.num || ""; } }
+if (RE) {
+  if (S.re !== RE.k) S = {name: RE.n || "", num: RE.id || "", ans: Object.assign({}, RE.keep || {}), started: new Date().toISOString(), re: RE.k};
+  $("#title").textContent = "Reading: second attempt" + (GOT.length < PARTS.length ? ", Part " + GOT : "");
+  $("#stName").readOnly = true; $("#stNum").readOnly = true;
+  $("#introHint").textContent = "Second attempt. Your correct answers are kept. Answer the questions marked Try this question again, then press Finish.";
+  save();
+} else if (!S.name) { const o = otherName(); if (o) { S.name = o.name; S.num = o.num || ""; } }
 $("#stName").value = S.name || ""; $("#stNum").value = S.num || "";
 render();
 if (S.finished) showDone();
