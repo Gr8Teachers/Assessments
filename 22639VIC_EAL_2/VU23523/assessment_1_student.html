@@ -30,6 +30,7 @@ input[type=text]:focus{outline:none;border-color:var(--teal)}
 .qn{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.7rem}
 .qn b.num{flex:none;background:var(--navy);color:#fff;border-radius:50%;width:2rem;height:2rem;display:inline-flex;align-items:center;justify-content:center;font-size:1rem}
 .qn .qt{font-weight:700;padding-top:.15rem}
+.qq{font-weight:400;font-style:italic;margin:.45rem 0 .1rem;padding:.35rem .7rem;border-left:4px solid #8CDBE5;background:#E7F7F9;border-radius:4px}
 .hint{color:var(--grey);font-size:.9rem}
 .opt{display:flex;gap:.7rem;align-items:flex-start;width:100%;text-align:left;border:2px solid var(--line);background:#fff;border-radius:12px;padding:.7rem .8rem;margin:.45rem 0;font:inherit;color:var(--ink);cursor:pointer;touch-action:manipulation;min-height:52px}
 .opt .l{flex:none;font-weight:700;color:var(--teal-d);width:1.6rem}
@@ -180,23 +181,24 @@ let S = {name: "", num: "", ans: {}, started: new Date().toISOString()};
 function load() { try { const v = JSON.parse(localStorage.getItem(KEY) || "null"); if (v && v.ans) S = v; } catch (e) {} }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 
+function QQ(q) { return q.quote ? '<div class="qq">' + esc(q.quote).replace(/\n/g, "<br>") + "</div>" : ""; }
 function ansOf(q) { return S.ans[q.id] || ""; }
 function filled(q) {
   const a = ansOf(q);
   if (q.type === "one") return a ? 1 : 0;
-  if (q.type === "two") return a.length >= 2 ? 1 : 0;
+  if (q.type === "two") return a.length >= (q.pick || 2) ? 1 : 0;
   return Array.from({length: slots(q)}, (x, i) => a[i] && a[i] !== "-" ? 1 : 0).every(Boolean) ? 1 : 0;
 }
 function render() {
   let h = "";
   SHOWN.forEach(p => {
-    h += '<div class="ph"><h2>' + esc(p.title) + '</h2><p>' + esc(ASMT.intro1 || "Read the text. Then answer the questions.") + '</p></div>';
+    h += '<div class="ph"><h2>' + esc(p.title) + '</h2><p>' + esc(p.intro1 || ASMT.intro1 || "Read the text. Then answer the questions.") + '</p></div>';
     p.qs.forEach(q => {
       const a = ansOf(q);
-      h += '<div class="card' + (locked(q) ? " locked" : "") + '" id="q' + q.id.replace(".", "_") + '" data-q="' + q.id + '"><div class="qn"><b class="num">' + q.n + '</b><div class="qt">' + esc(q.text) + "</div></div>";
+      h += '<div class="card' + (locked(q) ? " locked" : "") + '" id="q' + q.id.replace(".", "_") + '" data-q="' + q.id + '"><div class="qn"><b class="num">' + q.n + '</b><div class="qt">' + esc(q.text) + QQ(q) + "</div></div>";
       if (RE) h += locked(q) ? '<p class="lockmsg">✓ Correct. No change needed.</p>' : '<p class="redomsg">Try this question again.</p>';
       if (q.type === "one" || q.type === "two") {
-        if (q.type === "two") h += '<p class="hint" style="margin:-.3rem 0 .3rem">Choose 2 answers.</p>';
+        if (q.type === "two") h += '<p class="hint" style="margin:-.3rem 0 .3rem">Choose ' + (q.pick || 2) + ' answers.</p>';
         h += q.opts.map(([k, t]) => '<button type="button" class="opt" data-k="' + k + '" aria-pressed="' + a.includes(k) + '"><span class="l">' + (/^[A-Z]$/.test(k) ? k + "." : k + ")") + '</span><span>' + esc(t) + "</span></button>").join("");
       } else if (q.type === "match") {
         h += '<div class="key">' + q.opts.map(([k, t]) => "<div><b>" + k + ".</b>" + esc(t) + "</div>").join("") + "</div>";
@@ -224,7 +226,7 @@ $("#qs").addEventListener("click", e => {
   if (q.type === "one") S.ans[q.id] = ansOf(q) === k ? "" : k;
   else if (q.type === "two") {
     let a = ansOf(q).split("").filter(Boolean);
-    if (a.includes(k)) a = a.filter(x => x !== k); else { a.push(k); if (a.length > 2) a.shift(); }
+    if (a.includes(k)) a = a.filter(x => x !== k); else { a.push(k); if (a.length > (q.pick || 2)) a.shift(); }
     S.ans[q.id] = a.sort().join("");
   } else setSlot(q, +b.dataset.i, k);
   const a = ansOf(q);
