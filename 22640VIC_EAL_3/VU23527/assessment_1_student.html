@@ -167,7 +167,7 @@ let RE = null;
 window.addEventListener("hashchange", () => location.reload());
 try { const m = location.hash.match(/re=([^&]+)/); if (m) { RE = JSON.parse(b64d(m[1])); if (!RE || RE.a !== ASMT.code || !Array.isArray(RE.redo)) RE = null; } } catch (e) { RE = null; }
 /* the teacher can give out one part at a time: ?part=1 or ?part=2 */
-const PART = RE ? String(RE.p || "12") : (new URLSearchParams(location.search).get("part") || "").replace(/[^0-9]/g, "");
+const PART = RE ? String(RE.p || PARTS.map(p => p.id).join("")) : (new URLSearchParams(location.search).get("part") || "").replace(/[^0-9]/g, "");
 const SHOWN = PARTS.filter(p => PART.length === 1 ? p.id === PART : true);
 const SHOWQ = SHOWN.flatMap(p => p.qs);
 const GOT = SHOWN.map(p => p.id).join("");
@@ -179,7 +179,8 @@ let S = {name: "", num: "", ans: {}, started: new Date().toISOString()};
 function load() { try { const v = JSON.parse(localStorage.getItem(KEY) || "null"); if (v && v.ans) S = v; } catch (e) {} }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 
-function QQ(q) { return q.quote ? '<div class="qq">' + esc(q.quote).replace(/\n/g, "<br>") + "</div>" : ""; }
+function IT(q, i, w) { return (q.imgs && q.imgs[i] ? '<img class="qimg" src="' + q.imgs[i] + '" alt="' + esc(q.items[i]) + '" style="display:block;width:' + w + ';max-width:100%;height:auto;border-radius:4px;margin:2px 0">' : "") + esc(q.items[i]); }
+function QQ(q) { return q.quote ? '<div class="qq">' + esc(q.quote).replace(/\n/g, "<br>").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>") + "</div>" : ""; }
 function ansOf(q) { return S.ans[q.id] || ""; }
 function filled(q) {
   const a = ansOf(q);
@@ -200,7 +201,7 @@ function render() {
         h += q.opts.map(([k, t]) => '<button type="button" class="opt" data-k="' + k + '" aria-pressed="' + a.includes(k) + '"><span class="l">' + (/^[A-Z]$/.test(k) ? k + "." : k + ")") + '</span><span>' + esc(t) + "</span></button>").join("");
       } else if (q.type === "match") {
         h += '<div class="key">' + q.opts.map(([k, t]) => "<div><b>" + k + ".</b>" + esc(t) + "</div>").join("") + "</div>";
-        h += q.items.map((it, i) => '<div class="row"><div class="st"><b>' + esc(it) + "</b></div><div class=\"chips\">" + q.opts.map(([k]) => '<button type="button" class="chip" data-i="' + i + '" data-k="' + k + '" aria-pressed="' + (a[i] === k) + '">' + k + "</button>").join("") + "</div></div>").join("");
+        h += q.items.map((it, i) => '<div class="row"><div class="st"><b>' + IT(q, i, "150px") + "</b></div><div class=\"chips\">" + q.opts.map(([k]) => '<button type="button" class="chip" data-i="' + i + '" data-k="' + k + '" aria-pressed="' + (a[i] === k) + '">' + k + "</button>").join("") + "</div></div>").join("");
       } else if (q.type === "order") {
         h += '<p class="hint" style="margin:-.3rem 0 .3rem">Give each sentence a number from 1 to ' + q.items.length + '.</p>';
         h += q.items.map((it, i) => '<div class="row"><div class="st">' + esc(it) + '</div><div class="chips">' + q.items.map((x, j) => '<button type="button" class="chip" data-i="' + i + '" data-k="' + (j + 1) + '" aria-pressed="' + (a[i] === String(j + 1)) + '">' + (j + 1) + "</button>").join("") + "</div></div>").join("");
@@ -263,7 +264,7 @@ $("#btnFinish").addEventListener("click", () => {
 });
 function showDone() {
   const qr = qrcode(0, "M"); qr.addData(payload(), "Byte"); qr.make();
-  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>" + '<div class="qrpart">' + esc((GOT.length > 1 ? "Reading 1 and 2" : "Reading " + GOT) + (RE ? ", 2nd attempt" : "")) + "</div>";
+  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>" + '<div class="qrpart">' + esc((PARTS.length === 1 ? "Reading" : GOT.length > 1 ? "Reading 1 and 2" : "Reading " + GOT) + (RE ? ", 2nd attempt" : "")) + "</div>";
   $("#doneName").textContent = S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "");
   $("#doneInfo").textContent = ACTQ.filter(filled).length + " of " + ACTQ.length + " questions answered" + (GOT.length < PARTS.length ? " (Part " + GOT + ")." : ".");
   $("#viewAnswer").hidden = true; $("#viewDone").hidden = false; window.scrollTo(0, 0);

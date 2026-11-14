@@ -257,7 +257,8 @@ const KEY_NOTES = {};
 /* marking guide: responses must meet the criteria in the marking guide to be satisfactory */
 const PASS_RULE = "all";
 
-function QQ(q) { return q.quote ? '<div class="qq">' + esc(q.quote).replace(/\n/g, "<br>") + "</div>" : ""; }
+function IT(q, i, w) { return (q.imgs && q.imgs[i] ? '<img class="qimg" src="' + q.imgs[i] + '" alt="' + esc(q.items[i]) + '" style="display:block;width:' + w + ';max-width:100%;height:auto;border-radius:4px;margin:2px 0">' : "") + esc(q.items[i]); }
+function QQ(q) { return q.quote ? '<div class="qq">' + esc(q.quote).replace(/\n/g, "<br>").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>") + "</div>" : ""; }
 function optLab(k) { return /^[A-Z]$/.test(k) ? k + "." : k + ")"; }
 const PRINT_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQUAAABBCAMAAADv9kFtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMAUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALMw9IgAAAEAdFJOUwBZVTNLAyHm5B0FMQe3/50blI2gsB7100A18eoyQ9buIBAEVPBlpJxnTwELKcGZNpUu8yg3msMiq0H6pb/0jy/4vfL7TuhaaEjRoirr4S2pz0aXY+V8DYv2THZpUIoKd4n3VwKxF9LNGVH5gyNwZsmfK/19hpBCTTiOexi7JHliO/5+0DB1XWA9mEmTRFs/aiV/4q1uunr8vte5hzof6UfjbRrERXLKCBFsZOwMwBXUyywGFFbvtpYTXoEOHG/tWGuSo+BKprTn3cWvUrins3jZm8jMqibHEoy829gPztoWwtWAPpGIOay1NIUnsjx0cd5froLcc2FThJ7GCajfoVy7T43/AAAACXBIWXMAABcRAAAXEQHKJvM/AAAPDElEQVR4Xu2be1zN9x/H39RxOU5vFYWGlNyiUVQUqbCYagxRrpVIEp0toTG5s0UomimhFJsZ/ZgJm2WxauZOLpv73TLNz1z3e7w/n+/3nO/5dmjV+Sf7Pf/o8/1c+3xe33M+l/fnfQD+TznUqClP+RdhZKxgYa3adeqyB6VxPVmRNx+VCdY3pQczRHMK6zbAhip5qTcdC0vERo0BmlghvtUUoFlzROsW8lJvLDa2LGiJiGjXClpT2AbaWlHYjmXZ2tjL6khpz+tXbzo4vN2Rwk40auzkyEbv1Lk+i7KvRhdnF1d5LS22XbvJk6ohNd3Qzt1IAd1p1D0cuRjo0dOTAi+wbeLujb16y2tpUfZ5R55UDfGh0VqZWfTth4jv9vflKvj5v4eIAwZavO9N0UHyWlqUg98EFYbwYddpFzB0mFtgEI8hDh+BliNHjajNY6PltbS8GSqM4eMMDgkNbTk2bJyowvjwsRNCFS0jeGyivJaWN0MFDz5Oh8gBk8B+ApsNmCoDFRA1uT+bLRA95LW0vFEqTIlG9UT4QBQB8UMY7Yn1nHkkRl5LS/VWIWBqbKBxt2mK6XycM2i/MCbuI1GEATNn0X6B/tBnQTmtW2BgbLdR8laquwof0+iCnWbzeSG+Bo03fk6tuXzYfvNa0ZQwfwGPftjMLpjChfJWqrsK8/n4es9gQcSixSz0cexDgeeSQDZDfPIpGzwGJfDS8+WtVHcVlrKNAH68jAWWiWNZ6N04QY2Iy/uvYNGVfCuJrZJYYD1b3kp1V0GRzAa2quZqCuxMU1gUP7NwRnQIW8NjDnXZLkod+DmLmsgbqfYqQCC9dGy91pK95XAXPm50Tq3Tay1/9YiTw9Io8Ky3koJe6+RtVH8VFA0QMX39Bva2fUdtFAYenJHZIJp/HxA3ZQ2mwC57M4VtuBlGl2quAtQaP27LTEeb5jTOL74UVcCttcJjxOdN7dkWesBX/omttn3NTVAy9Khg6r+9XKIDdKqE7tCJ6hLuKK8txb9DFoAisrz/6ZgNADnt5W0DWMT9J9l3URsa505T8RuBaBz+hfg4Oe4tCsw+tdvVMoxZosqgRwVn9CwPN7tAnSqm3+zWiesw/bXt9epTD2D3xnh5ugz8FgDMU/YM1JUfchfMVSNG1aBxeu/V7JcwZJ/mcY3rfgq+80FcPTlEVp+jR4UpmvqvxpMbcEQm4vc6cR0OyCvrstMIIGeTPLUMtNf5ATE4770t82zEpu0PbuTTo5E1zQbzfhRLW7nma2o26OKEiIeMulJE3b2vbu8YlVQhWMdk4XgID6dKE3QoT4Wm/1gFZkhDdPrpk5px1HLiD8Jx0XpmAY2wcLlYuqipODcizgghpRrWsuPR4CmR8h4aRAXbn0W7ll4Mp0LIkfG12bvH1fs/WggJhzW5UQnxNN5CMb48Q5OFxr/Q38JJmoSjZe4qDKHCEtqzODHDnz4MpwKAjX/gpGPH02hnvBGGaXNPhJ1AxJOnhM8GJjDrEyM42h0RT+/9WpOCK87IumgAFXJ/YkkFodJGJBhSBZoL6k6dT8clB6BvgciCEWrEo/4OPBax5Kwmp3j7OUS33uzgJfCuUreHhlBhM0+KaCltRILhVNiRXW9LJ6/z/PDwEVw4y49JxHkLWixHRPGY3exPNDnrDyLiYgvtt6fH52UW3KqrUNdPSLtIS7oeylPhn68RM/bzWcHtV5NPonoCQEayxq5UP/w0Yvc4/rkfliHYXRD7/ZaMeGkD7TF51pGlZT+0elSgr1F5RBRqigsWDjq66jSjQaKCZZ6fnDqN/HVVsC5bxs/P7wua0WiNUF82q7k9TtylhU41a86VwSt1ixGHd2RnBqwxXGzt6sdqLNq7h8fU/Txml9VArwrfXTMXOXtNu+Dg1uua9OljosXSN2il5vh10G1IQKLCe/I8AakKw+WZWuj9qH+9Oaem0QVNmn3cog9unUuzRDw787qvZcinR6mR92/zrWOecaCV7527MYg90o7eC7r/m/4LKj0qSFFpd2OYKc8kFNIpylmeyzCcClFfp3vTiqi2/rV4qHT3o3TtlvD7mL4QmTnGdMPQFXQ52TYYMc3MdfeezEg4OLLknaWu8ilRQjkqjBJO7IReFUKoVyKeS+XZhOFUAPitsU/MrgfMmuAiSW5yJSmwf6pr3bBsV/9atRa9s7CjCqIX/tEtssX2yOywui0sogMnXWkqqSCjiiqEjdfmI2KyHsumQVUgNtxPushWSi0fUkWrB4f98mq/1ahg+vy2iQB3o4KmP9zmO9gv7/ADZmwqlVSQUUUV2LZMgh7LpiFVCI2M/aX+1nQ2H16SpFu09uuhjnfzbd51fdPwnAs2cQEAAWE2F3I2NFl/87KvW7zaMu+HvZIKMqqmQuIhbTbj/FfyIoZUYdKfXwgro1Wj1hOkOQrXZoWFGT21k6aECz0zCkc0a6FvbRCpmgrHtLkCeq7BDKeCcJrqc3PSVb3j1RA6Sv9a8CqqpEKzHtpcgbSybkQVVGHuzYIymBxkxVpjfJ3u15udEV0uQo1LkkrWio34P0oqmUZD6r3YxOHWsf+GA3R5lJQ5lfJOZSaVLKKH7SVJJbwxKVVRQVGszdTQWl5KqsLFtkm6ZN5lRcrdO25mxWY4P06lD7a9Lf942z5ExME0coI2ShMBZpoI26i3SgPoBqKI9ssT6WxNha4h4l9izzRURYVB0lVSxK2Ms8Rrd9A1WJF/qIICbPreBej4pHhlWxobUwHn1uL/h1QohWzhbpZo038wYh+yNF5CxOYWAPAUERtLe8eoggqm27R5Ei7JjxOGUwEWncDRMI1NyW2eiSpgCv+PpMIe+J7OS8k/bvVG9O4Lp/mgw8nmtnoRgOsKxPQwae8YVVCBLdJ6WC8rZzgVNpxD/B2Ey5aFGhVwCjtWkApX4EdEt80KCJhn1uMvADJEzwIodKNi+wBGRCA+L+vJVXkV5mmMvDLyZMY3w6lATirD5+1HPH8UsUirAn5OSwKpsNy+O6I3d9UyygUwRsR8gKGsVAF3epG/zaqooNRYOul0fE9zwi3rKGA4FYowPiZgH6JfqusLtOMqqOk1r26r+SzQBdTxvl8Jdy97SbIvVUWsEb8s5UNEKz3b/EqrwO/GBE4+E4w8DKsbOiUNpkLAZDxkQ4boKRA6FpGrYNeAtsc7jcV5ge1m489N+f4UVXlmgrizY4va2OtyPFp2zE5H/OxLnd4xKqtCe5p3RHY2hYG9JPEjOnuWCqpgvSK9DNZsZ/7lcUyHuDzEBMgqElXwXvQ71Uq/LawRZGxh+D73BwCySi9sjGg5aTDipO2I6C7tm0BlVdBeepD7iHBhKBIRIi0qUSF+tQz8jhWRqjBrt2kZ9nIb2S70HBSEaDkTYnfifq6CU2NgHjtzw8iyWArg+lL8dvbpCxDriehxB7GPxSXEKesR8b/SvglUUoXUPG06/hkOAKKTIWN8jqSsRIWfAlvqEsKvDaUq+EiqyhjNSxzJHjoM8aGgwlTIZW4L+auEc6PScU73FWwrcz4Hwg8jHr+MeAvaIE52QYzQZwqqpAo6n3KamgDmSJNW6S/7T3bQrzlHmL6gAhETdnRH9DTWqAB76aTdi+5khdOzInHBEdrBPaYZFd3UiEPI+yfYDfG0fDtDVE6FtVozG+LWXJYWrnEzpG1tZ21hw6kA61Ygrr4Dud0RS0O1KoDjA6FyKUBn4YcRL3mXudOP2hhO8S+KXn+/SqmQpb0ERPQcKKS+w0xAAk+0B1kDqgBhIVua2sMo8+cHaQLWqACBO3nlUohstI3lMe+/4QBdWPqLU/CMvSX1AnmTRKVUYDfEIi/FVIWJJDWCdY5hOBXs+drDA3upCrCQv4Ll7VMQ3VJK2rU7a4nodBsg7ldKTwGAb+jhUNlLykqqkCN40jEGa6zRcJ9fl3C8nonJFVThNbOjz0l3Tmt39+cf6KgA3NY+5Dbz7RFoaA8Q+gM90feA3U49lbfJqIwKgu815wNJacEjnxGvcUGvoAqPsrL1Yi+7KXEBsG2I2KMZb0L1NiX+BVe9NNs5F3bYZGs6ORp0oSNV2VM1UQkV7jLXEIFt0im3RR1JzlF2uV5xFawO9dFDmp+NTIVLAIqz4wZsbCK0cca93/hGPgABse551k5O1uNm8bNj00sDLj6lxws/jxvfSGOT0aESKjyRdEX9t07xR5IsvCMkVlCFV+B5BiDBLCYmxmNMG+bUuUveiJaszvdnz9TnxfUqKq5ChtTMlq/7A7Uz0n11mhFPNJwKnIMO8YhO38ykZ3v2g6cd7UFBh2uVUpWVtUOh2sFnUVulMhQg1FahUmUplQoApUKVlZWlxwxbYRWyvCRdGyb3I50gPWM956/DoCqE3n4YjOg5lh/YNkx3abgOljR0KE3t5A827094aFJ8YOmRNT8vSTyWCo+TtowBWDZnRFFR8bKo5aAqjT2Sf6tAeDlSKqxCK2nXzOTlQ09Ks7nxzZAquB4gH6VL7fj7VBZ07fnHuiYPom4UO6+cCFtMHl8ceCPa5+K0kvOxw8Yqgl5Ox96Ow/KHeN2+HxmDf6h+WnLj+a2rcheOSqiQ+pmkZy8S5eXhNr8z5vDdquFUyAnyQ3TbVEO8cUx84Np5X+8GHgD1zv19ov29VldflA7psMUhfMTlwuOTSzOfmKdMdnF5+Uu/0fP3mrs0H7jmBkzsJPvXjIqqwH2JBR7JiwPASGmBfZRiOBWYI2cP94kjzc3NPZYBnPqzRc/Fm1ZeA6h3uEX+gacBnx5elZm4MC3F99smyUabTiw+sOzazRD3WeOTNm84sKpV821d4M5i+f8mKqhCPe5ezjmtz3cw7pykRDoZ3wynAtsAiTwFUN4a2y3oRMtzQQe93oZlWAp9xwUu7bksZZTJkBundyyJX9xp8+7ckJXLHdZOPfX2HliMXeC6fhVe/0vCURK7diaA6p6kG55aTw4pglMN5xj/zbPIq1T4inyzXg+pIDXy4UY6wXkccc+AgSfzl+dCjrs/9Lx3s+B6xhWIftLsjgqWrfeJBbg///Gtrg0HDU+AM853YYFex0zFL2SReSWqD5PzBbwmAHRouEuM5q8Zo2fJIbtYpzWaMiatLQDafiRGi1/1Y77c6UWaOvq5VRAA8MjLREPySHkj/07+B/0MSHvRV3SKAAAAAElFTkSuQmCC";
 
@@ -286,7 +287,8 @@ function autoOk(rec, q, i) {
 function itemOk(rec, q, i) { const o = rec.over && rec.over[q.id + ":" + i]; return o === undefined ? autoOk(rec, q, i) : o; }
 function qOk(rec, q) { for (let i = 0; i < slots(q); i++) if (!itemOk(rec, q, i)) return false; return true; }
 /* parts the student has handed in (reading parts can be given out together or separately) */
-function partsOf(rec) { return String(rec.parts || "12"); }
+const ALLP = PARTS.map(p => p.id).join("");
+function partsOf(rec) { return String(rec.parts || ALLP); }
 function partDone(rec, pid) { return partsOf(rec).includes(pid); }
 function allDone(rec) { return PARTS.every(p => partDone(rec, p.id)); }
 function partOfQ(q) { return q.id.split(".")[0]; }
@@ -318,9 +320,9 @@ function addFromCode(text) {
     r.att2At = new Date().toISOString(); r.result = "";
     if (r.commentsAuto !== false) { r.comments = autoComments(r); r.commentsAuto = true; }
     save(); select(r);
-    return {rec: r, updated: true, got: String(d.p || "12"), second: true};
+    return {rec: r, updated: true, got: String(d.p || ALLP), second: true};
   }
-  const got = String(d.p || "12");
+  const got = String(d.p || ALLP);
   if (!r) { r = {rid: "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), over: {}, result: "", comments: "", commentsAuto: true, ra: false, raText: "", assessor: "", date: today(), x: {}, parts: ""}; RECS.push(r); }
   r.n = d.n; r.id = d.id; r.finished = d.f; r.scanned = new Date().toISOString();
   r.x = r.x || {}; r.over = r.over || {};
@@ -335,7 +337,7 @@ function addFromCode(text) {
   save(); select(r);
   return {rec: r, updated, got};
 }
-function gotLabel(got, second) { return (got.length > 1 ? "" : " (Part " + got + ")") + (second ? " (second attempt)" : ""); }
+function gotLabel(got, second) { return (got.length > 1 || PARTS.length === 1 ? "" : " (Part " + got + ")") + (second ? " (second attempt)" : ""); }
 
 /* ---------- camera scanning ---------- */
 const SCAN = {stream: null, timer: null, last: "", lastAt: 0, canvas: document.createElement("canvas")};
@@ -423,14 +425,15 @@ $("#btnPaste").addEventListener("click", () => { const r = addFromCode($("#paste
 
 /* ---------- student link ---------- */
 const STUDENT_BASE = location.href.split("#")[0].split("?")[0].replace(/[^/]*$/, "") + location.pathname.split("/").pop().replace(/\.html?$/i, "") + "_student.html";
-let GIVE = localStorageGet("eal_read_" + ASMT.code + "_give") || "12";
+let GIVE = PARTS.length === 1 ? ALLP : localStorageGet("eal_read_" + ASMT.code + "_give") || "12";
+if (PARTS.length === 1) $("#giveBtns").style.display = "none";
 let STUDENT_URL = STUDENT_BASE;
 function qrSvg(text, cell) { const q = qrcode(0, "M"); q.addData(text, "Byte"); q.make(); return q.createSvgTag({cellSize: cell || 4, margin: 2, scalable: true}); }
 function renderLink() {
-  STUDENT_URL = STUDENT_BASE + (GIVE === "12" ? "" : "?part=" + GIVE);
+  STUDENT_URL = STUDENT_BASE + (GIVE === "12" || PARTS.length === 1 ? "" : "?part=" + GIVE);
   $("#linkQr").innerHTML = qrSvg(STUDENT_URL, 4); $("#linkText").textContent = STUDENT_URL;
   document.querySelectorAll("#giveBtns button").forEach(b => b.setAttribute("aria-pressed", b.dataset.give === GIVE));
-  $("#bigTitle").textContent = "Scan to open the answer sheet" + (GIVE === "12" ? "" : " (Part " + GIVE + ")");
+  $("#bigTitle").textContent = "Scan to open the answer sheet" + (GIVE === "12" || PARTS.length === 1 ? "" : " (Part " + GIVE + ")");
 }
 $("#giveBtns").addEventListener("click", e => { const b = e.target.closest("[data-give]"); if (!b) return; GIVE = b.dataset.give; try { localStorage.setItem("eal_read_" + ASMT.code + "_give", GIVE); } catch (x) {} renderLink(); });
 renderLink();
@@ -478,7 +481,7 @@ function renderMarks() {
       h += '<div class="q"><div class="qt"><b>' + q.n + ".</b> " + esc(q.text) + ' <span class="' + (ok ? "ok" : "no") + '">' + (ok ? "✓ correct" : "✗ not correct") + "</span>" + (redone(cur, q) ? ' <span class="tag n">2nd attempt</span>' : "") + QQ(q) + "</div>";
       h += '<table class="m"><tr>' + (slots(q) > 1 ? "<th>" + esc(q.heads ? q.heads[0] : q.type === "tf" ? "Statement" : q.type === "order" ? "Steps/Process" : "Feature") + "</th>" : "") + "<th>Student's answer</th><th>Correct answer</th><th>Mark</th></tr>";
       for (let i = 0; i < slots(q); i++) {
-        h += "<tr>" + (slots(q) > 1 ? "<td>" + esc(q.items[i]) + "</td>" : "") + "<td>" + showAns(q, itemAns(cur, q, i)) + (redone(cur, q) ? '<div class="chg">1st attempt: ' + (firstAns(cur, q, i) ? showAns(q, firstAns(cur, q, i)).replace(/<[^>]+>/g, "") : "no answer") + "</div>" : "") + "</td><td>" + showAns(q, itemKey(q, i)) + (KEY_NOTES[q.id + ":" + i] ? '<div class="chg">Clue: ' + esc(KEY_NOTES[q.id + ":" + i]) + "</div>" : "") + "</td><td>" + mkBtns(q, i) + "</td></tr>";
+        h += "<tr>" + (slots(q) > 1 ? "<td>" + IT(q, i, "90px") + "</td>" : "") + "<td>" + showAns(q, itemAns(cur, q, i)) + (redone(cur, q) ? '<div class="chg">1st attempt: ' + (firstAns(cur, q, i) ? showAns(q, firstAns(cur, q, i)).replace(/<[^>]+>/g, "") : "no answer") + "</div>" : "") + "</td><td>" + showAns(q, itemKey(q, i)) + (KEY_NOTES[q.id + ":" + i] ? '<div class="chg">Clue: ' + esc(KEY_NOTES[q.id + ":" + i]) + "</div>" : "") + "</td><td>" + mkBtns(q, i) + "</td></tr>";
       }
       h += "</table></div>";
     });
@@ -498,7 +501,7 @@ $("#marks").addEventListener("click", e => {
 function autoComments(r) {
   if (!allDone(r)) return missingParts(r).join(" and ") + " not completed yet.";
   const s = score(r), wrong = [];
-  PARTS.forEach(p => p.qs.forEach(q => { if (!qOk(r, q)) wrong.push(p.title.split(":")[0] + ", Question " + q.n); }));
+  PARTS.forEach(p => p.qs.forEach(q => { if (!qOk(r, q)) wrong.push((PARTS.length === 1 ? "" : p.title.split(":")[0] + ", ") + "Question " + q.n); }));
   const second = ALLQ.some(q => redone(r, q));
   if (!wrong.length && second) return "Well done. In your second attempt you corrected your answers, and now all the questions are correct.";
   if (!wrong.length) return (ASMT.wellDone || "Well done. You answered all the questions correctly.");
@@ -541,7 +544,7 @@ function redoLink(r) {
   ALLQ.filter(q => partDone(r, partOfQ(q)) && !redo.includes(q.id)).forEach(q => { const a = effAns(r, q); if (a) keep[q.id] = a; });
   return STUDENT_BASE + "#re=" + b64u(JSON.stringify({a: ASMT.code, k: r.reK, n: r.n, id: r.id, p: partsOf(r), keep: keep, redo: redo}));
 }
-function qLabel(id) { const q = ALLQ.find(x => x.id === id); return (PARTS.find(p => p.id === partOfQ(q)) || {title: ""}).title.split(":")[0] + ", Question " + q.n; }
+function qLabel(id) { const q = ALLQ.find(x => x.id === id); return (PARTS.length === 1 ? "" : (PARTS.find(p => p.id === partOfQ(q)) || {title: ""}).title.split(":")[0] + ", ") + "Question " + q.n; }
 function renderRedo() {
   const box = $("#redoBox"); if (!box) return;
   if (!cur) { box.innerHTML = '<p class="hint">Choose or scan a student.</p>'; return; }
@@ -593,7 +596,7 @@ const TK = on => '<span class="tk">' + (on ? "☑" : "☐") + "</span>";
 const MK0 = ok => '<span class="' + (ok ? "mok" : "mno") + '">' + (ok ? "✓" : "✗") + "</span>";
 function printQ(r, q) {
   const done = partDone(r, partOfQ(q)), MK = ok => done ? MK0(ok) : "";
-  let h = '<div class="p-qb"><div class="p-q">' + q.n + ". " + esc(q.text) + (redone(r, q) ? ' <span style="font-weight:400;font-style:italic;color:#495054">(second attempt)</span>' : "") + '</div>' + (q.quote ? '<div class="p-p" style="font-style:italic;margin:1mm 0 2mm 5mm">' + esc(q.quote).replace(/\n/g, "<br>") + '</div>' : '') + '<div class="p-cap">' + esc(q.table) + "</div>";
+  let h = '<div class="p-qb"><div class="p-q">' + q.n + ". " + esc(q.text) + (redone(r, q) ? ' <span style="font-weight:400;font-style:italic;color:#495054">(second attempt)</span>' : "") + '</div>' + (q.quote ? '<div class="p-p" style="font-style:italic;margin:1mm 0 2mm 5mm">' + esc(q.quote).replace(/\n/g, "<br>").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>") + '</div>' : '') + '<div class="p-cap">' + esc(q.table) + "</div>";
   const a = effAns(r, q);
   if (q.type === "one" || q.type === "two") {
     h += '<table class="p"><tr><th>Answer choices</th><th style="width:28mm">' + esc(q.ansHead || (q.type === "two" ? (ASMT.twoHead || "Select correct answers") : (ASMT.oneHead || "Select one correct answer"))) + '</th><th class="mkh"></th></tr>';
@@ -601,7 +604,7 @@ function printQ(r, q) {
     h += "</table>";
   } else if (q.type === "match") {
     h += '<table class="p"><tr><th>' + esc((q.heads || [])[0] || "Feature") + '</th><th style="width:18mm">Answer</th><th>' + esc((q.heads || [])[1] || "Information written in the text") + '</th><th class="mkh"></th></tr>';
-    q.items.forEach((it, i) => { const v = itemAns(r, q, i); const o = q.opts[i]; h += "<tr><td>" + esc(it) + '</td><td class="c"><b>' + esc(v) + "</b></td><td>" + o[0] + ". " + esc(o[1]) + '</td><td class="mk">' + MK(itemOk(r, q, i)) + "</td></tr>"; });
+    q.items.forEach((it, i) => { const v = itemAns(r, q, i); const o = q.opts[i]; h += "<tr><td>" + IT(q, i, "28mm") + '</td><td class="c"><b>' + esc(v) + "</b></td><td>" + o[0] + ". " + esc(o[1]) + '</td><td class="mk">' + MK(itemOk(r, q, i)) + "</td></tr>"; });
     h += "</table>";
   } else if (q.type === "order") {
     h += '<table class="p"><tr><th>' + esc((q.heads || [])[0] || "Steps/Process") + '</th><th style="width:28mm">' + esc((q.heads || [])[1] || "Order") + '</th><th class="mkh"></th></tr>';
