@@ -107,7 +107,8 @@ const ASMT = {
   code: "VU23521_AE_Kn1of3", unit: "VU23521", event: "Assessment event 1 of 3: Knowledge",
   unitName: "VU23521 | Read and write simple transactional texts",
   qual: "22639VIC | Certificate II in EAL (Access)",
-  f1: "Document title: VU23521_AE_Kn1of3", f2: "Resource ID: POP_24_001_VU23521_AE_Kn1of3"
+  f1: "Document title: VU23521_AE_Kn1of3", f2: "Resource ID: POP_24_001_VU23521_AE_Kn1of3",
+  wellDone: "Well done. You answered all the questions correctly. You understood the purpose, the layout and the language of both texts."
 };
 const PARTS = [
   {id: "1", title: "Part 1: Reading text 1", qs: [
@@ -139,7 +140,7 @@ const PARTS = [
 ];
 const ALLQ = PARTS.flatMap(p => p.qs);
 /* number of separate answers in a question */
-function slots(q) { return q.type === "match" || q.type === "tf" ? q.items.length : 1; }
+function slots(q) { return q.type === "match" || q.type === "tf" || q.type === "order" ? q.items.length : 1; }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
@@ -172,17 +173,20 @@ function filled(q) {
 function render() {
   let h = "";
   SHOWN.forEach(p => {
-    h += '<div class="ph"><h2>' + esc(p.title) + '</h2><p>Read the text. Then answer the questions.</p></div>';
+    h += '<div class="ph"><h2>' + esc(p.title) + '</h2><p>' + esc(ASMT.intro1 || "Read the text. Then answer the questions.") + '</p></div>';
     p.qs.forEach(q => {
       const a = ansOf(q);
       h += '<div class="card' + (locked(q) ? " locked" : "") + '" id="q' + q.id.replace(".", "_") + '" data-q="' + q.id + '"><div class="qn"><b class="num">' + q.n + '</b><div class="qt">' + esc(q.text) + "</div></div>";
       if (RE) h += locked(q) ? '<p class="lockmsg">✓ Correct. No change needed.</p>' : '<p class="redomsg">Try this question again.</p>';
       if (q.type === "one" || q.type === "two") {
         if (q.type === "two") h += '<p class="hint" style="margin:-.3rem 0 .3rem">Choose 2 answers.</p>';
-        h += q.opts.map(([k, t]) => '<button type="button" class="opt" data-k="' + k + '" aria-pressed="' + a.includes(k) + '"><span class="l">' + k + ')</span><span>' + esc(t) + "</span></button>").join("");
+        h += q.opts.map(([k, t]) => '<button type="button" class="opt" data-k="' + k + '" aria-pressed="' + a.includes(k) + '"><span class="l">' + (/^[A-Z]$/.test(k) ? k + "." : k + ")") + '</span><span>' + esc(t) + "</span></button>").join("");
       } else if (q.type === "match") {
         h += '<div class="key">' + q.opts.map(([k, t]) => "<div><b>" + k + ".</b>" + esc(t) + "</div>").join("") + "</div>";
         h += q.items.map((it, i) => '<div class="row"><div class="st"><b>' + esc(it) + "</b></div><div class=\"chips\">" + q.opts.map(([k]) => '<button type="button" class="chip" data-i="' + i + '" data-k="' + k + '" aria-pressed="' + (a[i] === k) + '">' + k + "</button>").join("") + "</div></div>").join("");
+      } else if (q.type === "order") {
+        h += '<p class="hint" style="margin:-.3rem 0 .3rem">Give each sentence a number from 1 to ' + q.items.length + '.</p>';
+        h += q.items.map((it, i) => '<div class="row"><div class="st">' + esc(it) + '</div><div class="chips">' + q.items.map((x, j) => '<button type="button" class="chip" data-i="' + i + '" data-k="' + (j + 1) + '" aria-pressed="' + (a[i] === String(j + 1)) + '">' + (j + 1) + "</button>").join("") + "</div></div>").join("");
       } else if (q.type === "tf") {
         h += q.items.map((it, i) => '<div class="row"><div class="st">' + esc(it) + '</div><div class="chips">' + [["T", "True"], ["F", "False"]].map(([k, t]) => '<button type="button" class="chip" data-i="' + i + '" data-k="' + k + '" aria-pressed="' + (a[i] === k) + '">' + t + "</button>").join("") + "</div></div>").join("");
       }
