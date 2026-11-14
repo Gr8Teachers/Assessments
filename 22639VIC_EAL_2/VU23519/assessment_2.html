@@ -628,7 +628,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
         <div class="more-body">
           <label class="check"><input type="checkbox" id="chkLive" checked> Show words while recording</label>
           <label class="check"><input type="checkbox" id="chkLabels" checked> Start each line with S: or T:</label>
-          <label class="check"><input type="checkbox" id="chkAutoWhisper" checked> If no words appear, transcribe the recording after Stop</label>
+          <label class="check"><input type="checkbox" id="chkAutoWhisper" checked> If words are missing, transcribe the whole recording after Stop</label>
           <label class="check"><input type="checkbox" id="chkVerbatim" checked> Transcribe word for word: keep the student's mistakes and hesitations (um, uh, repeated words)</label>
           <div class="row">
             <div class="field" style="max-width:300px">
@@ -1769,6 +1769,7 @@ async function startRecording() {
   }
   ensureCtx();
   setStatus("#recStatus", "Opening the microphone ...");
+  SRG = {recId: cur.id, last: 0, maxGap: 0, live: $("#chkLive").checked};
   if ($("#chkLive").checked) startSR(cur.id);
   let stream;
   try { stream = await openMic(); }
@@ -1868,6 +1869,12 @@ function finishRecording(recId, blob, mime, dur) {
     if (noText && $("#chkAutoWhisper").checked) {
       setStatus("#recStatus", "Recording saved (" + fmtTime(dur) + "). No words appeared, so the app is now transcribing the recording in Step 3.", "warn");
       setTimeout(() => { if (cur === r && !r.english.trim()) whisperTranscribe(); }, 300);
+    } else if (!noText && liveMissed(r, dur)) {
+      $("#btnWhisper").classList.add("glow");
+      if ($("#chkAutoWhisper").checked) {
+        setStatus("#recStatus", "Recording saved (" + fmtTime(dur) + "). The live words missed parts of the recording, so the app is now transcribing the whole recording in Step 3. The recording itself is complete.", "warn");
+        setTimeout(() => { if (cur === r) whisperTranscribe(true); }, 300);
+      } else setStatus("#recStatus", "Recording saved (" + fmtTime(dur) + "). The live words missed parts of the recording. In Step 3, press Transcribe the recording to get all the words. The recording itself is complete.", "warn");
     }
     loadAudio();
   }
@@ -2034,23 +2041,38 @@ async function setupOnDevice() {
     setSrState("That did not work (" + (e.message || e.name) + "). After Stop, press Transcribe the recording.", "err");
   } finally { btn.disabled = false; btn.textContent = "Set up words without internet"; }
 }
-function startSR(recId) {
+/* gaps in the live words: measured in recording time (pauses are not counted) */
+var SRG = {recId: null, last: 0, maxGap: 0, live: false};
+function recTime() { return (REC.accum || 0) + (REC.state === "recording" && REC.startT ? (performance.now() - REC.startT) / 1000 : 0); }
+function srGapNote(t) { if (SRG.recId === SR.recId) { const g = t - SRG.last; if (g > SRG.maxGap) SRG.maxGap = g; SRG.last = t; } }
+function liveMissed(r, dur) {
+  if (!SRG.live || SRG.recId !== r.id || !dur || dur < 90) return false;
+  const endGap = dur - SRG.last, wpm = wordCount(r.english) / (dur / 60);
+  return SRG.maxGap > 45 || endGap > 45 || wpm < 45;
+}
+function startSR(recId, keep) {
   if (!SR.available) { setSrState("Words cannot show in this browser. After Stop, press Transcribe the recording.", "warn"); return; }
   if (SR.r) { try { SR.r.onend = null; SR.r.stop(); } catch (e) {} SR.r = null; }
   clearTimeout(SR.watch);
-  SR.recId = recId; SR.wanted = true; SR.lastErr = ""; SR.results = 0; SR.fails = 0; SR.restarts = 0;
+  SR.recId = recId; SR.wanted = true; SR.lastErr = "";
+  if (!keep) { SR.results = 0; SR.fails = 0; SR.restarts = 0; SR.netRetries = 0; }
+  SR.lastAct = Date.now();
+  clearInterval(SR.dog);
+  /* watchdog: if the browser goes quiet (no events for 20 seconds) while recording, start the words again */
+  SR.dog = setInterval(() => { if (!SR.wanted) { clearInterval(SR.dog); return; } if (REC.state === "recording" && Date.now() - SR.lastAct > 20000) { SR.restarts++; startSR(recId, true); } }, 5000);
   let r;
   try { r = new SR.Ctor(); } catch (e) { SR.wanted = false; SR.lastErr = e.name || "Error"; setSrState(srFail(SR.lastErr), "err"); return; }
   const att = (records.find(x => x.id === recId) || {}).attempt;
   r.lang = SR.local || $("#langSel").value; r.continuous = true; r.interimResults = true; r.maxAlternatives = 1;
   if (SR.local) { try { r.processLocally = true; } catch (e) {} }
-  r.onstart = () => { if (SR.r === r && !SR.results) setSrState("Listening ...", "ok"); };
+  r.onstart = () => { SR.lastAct = Date.now(); if (SR.r === r && !SR.results) setSrState("Listening ...", "ok"); };
+  r.onaudiostart = r.onsoundstart = r.onspeechstart = () => { SR.lastAct = Date.now(); };
   r.onresult = e => {
     let interim = "";
-    SR.fails = 0;
+    SR.fails = 0; SR.lastAct = Date.now();
     for (let i = e.resultIndex; i < e.results.length; i++) {
       const res = e.results[i];
-      if (res.isFinal) { SR.results++; appendFinal(recId, res[0].transcript, res[0].confidence, att); }
+      if (res.isFinal) { SR.results++; srGapNote(recTime()); appendFinal(recId, res[0].transcript, res[0].confidence, att); }
       else interim += res[0].transcript;
     }
     if (SR.r === r) {
@@ -2061,8 +2083,11 @@ function startSR(recId) {
   r.onerror = e => {
     const n = e.error || "error";
     if (SR.r !== r) return;
+    SR.lastAct = Date.now();
     if (n === "no-speech") return;
     SR.lastErr = n;
+    /* a short network drop in the middle of a long recording: try again a few times before giving up */
+    if (n === "network" && !SR.local && SR.results && (SR.netRetries || 0) < 6) { SR.netRetries = (SR.netRetries || 0) + 1; setSrState("Words stopped for a moment. Trying again ...", "warn"); setTimeout(() => { if (SR.wanted && REC.state === "recording") startSR(recId, true); }, 1500); return; }
     if (n === "network" && !SR.local) { SR.wanted = false; onNetworkFail(recId); return; }
     const fatal = ["network","not-allowed","service-not-allowed","language-not-supported"].includes(n);
     if (!fatal) SR.fails++;
@@ -2077,7 +2102,7 @@ function startSR(recId) {
     if (SR.wanted) {
       SR.restarts++;
       if (SR.restarts > 30 && !SR.results) { SR.wanted = false; setSrState(srFail(SR.lastErr || "no results"), "err"); return; }
-      setTimeout(() => { if (SR.wanted && SR.r === r) { try { r.start(); } catch (e) {} } }, 250);
+      setTimeout(() => { if (SR.wanted && SR.r === r) { try { r.start(); } catch (e) { startSR(recId, true); } } }, 250);
     }
   };
   SR.r = r;
@@ -2090,7 +2115,7 @@ function startSR(recId) {
   }, 12000);
 }
 function stopSR() {
-  SR.wanted = false; clearTimeout(SR.watch);
+  SR.wanted = false; clearTimeout(SR.watch); clearInterval(SR.dog);
   const r = SR.r; SR.r = null;
   if (r) { try { r.stop(); } catch (e) {} }
   setTimeout(() => { if (!SR.r) $("#interim").textContent = ""; }, 1500);
@@ -2205,11 +2230,11 @@ async function whisperVerbatim(pipe, pcm, onProg) {
   }
   return parts.join(" ").replace(/\s+/g, " ").trim();
 }
-async function whisperTranscribe() {
+async function whisperTranscribe(force) {
   if (ASR.busy) return;
   if (REC.state !== "idle") { whisperMsg("Stop the recording first."); return; }
   if (!cur.audio) { whisperMsg("There is no recording for this student yet. Record first, then press this button."); return; }
-  if (cur.english.trim() && Date.now() - whisperArmed > 5000) {
+  if (cur.english.trim() && force !== true && Date.now() - whisperArmed > 5000) {
     whisperArmed = Date.now();
     $("#btnWhisper").textContent = "Tap again to replace the transcript";
     setTimeout(() => { if (!ASR.busy) $("#btnWhisper").textContent = "Transcribe the recording"; }, 5000);
