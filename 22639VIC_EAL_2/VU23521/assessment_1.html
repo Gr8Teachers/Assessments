@@ -117,14 +117,14 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
 <div class="bar">
   <div class="ey">VU23521 | Assessment event 1 of 3</div>
   <h1>Reading: scan and mark</h1>
-  <nav class="steps"><a href="#sec1"><b>1</b>Scan answers</a><a href="#sec2"><b>2</b>Answers and marks</a><a href="#sec3"><b>3</b>Outcome and feedback</a><a href="#sec4"><b>4</b>Print or save</a></nav>
+  <nav class="steps"><a href="#sec1"><b>1</b>Student link</a><a href="#sec2"><b>2</b>Scan answers</a><a href="#sec3"><b>3</b>Marking</a><a href="#sec4"><b>4</b>Outcome and feedback</a><a href="#sec5"><b>5</b>Print or save</a></nav>
 </div>
 <div class="wrap">
   <aside>
     <div class="card">
       <b>Students scanned</b>
       <ul class="slist" id="slist"></ul>
-      <p class="hint" id="noStudents">No students yet. Scan a student's QR code in Step 1.</p>
+      <p class="hint" id="noStudents">No students yet. Scan a student's QR code in Step 2.</p>
       <div class="row" style="margin-top:.4rem">
         <button type="button" class="btn ghost small" id="btnDel">Delete student</button>
       </div>
@@ -140,18 +140,20 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
     <div class="mock" id="mockNote" style="background:#E7F7F9;border-color:#2E808E">Answers are marked against the marking guide. To be Satisfactory, the student must answer every question correctly. Check any mark you are unsure about.</div>
 
     <section class="card" id="sec1">
-      <div class="sec-h"><span class="n">1</span><h2>Scan answers</h2></div>
+      <div class="sec-h"><span class="n">1</span><h2>Student link</h2></div>
       <div class="linkbox">
         <div class="qrs" id="linkQr"></div>
         <div style="flex:1;min-width:240px">
-          <b>Student link</b>
           <div class="give" id="giveBtns" role="group" aria-label="Which part to give out"><span class="hint">Give out:</span><button type="button" data-give="12">Both parts together</button><button type="button" data-give="1">Part 1 only</button><button type="button" data-give="2">Part 2 only</button></div>
           <p class="hint" style="margin:.2rem 0 .5rem">Students scan this code (or open the link) to get the answer sheet. If you give the parts out at different times, scan each part when the student finishes it. The parts join together for each student.</p>
           <div class="row"><button type="button" class="btn ghost small" id="btnBigLink">Show the code on the board</button><button type="button" class="btn ghost small" id="btnCopyLink">Copy the link</button></div>
           <p class="hint" id="linkText" style="word-break:break-all;margin:.4rem 0 0"></p>
         </div>
       </div>
-      <hr style="border:0;border-top:1px solid var(--line);margin:1rem 0">
+    </section>
+
+    <section class="card" id="sec2">
+      <div class="sec-h"><span class="n">2</span><h2>Scan answers</h2></div>
       <p style="margin:0 0 .6rem">When a student finishes, a QR code appears on their screen. Press <b>Start scanning</b> and hold their screen up to the camera.</p>
       <div class="row"><button type="button" class="btn teal" id="btnScan">Start scanning</button><button type="button" class="btn ghost" id="btnStopScan" hidden>Stop scanning</button><button type="button" class="btn ghost" id="btnUpQr">Upload QR pictures</button><input type="file" id="inQr" accept="image/*" multiple hidden></div>
       <p class="hint" style="margin:.4rem 0 0">Students can also take a screenshot of their QR code and send it to you. Press <b>Upload QR pictures</b> (you can choose several at once), drag the pictures onto this page, or copy a picture and press Ctrl + V.</p>
@@ -164,19 +166,19 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
       </details>
     </section>
 
-    <section class="card" id="sec2">
-      <div class="sec-h"><span class="n">2</span><h2>Answers and marks</h2></div>
+    <section class="card" id="sec3">
+      <div class="sec-h"><span class="n">3</span><h2>Marking</h2></div>
       <div id="curHead" class="hint">Choose or scan a student.</div>
       <div id="marks"></div>
     </section>
 
-    <section class="card" id="sec3">
-      <div class="sec-h"><span class="n">3</span><h2>Outcome and feedback</h2></div>
+    <section class="card" id="sec4">
+      <div class="sec-h"><span class="n">4</span><h2>Outcome and feedback</h2></div>
       <div id="outBox"></div>
     </section>
 
-    <section class="card" id="sec4">
-      <div class="sec-h"><span class="n">4</span><h2>Print or save</h2></div>
+    <section class="card" id="sec5">
+      <div class="sec-h"><span class="n">5</span><h2>Print or save</h2></div>
       <div class="row"><button type="button" class="btn" id="btnPrint">Print / Save as PDF</button></div>
       <p class="hint">The printout looks like the assessment paper: cover, the questions with the student's answers and marks, then the outcome page.</p>
       <p class="status" id="printMsg"></p>
