@@ -147,7 +147,8 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
       </div>
       <hr style="border:0;border-top:1px solid var(--line);margin:1rem 0">
       <p style="margin:0 0 .6rem">When a student finishes, a QR code appears on their screen. Press <b>Start scanning</b> and hold their screen up to the camera.</p>
-      <div class="row"><button type="button" class="btn teal" id="btnScan">Start scanning</button><button type="button" class="btn ghost" id="btnStopScan" hidden>Stop scanning</button></div>
+      <div class="row"><button type="button" class="btn teal" id="btnScan">Start scanning</button><button type="button" class="btn ghost" id="btnStopScan" hidden>Stop scanning</button><button type="button" class="btn ghost" id="btnUpQr">Upload QR pictures</button><input type="file" id="inQr" accept="image/*" multiple hidden></div>
+      <p class="hint" style="margin:.4rem 0 0">Students can also take a screenshot of their QR code and send it to you. Press <b>Upload QR pictures</b> (you can choose several at once), drag the pictures onto this page, or copy a picture and press Ctrl + V.</p>
       <div class="cam" id="camBox" hidden><video id="video" playsinline muted></video><div class="frame"></div></div>
       <p class="status" id="scanMsg" role="status"></p>
       <details style="margin-top:.6rem"><summary class="hint" style="cursor:pointer">No camera? Paste the code instead</summary>
@@ -312,6 +313,50 @@ function gotCode(text) {
   try { const ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = 880; g.gain.value = .08; o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .15); } catch (e) {}
 }
 $("#btnScan").addEventListener("click", startScan);
+/* ---------- QR pictures (screenshots sent by students) ---------- */
+function decodeCanvas(img, maxW, crop) {
+  const sw = crop ? img.width * crop.w : img.width, sh = crop ? img.height * crop.h : img.height;
+  const sx = crop ? img.width * crop.x : 0, sy = crop ? img.height * crop.y : 0;
+  const k = Math.min(1, maxW / sw), w = Math.max(1, Math.round(sw * k)), h = Math.max(1, Math.round(sh * k));
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const ctx = c.getContext("2d", {willReadFrequently: true}); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h); ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+  const r = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, {inversionAttempts: "attemptBoth"});
+  return r && r.data ? r.data : null;
+}
+async function decodeImage(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    /* try a few sizes and the middle of the picture: phone screenshots are tall and large */
+    const tries = [[1000], [1600], [2400], [1000, {x: 0, y: .15, w: 1, h: .7}], [1400, {x: 0, y: .25, w: 1, h: .5}], [700]];
+    for (const [w, crop] of tries) { const d = decodeCanvas(img, w, crop); if (d) return d; }
+    return null;
+  } catch (e) { return null; } finally { URL.revokeObjectURL(url); }
+}
+async function addPictures(files) {
+  files = Array.from(files || []).filter(f => /^image\//.test(f.type) || /\.(png|jpe?g|gif|webp|bmp|heic)$/i.test(f.name || ""));
+  if (!files.length) { setMsg("#scanMsg", "Choose a picture of a student's QR code.", "warn"); return; }
+  const done = [], bad = [];
+  for (let i = 0; i < files.length; i++) {
+    setMsg("#scanMsg", "Reading picture " + (i + 1) + " of " + files.length + " ...", "ok");
+    const text = await decodeImage(files[i]);
+    if (!text) { bad.push((files[i].name || "picture") + ": no QR code found"); continue; }
+    const r = addFromCode(text);
+    if (r.err) bad.push((files[i].name || "picture") + ": " + r.err); else done.push((r.updated ? "updated " : "added ") + r.rec.n);
+  }
+  const names = k => Array.from(new Set(done.filter(x => x.startsWith(k + " ")).map(x => x.slice(k.length + 1))));
+  const add = names("added"), upd = names("updated").filter(n => !add.includes(n));
+  setMsg("#scanMsg", (add.length ? "Added: " + add.join(", ") + ". " : "") + (upd.length ? "Updated: " + upd.join(", ") + ". " : "") + (bad.length ? "Could not read: " + bad.join("; ") + ". Ask the student for a clearer screenshot of the whole code." : ""), bad.length ? "warn" : "ok");
+}
+$("#btnUpQr").addEventListener("click", () => $("#inQr").click());
+$("#inQr").addEventListener("change", e => { const f = e.target.files; addPictures(f).then(() => { e.target.value = ""; }); });
+document.addEventListener("dragover", e => { if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files")) e.preventDefault(); });
+document.addEventListener("drop", e => { if (!e.dataTransfer || !e.dataTransfer.files.length) return; e.preventDefault(); addPictures(e.dataTransfer.files); });
+document.addEventListener("paste", e => {
+  if (e.target && /^(TEXTAREA|INPUT)$/.test(e.target.tagName)) return;
+  const files = Array.from((e.clipboardData && e.clipboardData.items) || []).filter(it => it.kind === "file" && /^image\//.test(it.type)).map(it => it.getAsFile()).filter(Boolean);
+  if (files.length) { e.preventDefault(); addPictures(files); }
+});
 $("#btnStopScan").addEventListener("click", stopScan);
 $("#btnPaste").addEventListener("click", () => { const r = addFromCode($("#pasteCode").value); if (r.err) setMsg("#scanMsg", r.err, "warn"); else { setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + ".", "ok"); $("#pasteCode").value = ""; } });
 
