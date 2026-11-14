@@ -61,7 +61,7 @@ input[type=text]:focus{outline:none;border-color:var(--teal)}
 <body>
 <div class="bar">
   <div class="ey">VU23521 | Assessment event 1 of 3</div>
-  <h1>Reading: answer sheet</h1>
+  <h1 id="title">Reading: answer sheet</h1>
   <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
   <div class="progt" id="progText"></div>
 </div>
@@ -137,7 +137,12 @@ function slots(q) { return q.type === "match" || q.type === "tf" ? q.items.lengt
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
-const KEY = "eal_read_" + ASMT.code + "_student_v2";
+/* the teacher can give out one part at a time: ?part=1 or ?part=2 */
+const PART = (new URLSearchParams(location.search).get("part") || "").replace(/[^0-9]/g, "");
+const SHOWN = PARTS.some(p => p.id === PART) ? PARTS.filter(p => p.id === PART) : PARTS;
+const SHOWQ = SHOWN.flatMap(p => p.qs);
+const GOT = SHOWN.map(p => p.id).join("");
+const KEY = "eal_read_" + ASMT.code + "_student_v2" + (GOT.length < PARTS.length ? "_p" + GOT : "");
 let S = {name: "", num: "", ans: {}, started: new Date().toISOString()};
 function load() { try { const v = JSON.parse(localStorage.getItem(KEY) || "null"); if (v && v.ans) S = v; } catch (e) {} }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -151,7 +156,7 @@ function filled(q) {
 }
 function render() {
   let h = "";
-  PARTS.forEach(p => {
+  SHOWN.forEach(p => {
     h += '<div class="ph"><h2>' + esc(p.title) + '</h2><p>Read the text. Then answer the questions.</p></div>';
     p.qs.forEach(q => {
       const a = ansOf(q);
@@ -194,18 +199,19 @@ $("#qs").addEventListener("click", e => {
 });
 ["stName", "stNum"].forEach(id => $("#" + id).addEventListener("input", () => { S[id === "stName" ? "name" : "num"] = $("#" + id).value; $("#" + id).classList.remove("need"); save(); }));
 function progress() {
-  const done = ALLQ.filter(filled).length;
-  $("#progBar").style.width = (100 * done / ALLQ.length) + "%";
-  $("#progText").textContent = done + " of " + ALLQ.length + " questions answered";
+  const done = SHOWQ.filter(filled).length;
+  $("#progBar").style.width = (100 * done / SHOWQ.length) + "%";
+  $("#progText").textContent = done + " of " + SHOWQ.length + " questions answered";
 }
 /* the answers as a short text for the QR code (no answers to the questions are in this page) */
 function payload() {
-  return "EALR1" + JSON.stringify({a: ASMT.code, v: 2, n: S.name.trim(), id: S.num.trim(), f: String(S.finished || "").slice(0, 16), x: S.ans});
+  const x = {}; SHOWQ.forEach(q => { if (S.ans[q.id]) x[q.id] = S.ans[q.id]; });
+  return "EALR1" + JSON.stringify({a: ASMT.code, v: 2, p: GOT, n: S.name.trim(), id: S.num.trim(), f: String(S.finished || "").slice(0, 16), x: x});
 }
 let finishArmed = 0;
 $("#btnFinish").addEventListener("click", () => {
   if (!S.name.trim()) { $("#stName").classList.add("need"); $("#stName").focus(); $("#finishMsg").className = "msg warn"; $("#finishMsg").textContent = "Type your name first."; return; }
-  const missing = ALLQ.filter(q => !filled(q));
+  const missing = SHOWQ.filter(q => !filled(q));
   if (missing.length && Date.now() - finishArmed > 6000) {
     finishArmed = Date.now();
     document.querySelectorAll(".card.todo").forEach(c => c.classList.remove("todo"));
@@ -221,7 +227,7 @@ function showDone() {
   const qr = qrcode(0, "M"); qr.addData(payload(), "Byte"); qr.make();
   $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>";
   $("#doneName").textContent = S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "");
-  $("#doneInfo").textContent = ALLQ.filter(filled).length + " of " + ALLQ.length + " questions answered.";
+  $("#doneInfo").textContent = SHOWQ.filter(filled).length + " of " + SHOWQ.length + " questions answered" + (GOT.length < PARTS.length ? " (Part " + GOT + ")." : ".");
   $("#viewAnswer").hidden = true; $("#viewDone").hidden = false; window.scrollTo(0, 0);
 }
 $("#btnBack").addEventListener("click", () => { $("#viewDone").hidden = true; $("#viewAnswer").hidden = false; });
@@ -234,7 +240,14 @@ $("#btnNew").addEventListener("click", () => {
   $("#btnNew").textContent = "New student on this device";
   $("#viewDone").hidden = true; $("#viewAnswer").hidden = false; window.scrollTo(0, 0);
 });
+/* if this device was used for the other part, fill in the same name and number */
+function otherName() {
+  try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k !== KEY && k.indexOf("eal_read_" + ASMT.code + "_student_v2") === 0) { const v = JSON.parse(localStorage.getItem(k) || "null"); if (v && v.name) return v; } } } catch (e) {}
+  return null;
+}
+if (GOT.length < PARTS.length) { $("#title").textContent = "Reading: answer sheet, Part " + GOT; document.title += " Part " + GOT; }
 load();
+if (!S.name) { const o = otherName(); if (o) { S.name = o.name; S.num = o.num || ""; } }
 $("#stName").value = S.name || ""; $("#stNum").value = S.num || "";
 render();
 if (S.finished) showDone();

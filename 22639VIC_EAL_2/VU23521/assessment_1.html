@@ -70,6 +70,9 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
 .check{display:flex;gap:.5rem;align-items:center;margin:.6rem 0}
 .check input{width:22px;height:22px}
 .linkbox{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.give{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:.35rem 0 .2rem}
+.give button{min-height:40px;padding:.15rem .9rem;border-radius:999px;border:2px solid var(--teal);background:#fff;color:var(--navy);font:inherit;font-weight:700;cursor:pointer}
+.give button[aria-pressed="true"]{background:#FFFF99;border-color:var(--navy)}
 .linkbox .qrs svg{width:150px;height:auto;display:block}
 .biglink{position:fixed;inset:0;background:#fff;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:16px}
 .biglink svg{width:min(80vh,90vw);height:auto}
@@ -142,7 +145,8 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
         <div class="qrs" id="linkQr"></div>
         <div style="flex:1;min-width:240px">
           <b>Student link</b>
-          <p class="hint" style="margin:.2rem 0 .5rem">Students scan this code (or open the link) to get the answer sheet.</p>
+          <div class="give" id="giveBtns" role="group" aria-label="Which part to give out"><span class="hint">Give out:</span><button type="button" data-give="12">Both parts together</button><button type="button" data-give="1">Part 1 only</button><button type="button" data-give="2">Part 2 only</button></div>
+          <p class="hint" style="margin:.2rem 0 .5rem">Students scan this code (or open the link) to get the answer sheet. If you give the parts out at different times, scan each part when the student finishes it. The parts join together for each student.</p>
           <div class="row"><button type="button" class="btn ghost small" id="btnBigLink">Show the code on the board</button><button type="button" class="btn ghost small" id="btnCopyLink">Copy the link</button></div>
           <p class="hint" id="linkText" style="word-break:break-all;margin:.4rem 0 0"></p>
         </div>
@@ -179,7 +183,7 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
     </section>
   </main>
 </div>
-<div class="biglink" id="bigLink" hidden><h2>Scan to open the answer sheet</h2><div id="bigQr"></div><button type="button" class="btn" id="btnBigClose">Close</button></div>
+<div class="biglink" id="bigLink" hidden><h2 id="bigTitle">Scan to open the answer sheet</h2><div id="bigQr"></div><button type="button" class="btn" id="btnBigClose">Close</button></div>
 <div id="printArea"></div>
 
 <script>
@@ -241,6 +245,7 @@ const PRINT_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQUAAABBCAMAAA
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 const STORE = "eal_read_" + ASMT.code + "_marking";
+function localStorageGet(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } }
 let RECS = [], cur = null;
 function save() { try { localStorage.setItem(STORE, JSON.stringify(RECS)); } catch (e) {} }
 function load() { try { RECS = JSON.parse(localStorage.getItem(STORE) || "[]") || []; } catch (e) { RECS = []; } }
@@ -258,12 +263,19 @@ function autoOk(rec, q, i) {
 }
 function itemOk(rec, q, i) { const o = rec.over && rec.over[q.id + ":" + i]; return o === undefined ? autoOk(rec, q, i) : o; }
 function qOk(rec, q) { for (let i = 0; i < slots(q); i++) if (!itemOk(rec, q, i)) return false; return true; }
+/* parts the student has handed in (reading parts can be given out together or separately) */
+function partsOf(rec) { return String(rec.parts || "12"); }
+function partDone(rec, pid) { return partsOf(rec).includes(pid); }
+function allDone(rec) { return PARTS.every(p => partDone(rec, p.id)); }
+function partOfQ(q) { return q.id.split(".")[0]; }
+function missingParts(rec) { return PARTS.filter(p => !partDone(rec, p.id)).map(p => p.title.split(":")[0]); }
 function score(rec) {
   let items = 0, itemsOk = 0, qs = 0;
-  ALLQ.forEach(q => { const n = slots(q); items += n; for (let i = 0; i < n; i++) if (itemOk(rec, q, i)) itemsOk++; if (qOk(rec, q)) qs++; });
-  return {items, itemsOk, qs, qn: ALLQ.length};
+  const QS = ALLQ.filter(q => partDone(rec, partOfQ(q)));
+  QS.forEach(q => { const n = slots(q); items += n; for (let i = 0; i < n; i++) if (itemOk(rec, q, i)) itemsOk++; if (qOk(rec, q)) qs++; });
+  return {items, itemsOk, qs, qn: QS.length};
 }
-function suggested(rec) { const s = score(rec); return PASS_RULE === "all" ? (s.qs === s.qn ? "s" : "u") : (s.itemsOk / s.items >= PASS_RULE ? "s" : "u"); }
+function suggested(rec) { if (!allDone(rec)) return "n"; const s = score(rec); return PASS_RULE === "all" ? (s.qs === s.qn ? "s" : "u") : (s.itemsOk / s.items >= PASS_RULE ? "s" : "u"); }
 function outcome(rec) { return rec.result || suggested(rec); }
 
 /* ---------- adding a scanned student ---------- */
@@ -275,13 +287,22 @@ function addFromCode(text) {
   if ((d.v || 1) < 2) return {err: "This code is from an older answer sheet. Ask the student to open the link again, check their answers and press Finish."};
   const keyOf = r => (String(r.n || "").trim().toLowerCase() + "|" + String(r.id || "").trim());
   let r = RECS.find(x => keyOf(x) === keyOf(d)), updated = !!r;
-  if (!r) { r = {rid: "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), over: {}, result: "", comments: "", commentsAuto: true, ra: false, raText: "", assessor: "", date: today()}; RECS.push(r); }
-  r.n = d.n; r.id = d.id; r.x = d.x || {}; r.finished = d.f; r.scanned = new Date().toISOString();
-  if (updated) r.over = {};
+  const got = String(d.p || "12");
+  if (!r) { r = {rid: "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), over: {}, result: "", comments: "", commentsAuto: true, ra: false, raText: "", assessor: "", date: today(), x: {}, parts: ""}; RECS.push(r); }
+  r.n = d.n; r.id = d.id; r.finished = d.f; r.scanned = new Date().toISOString();
+  r.x = r.x || {}; r.over = r.over || {};
+  /* only replace the answers (and your changed marks) for the part or parts in this code */
+  ALLQ.filter(q => got.includes(partOfQ(q))).forEach(q => {
+    if (d.x && d.x[q.id] !== undefined) r.x[q.id] = d.x[q.id]; else delete r.x[q.id];
+    Object.keys(r.over).forEach(k => { if (k.startsWith(q.id + ":")) delete r.over[k]; });
+  });
+  r.parts = PARTS.map(p => p.id).filter(id => (updated ? String(r.parts || "") : "").includes(id) || got.includes(id)).join("");
+  r.lastGot = got;
   if (r.commentsAuto !== false) { r.comments = autoComments(r); r.commentsAuto = true; }
   save(); select(r);
-  return {rec: r, updated};
+  return {rec: r, updated, got};
 }
+function gotLabel(got) { return got.length > 1 ? "" : " (Part " + got + ")"; }
 
 /* ---------- camera scanning ---------- */
 const SCAN = {stream: null, timer: null, last: "", lastAt: 0, canvas: document.createElement("canvas")};
@@ -315,7 +336,7 @@ function gotCode(text) {
   const r = addFromCode(text);
   if (r.err) { setMsg("#scanMsg", r.err, "warn"); return; }
   const s = score(r.rec);
-  setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + ": " + s.qs + " of " + s.qn + " questions correct. Scan the next student, or press Stop scanning.", "ok");
+  setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got) + (allDone(r.rec) ? ": " + s.qs + " of " + s.qn + " questions correct." : ": waiting for " + missingParts(r.rec).join(" and ") + ".") + " Scan the next student, or press Stop scanning.", "ok");
   const box = $("#camBox"); box.classList.remove("flash"); void box.offsetWidth; box.classList.add("flash");
   try { const ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = 880; g.gain.value = .08; o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .15); } catch (e) {}
 }
@@ -349,7 +370,7 @@ async function addPictures(files) {
     const text = await decodeImage(files[i]);
     if (!text) { bad.push((files[i].name || "picture") + ": no QR code found"); continue; }
     const r = addFromCode(text);
-    if (r.err) bad.push((files[i].name || "picture") + ": " + r.err); else done.push((r.updated ? "updated " : "added ") + r.rec.n);
+    if (r.err) bad.push((files[i].name || "picture") + ": " + r.err); else done.push((r.updated ? "updated " : "added ") + r.rec.n + gotLabel(r.got));
   }
   const names = k => Array.from(new Set(done.filter(x => x.startsWith(k + " ")).map(x => x.slice(k.length + 1))));
   const add = names("added"), upd = names("updated").filter(n => !add.includes(n));
@@ -365,12 +386,21 @@ document.addEventListener("paste", e => {
   if (files.length) { e.preventDefault(); addPictures(files); }
 });
 $("#btnStopScan").addEventListener("click", stopScan);
-$("#btnPaste").addEventListener("click", () => { const r = addFromCode($("#pasteCode").value); if (r.err) setMsg("#scanMsg", r.err, "warn"); else { setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + ".", "ok"); $("#pasteCode").value = ""; } });
+$("#btnPaste").addEventListener("click", () => { const r = addFromCode($("#pasteCode").value); if (r.err) setMsg("#scanMsg", r.err, "warn"); else { setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got) + ".", "ok"); $("#pasteCode").value = ""; } });
 
 /* ---------- student link ---------- */
-const STUDENT_URL = location.href.split("#")[0].split("?")[0].replace(/[^/]*$/, "") + "assessment_1_student.html";
+const STUDENT_BASE = location.href.split("#")[0].split("?")[0].replace(/[^/]*$/, "") + "assessment_1_student.html";
+let GIVE = localStorageGet("eal_read_" + ASMT.code + "_give") || "12";
+let STUDENT_URL = STUDENT_BASE;
 function qrSvg(text, cell) { const q = qrcode(0, "M"); q.addData(text, "Byte"); q.make(); return q.createSvgTag({cellSize: cell || 4, margin: 2, scalable: true}); }
-$("#linkQr").innerHTML = qrSvg(STUDENT_URL, 4); $("#linkText").textContent = STUDENT_URL;
+function renderLink() {
+  STUDENT_URL = STUDENT_BASE + (GIVE === "12" ? "" : "?part=" + GIVE);
+  $("#linkQr").innerHTML = qrSvg(STUDENT_URL, 4); $("#linkText").textContent = STUDENT_URL;
+  document.querySelectorAll("#giveBtns button").forEach(b => b.setAttribute("aria-pressed", b.dataset.give === GIVE));
+  $("#bigTitle").textContent = "Scan to open the answer sheet" + (GIVE === "12" ? "" : " (Part " + GIVE + ")");
+}
+$("#giveBtns").addEventListener("click", e => { const b = e.target.closest("[data-give]"); if (!b) return; GIVE = b.dataset.give; try { localStorage.setItem("eal_read_" + ASMT.code + "_give", GIVE); } catch (x) {} renderLink(); });
+renderLink();
 $("#btnBigLink").addEventListener("click", () => { $("#bigQr").innerHTML = qrSvg(STUDENT_URL, 8); $("#bigLink").hidden = false; });
 $("#btnBigClose").addEventListener("click", () => { $("#bigLink").hidden = true; });
 $("#btnCopyLink").addEventListener("click", async () => { try { await navigator.clipboard.writeText(STUDENT_URL); $("#btnCopyLink").textContent = "Copied"; } catch (e) { $("#btnCopyLink").textContent = "Select the link below"; } setTimeout(() => { $("#btnCopyLink").textContent = "Copy the link"; }, 2500); });
@@ -378,7 +408,7 @@ $("#btnCopyLink").addEventListener("click", async () => { try { await navigator.
 /* ---------- student list ---------- */
 function renderList() {
   $("#noStudents").hidden = RECS.length > 0;
-  $("#slist").innerHTML = RECS.map(r => { const o = outcome(r); return '<li data-rid="' + r.rid + '" aria-current="' + (r === cur) + '"><span class="nm">' + esc(r.n || "(no name)") + '</span><span class="tag ' + o + '">' + (o === "s" ? "S" : "U/S") + (r.result ? "" : "?") + "</span></li>"; }).join("");
+  $("#slist").innerHTML = RECS.map(r => { const o = outcome(r); const t = o === "n" ? "Part " + PARTS.filter(p => partDone(r, p.id)).map(p => p.id).join(", ") + " only" : (o === "s" ? "S" : "U/S") + (r.result ? "" : "?"); return '<li data-rid="' + r.rid + '" aria-current="' + (r === cur) + '"><span class="nm">' + esc(r.n || "(no name)") + '</span><span class="tag ' + o + '">' + t + "</span></li>"; }).join("");
 }
 $("#slist").addEventListener("click", e => { const li = e.target.closest("[data-rid]"); if (li) select(RECS.find(r => r.rid === li.dataset.rid)); });
 function select(r) { cur = r || null; renderList(); renderMarks(); renderOutcome(); }
@@ -408,6 +438,7 @@ function renderMarks() {
   let h = "";
   PARTS.forEach(p => {
     h += '<div class="ph">' + esc(p.title) + "</div>";
+    if (!partDone(cur, p.id)) { h += '<p class="hint">Not handed in yet. When the student finishes this part, scan their new code and it will be added here.</p>'; return; }
     p.qs.forEach(q => {
       const ok = qOk(cur, q);
       h += '<div class="q"><div class="qt"><b>' + q.n + ".</b> " + esc(q.text) + ' <span class="' + (ok ? "ok" : "no") + '">' + (ok ? "✓ correct" : "✗ not correct") + "</span></div>";
@@ -431,6 +462,7 @@ $("#marks").addEventListener("click", e => {
 
 /* ---------- outcome and feedback ---------- */
 function autoComments(r) {
+  if (!allDone(r)) return missingParts(r).join(" and ") + " not completed yet.";
   const s = score(r), wrong = [];
   PARTS.forEach(p => p.qs.forEach(q => { if (!qOk(r, q)) wrong.push(p.title.split(":")[0] + ", Question " + q.n); }));
   if (!wrong.length) return "Well done. You answered all the questions correctly. You understood the purpose, the layout and the language of both texts.";
@@ -440,8 +472,9 @@ function renderOutcome() {
   if (!cur) { $("#outBox").innerHTML = '<p class="hint">Choose or scan a student.</p>'; return; }
   if (cur.commentsAuto && !cur.comments) cur.comments = autoComments(cur);
   const s = score(cur), sug = suggested(cur), o = outcome(cur);
-  $("#outBox").innerHTML =
-    '<div class="tiles"><div class="tile"><div class="k">Questions correct</div><div class="v">' + s.qs + " / " + s.qn + '</div></div><div class="tile"><div class="k">Answers correct</div><div class="v">' + s.itemsOk + " / " + s.items + '</div></div><div class="tile"><div class="k">Suggested outcome</div><div class="v">' + (sug === "s" ? "S" : "U/S") + "</div></div></div>" +
+  const waitNote = allDone(cur) ? "" : '<p class="status warn" style="margin:0 0 .6rem">Waiting for ' + esc(missingParts(cur).join(" and ")) + '. The outcome is suggested when every part is handed in.</p>';
+  $("#outBox").innerHTML = waitNote +
+    '<div class="tiles"><div class="tile"><div class="k">Questions correct</div><div class="v">' + s.qs + " / " + s.qn + '</div></div><div class="tile"><div class="k">Answers correct</div><div class="v">' + s.itemsOk + " / " + s.items + '</div></div><div class="tile"><div class="k">Suggested outcome</div><div class="v">' + (sug === "s" ? "S" : sug === "u" ? "U/S" : "...") + "</div></div></div>" +
     '<div class="res"><button type="button" class="s' + (o === "s" ? " on" : "") + '" data-res="s">Satisfactory</button><button type="button" class="u' + (o === "u" ? " on" : "") + '" data-res="u">Unsatisfactory</button></div>' +
     '<p class="hint" style="margin:.3rem 0 0">' + (cur.result ? "Outcome chosen by you." : "Suggested from the marks: every question must be correct (marking guide). Tap to confirm or change.") + "</p>" +
     '<label class="f" for="cmt">Comments</label><textarea id="cmt">' + esc(cur.comments) + '</textarea><div class="row" style="margin-top:.4rem"><button type="button" class="btn ghost small" id="btnRegen">Generate feedback again</button></div>' +
@@ -449,7 +482,6 @@ function renderOutcome() {
     '<textarea id="raText" placeholder="Details of the reasonable adjustment"' + (cur.ra ? "" : " hidden") + ">" + esc(cur.raText) + "</textarea>" +
     '<div class="row" style="align-items:flex-end"><div style="flex:2;min-width:200px"><label class="f" for="asr">Assessor name</label><input type="text" id="asr" value="' + esc(cur.assessor || localStorageGet("eal_read_assessor")) + '"></div><div style="flex:1;min-width:150px"><label class="f" for="adate">Date</label><input type="date" id="adate" value="' + esc(cur.date || today()) + '"></div></div>';
 }
-function localStorageGet(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } }
 $("#outBox").addEventListener("click", e => {
   const b = e.target.closest("[data-res]");
   if (b && cur) { cur.result = cur.result === b.dataset.res ? "" : b.dataset.res; save(); renderOutcome(); renderList(); }
@@ -485,8 +517,9 @@ $("#inOpen").addEventListener("change", async e => {
 /* ---------- printout ---------- */
 function pBox(v, cls) { return '<div class="p-box' + (cls ? " " + cls : "") + '">' + (v || "") + "</div>"; }
 const TK = on => '<span class="tk">' + (on ? "☑" : "☐") + "</span>";
-const MK = ok => '<span class="' + (ok ? "mok" : "mno") + '">' + (ok ? "✓" : "✗") + "</span>";
+const MK0 = ok => '<span class="' + (ok ? "mok" : "mno") + '">' + (ok ? "✓" : "✗") + "</span>";
 function printQ(r, q) {
+  const done = partDone(r, partOfQ(q)), MK = ok => done ? MK0(ok) : "";
   let h = '<div class="p-qb"><div class="p-q">' + q.n + ". " + esc(q.text) + '</div><div class="p-cap">' + esc(q.table) + "</div>";
   const a = (r.x && r.x[q.id]) || "";
   if (q.type === "one" || q.type === "two") {
@@ -512,7 +545,7 @@ function reportHTML(r) {
     '<div class="p-h">Student details</div><div class="p-lab">Student name</div>' + pBox(esc(r.n), "tall") +
     '<div class="p-lab">Student number</div>' + pBox(esc(r.id), "tall") + '</section>';
   PARTS.forEach(p => {
-    h += '<section class="pg"><div class="p-h">' + esc(p.title) + '</div><div class="p-p">Read the text. Then answer the questions.</div><div class="p-p">Read each question carefully and answer by selecting the appropriate response.</div>' + p.qs.map(q => printQ(r, q)).join("") + "</section>";
+    h += '<section class="pg"><div class="p-h">' + esc(p.title) + '</div>' + (partDone(r, p.id) ? "" : '<div class="p-p"><b>Not completed yet.</b></div>') + '<div class="p-p">Read the text. Then answer the questions.</div><div class="p-p">Read each question carefully and answer by selecting the appropriate response.</div>' + p.qs.map(q => printQ(r, q)).join("") + "</section>";
   });
   h += '<section class="pg last"><div class="p-h">Student assessment declaration</div><div class="p-p">This assessment is my original work and has not been:</div><ul class="p-ul"><li>copied from any source without proper referencing</li><li>written for me by any other person except where such collaboration has been approved by a teacher or assessor.</li></ul>' +
     '<div class="p-lab">Student signature and date</div>' + pBox("", "tall") +
