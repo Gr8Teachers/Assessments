@@ -159,7 +159,7 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
       <p style="margin:0 0 .6rem">When a student finishes, a QR code appears on their screen. Press <b>Start scanning</b> and hold their screen up to the camera.</p>
       <div class="row"><button type="button" class="btn teal" id="btnScan">Start scanning</button><button type="button" class="btn ghost" id="btnStopScan" hidden>Stop scanning</button><button type="button" class="btn ghost" id="btnUpQr">Upload QR pictures</button><input type="file" id="inQr" accept="image/*" multiple hidden></div>
       <p class="hint" style="margin:.4rem 0 0">Students can also take a screenshot of their QR code and send it to you. Press <b>Upload QR pictures</b> (you can choose several at once), drag the pictures onto this page, or copy a picture and press Ctrl + V.</p>
-      <div class="cam" id="camBox" hidden><video id="video" playsinline muted></video><div class="frame"></div></div>
+      <div id="camHome"><div class="cam" id="camBox" hidden><video id="video" playsinline muted></video><div class="frame"></div></div></div>
       <p class="status" id="scanMsg" role="status"></p>
       <details style="margin-top:.6rem"><summary class="hint" style="cursor:pointer">No camera? Paste the code instead</summary>
         <p class="hint">If a QR reader app shows the student's code as text, paste it here.</p>
@@ -182,6 +182,12 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
     <section class="card" id="sec5">
       <div class="sec-h"><span class="n">5</span><h2>Second attempt</h2></div>
       <div id="redoBox"></div>
+      <div id="redoScan" hidden style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--line, #EBEBEB)">
+        <p style="margin:0 0 .5rem"><b>When the student finishes</b>, scan or upload their new QR code here.</p>
+        <div class="row"><button type="button" class="btn teal" id="btnRedoScan">Scan second attempt</button><button type="button" class="btn ghost" id="btnRedoStop" hidden>Stop scanning</button><button type="button" class="btn ghost" id="btnRedoUp">Upload QR picture</button></div>
+        <div id="redoCamSlot"></div>
+        <p class="status" id="redoMsg" role="status"></p>
+      </div>
     </section>
 
     <section class="card" id="sec6">
@@ -311,21 +317,24 @@ function addFromCode(text) {
 function gotLabel(got, second) { return (got.length > 1 || PARTS.length === 1 ? "" : " (Part " + got + ")") + (second ? " (second attempt)" : ""); }
 
 /* ---------- camera scanning ---------- */
-const SCAN = {stream: null, timer: null, last: "", lastAt: 0, canvas: document.createElement("canvas")};
-async function startScan() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { setMsg("#scanMsg", "This browser cannot use the camera. Paste the code instead.", "warn"); return; }
+const SCAN = {where: "#scanMsg", stream: null, timer: null, last: "", lastAt: 0, canvas: document.createElement("canvas")};
+async function startScan(inRedo) {
+  if (SCAN.stream) stopScan();
+  SCAN.where = inRedo === true ? "#redoMsg" : "#scanMsg";
+  (inRedo === true ? $("#redoCamSlot") : $("#camHome")).appendChild($("#camBox"));
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { setMsg(SCAN.where, "This browser cannot use the camera. Paste the code instead.", "warn"); return; }
   try {
     SCAN.stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: "environment", width: {ideal: 1280}, height: {ideal: 720}}, audio: false});
-  } catch (e) { setMsg("#scanMsg", "The camera could not open (" + (e.name || "error") + "). Allow the camera for this page, or paste the code instead.", "warn"); return; }
+  } catch (e) { setMsg(SCAN.where, "The camera could not open (" + (e.name || "error") + "). Allow the camera for this page, or paste the code instead.", "warn"); return; }
   const v = $("#video"); v.srcObject = SCAN.stream; await v.play().catch(() => {});
-  $("#camBox").hidden = false; $("#btnScan").hidden = true; $("#btnStopScan").hidden = false;
-  setMsg("#scanMsg", "Scanning. Hold the student's screen up to the camera.", "ok");
+  $("#camBox").hidden = false; if (SCAN.where === "#redoMsg") { $("#btnRedoScan").hidden = true; $("#btnRedoStop").hidden = false; } else { $("#btnScan").hidden = true; $("#btnStopScan").hidden = false; }
+  setMsg(SCAN.where, "Scanning. Hold the student's screen up to the camera.", "ok");
   SCAN.timer = setInterval(scanFrame, 200);
 }
 function stopScan() {
   clearInterval(SCAN.timer); SCAN.timer = null;
   if (SCAN.stream) SCAN.stream.getTracks().forEach(t => t.stop());
-  SCAN.stream = null; $("#camBox").hidden = true; $("#btnScan").hidden = false; $("#btnStopScan").hidden = true;
+  SCAN.stream = null; $("#camBox").hidden = true; $("#btnScan").hidden = false; $("#btnStopScan").hidden = true; $("#btnRedoScan").hidden = false; $("#btnRedoStop").hidden = true;
 }
 function scanFrame() {
   const v = $("#video"); if (!v.videoWidth) return;
@@ -340,13 +349,14 @@ function scanFrame() {
 }
 function gotCode(text) {
   const r = addFromCode(text);
-  if (r.err) { setMsg("#scanMsg", r.err.replace(/([^.])$/, "$1."), "warn"); return; }
+  if (r.err) { setMsg(SCAN.where, r.err.replace(/([^.])$/, "$1."), "warn"); return; }
   const s = score(r.rec);
-  setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got, r.second) + (allDone(r.rec) ? ": " + s.qs + " of " + s.qn + " questions correct." : ": waiting for " + missingParts(r.rec).join(" and ") + ".") + " Scan the next student, or press Stop scanning.", "ok");
+  setMsg(SCAN.where, (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got, r.second) + (allDone(r.rec) ? ": " + s.qs + " of " + s.qn + " questions correct." : ": waiting for " + missingParts(r.rec).join(" and ") + ".") + (SCAN.where === "#redoMsg" ? "" : " Scan the next student, or press Stop scanning."), "ok");
+  if (SCAN.where === "#redoMsg" && r.second) stopScan();
   const box = $("#camBox"); box.classList.remove("flash"); void box.offsetWidth; box.classList.add("flash");
   try { const ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = 880; g.gain.value = .08; o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .15); } catch (e) {}
 }
-$("#btnScan").addEventListener("click", startScan);
+$("#btnScan").addEventListener("click", () => startScan(false));
 /* ---------- QR pictures (screenshots sent by students) ---------- */
 function decodeCanvas(img, maxW, crop) {
   const sw = crop ? img.width * crop.w : img.width, sh = crop ? img.height * crop.h : img.height;
@@ -369,10 +379,10 @@ async function decodeImage(file) {
 }
 async function addPictures(files) {
   files = Array.from(files || []).filter(f => /^image\//.test(f.type) || /\.(png|jpe?g|gif|webp|bmp|heic)$/i.test(f.name || ""));
-  if (!files.length) { setMsg("#scanMsg", "Choose a picture of a student's QR code.", "warn"); return; }
+  if (!files.length) { setMsg(SCAN.where, "Choose a picture of a student's QR code.", "warn"); return; }
   const done = [], bad = [];
   for (let i = 0; i < files.length; i++) {
-    setMsg("#scanMsg", "Reading picture " + (i + 1) + " of " + files.length + " ...", "ok");
+    setMsg(SCAN.where, "Reading picture " + (i + 1) + " of " + files.length + " ...", "ok");
     const text = await decodeImage(files[i]);
     if (!text) { bad.push((files[i].name || "picture") + ": no QR code found"); continue; }
     const r = addFromCode(text);
@@ -380,19 +390,19 @@ async function addPictures(files) {
   }
   const names = k => Array.from(new Set(done.filter(x => x.startsWith(k + " ")).map(x => x.slice(k.length + 1))));
   const add = names("added"), upd = names("updated").filter(n => !add.includes(n));
-  setMsg("#scanMsg", (add.length ? "Added: " + add.join(", ") + ". " : "") + (upd.length ? "Updated: " + upd.join(", ") + ". " : "") + (bad.length ? "Could not read: " + bad.join("; ") + "." + (bad.some(x => x.includes("no QR code found")) ? " Ask the student for a clearer screenshot of the whole code." : "") : ""), bad.length ? "warn" : "ok");
+  setMsg(SCAN.where, (add.length ? "Added: " + add.join(", ") + ". " : "") + (upd.length ? "Updated: " + upd.join(", ") + ". " : "") + (bad.length ? "Could not read: " + bad.join("; ") + "." + (bad.some(x => x.includes("no QR code found")) ? " Ask the student for a clearer screenshot of the whole code." : "") : ""), bad.length ? "warn" : "ok");
 }
-$("#btnUpQr").addEventListener("click", () => $("#inQr").click());
+$("#btnUpQr").addEventListener("click", () => { SCAN.where = "#scanMsg"; $("#inQr").click(); });
 $("#inQr").addEventListener("change", e => { const f = e.target.files; addPictures(f).then(() => { e.target.value = ""; }); });
 document.addEventListener("dragover", e => { if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files")) e.preventDefault(); });
-document.addEventListener("drop", e => { if (!e.dataTransfer || !e.dataTransfer.files.length) return; e.preventDefault(); addPictures(e.dataTransfer.files); });
+document.addEventListener("drop", e => { if (!e.dataTransfer || !e.dataTransfer.files.length) return; e.preventDefault(); SCAN.where = redoOpen() ? "#redoMsg" : "#scanMsg"; addPictures(e.dataTransfer.files); });
 document.addEventListener("paste", e => {
   if (e.target && /^(TEXTAREA|INPUT)$/.test(e.target.tagName)) return;
   const files = Array.from((e.clipboardData && e.clipboardData.items) || []).filter(it => it.kind === "file" && /^image\//.test(it.type)).map(it => it.getAsFile()).filter(Boolean);
-  if (files.length) { e.preventDefault(); addPictures(files); }
+  if (files.length) { e.preventDefault(); SCAN.where = redoOpen() ? "#redoMsg" : "#scanMsg"; addPictures(files); }
 });
 $("#btnStopScan").addEventListener("click", stopScan);
-$("#btnPaste").addEventListener("click", () => { const r = addFromCode($("#pasteCode").value); if (r.err) setMsg("#scanMsg", r.err.replace(/([^.])$/, "$1."), "warn"); else { setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got, r.second) + ".", "ok"); $("#pasteCode").value = ""; } });
+$("#btnPaste").addEventListener("click", () => { SCAN.where = "#scanMsg"; const r = addFromCode($("#pasteCode").value); if (r.err) setMsg("#scanMsg", r.err.replace(/([^.])$/, "$1."), "warn"); else { setMsg("#scanMsg", (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got, r.second) + ".", "ok"); $("#pasteCode").value = ""; } });
 
 /* ---------- student link ---------- */
 const STUDENT_BASE = location.href.split("#")[0].split("?")[0].replace(/[^/]*$/, "") + location.pathname.split("/").pop().replace(/\.html?$/i, "") + "_student.html";
@@ -516,8 +526,13 @@ function redoLink(r) {
   return STUDENT_BASE + "#re=" + b64u(JSON.stringify({a: ASMT.code, k: r.reK, n: r.n, id: r.id, p: partsOf(r), keep: keep, redo: redo}));
 }
 function qLabel(id) { const q = ALLQ.find(x => x.id === id); return (PARTS.length === 1 ? "" : (PARTS.find(p => p.id === partOfQ(q)) || {title: ""}).title.split(":")[0] + ", ") + "Question " + q.n; }
+function redoOpen() { return !$("#redoScan").hidden; }
 function renderRedo() {
   const box = $("#redoBox"); if (!box) return;
+  const need = !!(cur && cur.redo && !cur.att2At);
+  if (!need && SCAN.where === "#redoMsg" && SCAN.stream) stopScan();
+  if (need !== redoOpen()) setMsg("#redoMsg", "", "ok");
+  $("#redoScan").hidden = !need;
   if (!cur) { box.innerHTML = '<p class="hint">Choose or scan a student.</p>'; return; }
   if (cur.att2At) {
     const ids = Object.keys(cur.x2 || {}), fixed = ids.filter(id => qOk(cur, ALLQ.find(q => q.id === id)));
@@ -529,7 +544,7 @@ function renderRedo() {
   const wrong = wrongQs(cur);
   if (!wrong.length) { box.innerHTML = '<p class="hint">' + (allDone(cur) ? "All questions are correct. No second attempt is needed." : "No incorrect questions so far.") + "</p>"; return; }
   let h = "<p>Incorrect questions: <b>" + esc(wrong.map(q => qLabel(q.id)).join("; ")) + "</b>.</p>" +
-    '<p class="hint" style="margin-top:-.3rem">The student scans the code with their phone. Their correct answers are kept and locked; the incorrect questions are cleared so they can try again. When they finish, scan their new code in Step 2.</p>' +
+    '<p class="hint" style="margin-top:-.3rem">The student scans the code with their phone. Their correct answers are kept and locked; the incorrect questions are cleared so they can try again. When they finish, scan or upload their new code below.</p>' +
     '<div class="row"><button type="button" class="btn teal" id="btnRedo">' + (cur.redo ? "Make the code again" : "Make second attempt code") + "</button>" + (cur.redo ? '<button type="button" class="btn ghost" id="btnRedoBig">Show the code full screen</button>' : "") + "</div>";
   if (cur.redo) h += '<div class="linkbox" style="margin-top:.8rem"><div class="qrs">' + qrSvg(redoLink(cur), 4) + '</div><div class="hint">Second attempt for <b>' + esc(cur.n) + "</b>: " + esc(cur.redo.map(qLabel).join("; ")) + "</div></div>";
   box.innerHTML = h;
@@ -543,6 +558,9 @@ $("#redoBox").addEventListener("click", e => {
   if (e.target.id === "btnRedoBig" && cur.redo) { $("#bigTitle").textContent = "Second attempt for " + cur.n + ": scan with your phone"; $("#bigQr").innerHTML = qrSvg(redoLink(cur), 8); $("#bigLink").hidden = false; }
 });
 $("#btnBigClose").addEventListener("click", () => { renderLink(); });
+$("#btnRedoScan").addEventListener("click", () => startScan(true));
+$("#btnRedoStop").addEventListener("click", stopScan);
+$("#btnRedoUp").addEventListener("click", () => { SCAN.where = "#redoMsg"; $("#inQr").click(); });
 
 /* ---------- save and open ---------- */
 $("#btnSaveAll").addEventListener("click", () => {
