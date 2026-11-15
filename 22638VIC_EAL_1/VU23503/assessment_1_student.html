@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>VU23503 Assessment 1 Reading Answer Sheet</title>
 <style>
-:root{--navy:#0B3F47;--teal:#2E808E;--teal-d:#236A76;--sky:#8CDBE5;--teal-t:#E7F7F9;--red:#8B0000;--grey:#495054;--ink:#22272B;--bg:#EBEBEB;--line:#C9CFD2;--font:Calibri,Carlito,"Segoe UI",Arial,sans-serif}
+:root{--navy:#0B3F47;--teal:#2E808E;--teal-d:#236A76;--sky:#8CDBE5;--teal-t:#E7F7F9;--red:#8B0000;--grey:#495054;--ink:#22272B;--bg:#F1F9FA;--line:#C9CFD2;--font:Calibri,Carlito,"Segoe UI",Arial,sans-serif}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:18px;line-height:1.45}
@@ -14,6 +14,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font
 .bar{background:var(--navy);color:#fff;padding:.7rem 16px;position:sticky;top:0;z-index:5;box-shadow:0 2px 6px rgba(0,0,0,.2)}
 .bar .ey{color:var(--sky);font-weight:700;font-size:.78rem;letter-spacing:1.2px;text-transform:uppercase}
 .bar h1{margin:0;font-size:1.15rem;line-height:1.2}
+.bar .rt{color:#fff;font-size:.95rem;margin-top:.15rem;line-height:1.25}.bar .rt b{color:var(--sky);font-weight:700}
+.ph .tx{margin:.25rem 0 0;font-size:1.05rem;font-weight:700;color:#fff}.ph .tx span{color:var(--sky)}
 .prog{height:6px;background:rgba(255,255,255,.2);border-radius:3px;margin-top:.5rem;overflow:hidden}
 .prog i{display:block;height:100%;width:0;background:var(--sky);transition:width .3s}
 .progt{font-size:.82rem;color:#E7F7F9;margin-top:.25rem}
@@ -69,6 +71,7 @@ input[readonly]{background:#E7F7F9}
 <div class="bar">
   <div class="ey">VU23503 | Assessment event 1 of 2</div>
   <h1 id="title">Reading: answer sheet</h1>
+  <div class="rt" id="readText" hidden></div>
   <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
   <div class="progt" id="progText"></div>
 </div>
@@ -114,7 +117,7 @@ const ASMT = {
   wellDone: "Well done. You answered all the questions correctly. You understood the purpose and the details of Nala’s message."
 };
 const PARTS = [
-  {id: "1", title: "Part 1: Read a message", qs: [
+  {id: "1", title: "Part 1: Read a message", text: "Nala’s message to Ana", textLabel: "Message", qs: [
     {id: "1.1", type: "one", n: "1", text: "Why did Nala send this message?", table: "Table 2: Multiple choice",
      opts: [["a", "to plan an event"], ["b", "to give instructions"], ["c", "to give good news"]]},
     {id: "1.2", type: "one", n: "2", text: "When can Nala go to the movie?", table: "Table 3: Multiple choice",
@@ -160,7 +163,7 @@ function filled(q) {
 function render() {
   let h = "";
   SHOWN.forEach(p => {
-    h += '<div class="ph"><h2>' + esc(p.title) + '</h2><p>' + esc(p.intro1 || ASMT.intro1 || "Read the text. Then answer the questions.") + '</p></div>';
+    h += '<div class="ph"><h2>' + esc(p.title) + '</h2>' + (p.text ? '<p class="tx"><span>' + esc(p.textLabel || "Reading text") + ':</span> ' + esc(p.text) + "</p>" : "") + '<p>' + esc(p.intro1 || ASMT.intro1 || "Read the text. Then answer the questions.") + '</p></div>';
     p.qs.forEach(q => {
       const a = ansOf(q);
       h += '<div class="card' + (locked(q) ? " locked" : "") + '" id="q' + q.id.replace(".", "_") + '" data-q="' + q.id + '"><div class="qn"><b class="num">' + q.n + '</b><div class="qt">' + esc(q.text) + QQ(q) + "</div></div>";
@@ -254,6 +257,12 @@ function otherName() {
   try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k !== KEY && k.indexOf("eal_read_" + ASMT.code + "_student_v2") === 0) { const v = JSON.parse(localStorage.getItem(k) || "null"); if (v && v.name) return v; } } } catch (e) {}
   return null;
 }
+(function () {
+  const t = SHOWN.filter(p => p.text);
+  if (!t.length) return;
+  $("#readText").innerHTML = t.map(p => "<div><b>" + esc(p.textLabel || (t.length > 1 ? "Reading text " + p.id : "Reading text")) + ":</b> " + esc(p.text) + "</div>").join("");
+  $("#readText").hidden = false;
+})();
 if (GOT.length < PARTS.length) { $("#title").textContent = "Reading: answer sheet, Part " + GOT; document.title += " Part " + GOT; }
 load();
 if (RE) {
