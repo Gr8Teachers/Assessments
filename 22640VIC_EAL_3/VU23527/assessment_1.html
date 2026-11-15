@@ -134,6 +134,7 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
       </div>
       <div class="row" style="margin-top:.6rem">
         <button type="button" class="btn ghost small" id="btnSaveAll">Save all students</button>
+        <button type="button" class="btn ghost small" id="btnSendPc2">Send to PC</button>
         <button type="button" class="btn ghost small" id="btnOpen">Open saved file</button>
         <input type="file" id="inOpen" accept=".json,application/json" hidden>
       </div>
@@ -604,16 +605,18 @@ $("#btnRedoUp").addEventListener("click", () => { SCAN.where = "#redoMsg"; $("#i
 function marksFile() {
   return new File([JSON.stringify({a: ASMT.code, saved: new Date().toISOString(), recs: RECS}, null, 1)], ASMT.code + "_marking_" + today() + ".json", {type: "application/json"});
 }
-$("#btnSendPc").addEventListener("click", async () => {
-  if (!RECS.length) { setMsg("#expMsg", "There are no students to send yet. Scan students first.", "warn"); return; }
+async function sendPc(M) {
+  if (!RECS.length) { setMsg(M, "There are no students to send yet. Scan students first.", "warn"); return; }
   const f = marksFile(), n = RECS.length + " student" + (RECS.length > 1 ? "s" : "");
   if (navigator.canShare && navigator.canShare({files: [f]})) {
-    try { await navigator.share({files: [f], title: ASMT.unit + " reading marks", text: ASMT.unit + " reading: " + n + ". Open this file on the computer with Open saved file."}); setMsg("#expMsg", "Sent " + n + ". On the computer, open this page and press Open saved file.", "ok"); return; }
-    catch (e) { if (e && e.name === "AbortError") { setMsg("#expMsg", "Not sent.", "warn"); return; } }
+    try { await navigator.share({files: [f], title: ASMT.unit + " reading marks", text: ASMT.unit + " reading: " + n + ". Open this file on the computer with Open saved file."}); setMsg(M, "Sent " + n + ". On the computer, open this page and press Open saved file.", "ok"); return; }
+    catch (e) { if (e && e.name === "AbortError") { setMsg(M, "Not sent.", "warn"); return; } }
   }
   const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-  setMsg("#expMsg", "This device cannot open the share menu, so the file (" + f.name + ", " + n + ") was saved to Downloads. Email it to yourself or put it in OneDrive, then open it on the computer with Open saved file.", "ok");
-});
+  setMsg(M, "This device cannot open the share menu, so the file (" + f.name + ", " + n + ") was saved to Downloads. Email it to yourself or put it in OneDrive, then open it on the computer with Open saved file.", "ok");
+}
+$("#btnSendPc").addEventListener("click", () => sendPc("#expMsg"));
+$("#btnSendPc2").addEventListener("click", () => sendPc("#sideMsg"));
 $("#btnSaveAll").addEventListener("click", () => {
   if (!RECS.length) { setMsg("#sideMsg", "There are no students to save.", "warn"); return; }
   const blob = new Blob([JSON.stringify({a: ASMT.code, saved: new Date().toISOString(), recs: RECS}, null, 1)], {type: "application/json"});
