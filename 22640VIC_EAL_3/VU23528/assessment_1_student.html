@@ -58,7 +58,8 @@ input[type=text]:focus{outline:none;border-color:var(--teal)}
 .qrbox svg{display:block;width:100%;height:auto}
 .who{font-size:1.25rem;font-weight:700;color:var(--navy)}
 .qrname{font-size:1.3rem;font-weight:700;color:#000;margin-top:.4rem;word-break:break-word}
-.qrpart{display:inline-block;margin-top:.3rem;padding:.1rem .8rem;border-radius:999px;background:#0B3F47;color:#fff;font-weight:700;font-size:1.05rem}
+.qrunit{margin-top:.35rem;font-weight:700;color:#0B3F47;font-size:1rem;line-height:1.25}.qrev{color:#495054;font-size:.95rem;margin-top:.1rem}
+.qrpart{display:inline-block;margin-top:.4rem;padding:.1rem .8rem;border-radius:999px;background:#0B3F47;color:#fff;font-weight:700;font-size:1.05rem}
 .stack{display:flex;flex-direction:column;gap:.6rem;margin-top:1rem}
 .card.locked{opacity:.6}
 .card.locked button{cursor:default}
@@ -192,6 +193,12 @@ function load() { try { const v = JSON.parse(localStorage.getItem(KEY) || "null"
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 
 function IT(q, i, w) { return (q.imgs && q.imgs[i] ? '<img class="qimg" src="' + q.imgs[i] + '" alt="' + esc(q.items[i]) + '" style="display:block;width:' + w + ';max-width:100%;height:auto;border-radius:4px;margin:2px 0">' : "") + esc(q.items[i]); }
+function qrLabel() {
+  const one = id => { const p = PARTS.find(x => x.id === id); return p && p.text ? ": " + p.text : ""; };
+  if (PARTS.length === 1) return "Reading" + one(PARTS[0].id);
+  if (GOT.length > 1) return "Reading 1 and 2";
+  return "Reading " + GOT + one(GOT);
+}
 function QQ(q) { return q.quote ? '<div class="qq">' + esc(q.quote).replace(/\n/g, "<br>").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>") + "</div>" : ""; }
 function ansOf(q) { return S.ans[q.id] || ""; }
 function filled(q) {
@@ -276,7 +283,7 @@ $("#btnFinish").addEventListener("click", () => {
 });
 function showDone() {
   const qr = qrcode(0, "M"); qr.addData(payload(), "Byte"); qr.make();
-  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>" + '<div class="qrpart">' + esc((PARTS.length === 1 ? "Reading" : GOT.length > 1 ? "Reading 1 and 2" : "Reading " + GOT) + (RE ? ", 2nd attempt" : "")) + "</div>";
+  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>" + '<div class="qrunit">' + esc(ASMT.unitName) + "</div>" + '<div class="qrev">' + esc(ASMT.event) + "</div>" + '<div class="qrpart">' + esc(qrLabel() + (RE ? ", 2nd attempt" : "")) + "</div>";
   $("#doneName").textContent = S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "");
   $("#doneInfo").textContent = ACTQ.filter(filled).length + " of " + ACTQ.length + " questions answered" + (GOT.length < PARTS.length ? " (Part " + GOT + ")." : ".");
   $("#viewAnswer").hidden = true; $("#viewDone").hidden = false; window.scrollTo(0, 0);
