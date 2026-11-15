@@ -46,7 +46,8 @@ label.f{display:block;font-weight:700;color:var(--navy);margin:.6rem 0 .25rem}
 .slist .nm{flex:1;font-weight:700}
 .tag{font-size:.78rem;font-weight:700;border-radius:6px;padding:.05rem .4rem;white-space:nowrap}
 .tag.s{background:var(--teal-t);color:var(--teal-d)}.tag.u{background:var(--red-t);color:var(--red)}.tag.n{background:#EBEBEB;color:var(--grey)}
-.ph{font-weight:700;color:#fff;background:var(--teal);border-radius:10px;padding:.35rem .8rem;margin:1rem 0 .6rem}
+.ph{font-weight:700;color:#fff;background:var(--teal);border-radius:10px;padding:.35rem .8rem;margin:1rem 0 .6rem}.ph .tx{font-weight:400;margin-left:.5rem}.ph .tx span{color:var(--sky);font-weight:700}
+.bar .rt{color:#fff;font-size:.95rem;margin:.1rem 0 .2rem;line-height:1.3}.bar .rt span{display:inline-block;margin-right:1.4rem}.bar .rt b{color:var(--sky)}
 .q{border:1.5px solid var(--line);border-radius:12px;padding:.7rem .85rem;margin:.6rem 0}
 .q .qt{font-weight:700;margin-bottom:.4rem}
 .q .qt b{color:var(--teal-d)}
@@ -119,6 +120,7 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
 <div class="bar">
   <div class="ey">VU23505 | Assessment event 1 of 3</div>
   <h1>Reading: scan and mark</h1>
+  <div class="rt" id="readText" hidden></div>
   <nav class="steps"><a href="#sec1"><b>1</b>Student link</a><a href="#sec2"><b>2</b>Scan answers</a><a href="#sec3"><b>3</b>Marking</a><a href="#sec4"><b>4</b>Outcome and feedback</a><a href="#sec5"><b>5</b>Second attempt</a><a href="#sec6"><b>6</b>Print or save</a></nav>
 </div>
 <div class="wrap">
@@ -476,7 +478,7 @@ function renderMarks() {
   $("#curHead").innerHTML = "<b>" + esc(cur.n) + "</b>" + (cur.id ? " (" + esc(cur.id) + ")" : "") + ". Tap ✓ or ✗ to change a mark.";
   let h = "";
   PARTS.forEach(p => {
-    h += '<div class="ph">' + esc(p.title) + "</div>";
+    h += '<div class="ph">' + esc(p.title) + (p.text ? '<span class="tx"><span>' + esc(p.textLabel || "Reading text") + ":</span> " + esc(p.text) + "</span>" : "") + "</div>";
     if (!partDone(cur, p.id)) { h += '<p class="hint">Not handed in yet. When the student finishes this part, scan their new code and it will be added here.</p>'; return; }
     p.qs.forEach(q => {
       const ok = qOk(cur, q);
@@ -669,6 +671,12 @@ $("#btnPrint").addEventListener("click", () => {
 });
 
 load(); select(RECS[RECS.length - 1] || null);
+(function () {
+  const t = PARTS.filter(p => p.text);
+  if (!t.length) return;
+  $("#readText").innerHTML = t.map(p => "<span><b>" + esc(p.textLabel || (t.length > 1 ? "Reading text " + p.id : "Reading text")) + ":</b> " + esc(p.text) + "</span>").join("");
+  $("#readText").hidden = false;
+})();
 </script>
 </body>
 </html>
