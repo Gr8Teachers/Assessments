@@ -59,7 +59,7 @@ input[type=text]:focus{outline:none;border-color:var(--teal)}
 .who{font-size:1.25rem;font-weight:700;color:var(--navy)}
 .qrname{font-size:1.3rem;font-weight:700;color:#000;margin-top:.4rem;word-break:break-word}
 .qrunit{margin-top:.35rem;font-weight:700;color:#0B3F47;font-size:1rem;line-height:1.25}.qrev{color:#495054;font-size:.95rem;margin-top:.1rem}
-.qrpart{display:inline-block;margin-top:.4rem;padding:.1rem .8rem;border-radius:999px;background:#0B3F47;color:#fff;font-weight:700;font-size:1.05rem}
+.qrpart{display:inline-block;margin-top:.4rem;padding:.15rem .8rem;border-radius:12px;background:#0B3F47;color:#fff;font-weight:700;font-size:1.05rem}
 .stack{display:flex;flex-direction:column;gap:.6rem;margin-top:1rem}
 .card.locked{opacity:.6}
 .card.locked button{cursor:default}
@@ -264,7 +264,7 @@ $("#btnFinish").addEventListener("click", () => {
 });
 function showDone() {
   const qr = qrcode(0, "M"); qr.addData(payload(), "Byte"); qr.make();
-  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>" + '<div class="qrunit">' + esc(ASMT.unitName) + "</div>" + '<div class="qrev">' + esc(ASMT.event) + "</div>" + '<div class="qrpart">' + esc(qrLabel() + (RE ? ", 2nd attempt" : "")) + "</div>";
+  $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>" + '<div class="qrpart">' + esc(ASMT.unit + " | " + (((ASMT.event || "").match(/(\d+) of (\d+)/) || []).slice(1).join("/") + " ").replace(/^ $/, "") + qrLabel() + (RE ? ", 2nd attempt" : "")) + "</div>";
   $("#doneName").textContent = S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "");
   $("#doneInfo").textContent = ACTQ.filter(filled).length + " of " + ACTQ.length + " questions answered" + (GOT.length < PARTS.length ? " (Part " + GOT + ")." : ".");
   $("#viewAnswer").hidden = true; $("#viewDone").hidden = false; window.scrollTo(0, 0);
