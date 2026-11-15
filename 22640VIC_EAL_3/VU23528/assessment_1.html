@@ -121,7 +121,7 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
   <div class="ey">VU23528 | Assessment event 1 of 3</div>
   <h1>Reading: scan and mark</h1>
   <div class="rt" id="readText" hidden></div>
-  <nav class="steps"><a href="#sec1"><b>1</b>Student link</a><a href="#sec2"><b>2</b>Scan answers</a><a href="#sec3"><b>3</b>Marking</a><a href="#sec4"><b>4</b>Outcome and feedback</a><a href="#sec5"><b>5</b>Second attempt</a><a href="#sec6"><b>6</b>Print or save</a></nav>
+  <nav class="steps"><a href="#sec1"><b>1</b>Student link</a><a href="#sec2"><b>2</b>Scan answers</a><a href="#sec3"><b>3</b>Marking</a><a href="#sec4"><b>4</b>Outcome and feedback</a><a href="#sec5"><b>5</b>Second attempt</a><a href="#sec6"><b>6</b>Export</a></nav>
 </div>
 <div class="wrap">
   <aside>
@@ -193,8 +193,10 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
     </section>
 
     <section class="card" id="sec6">
-      <div class="sec-h"><span class="n">6</span><h2>Print or save</h2></div>
-      <div class="row"><button type="button" class="btn" id="btnPrint">Print / Save as PDF</button></div>
+      <div class="sec-h"><span class="n">6</span><h2>Export</h2></div>
+      <div class="row"><button type="button" class="btn teal" id="btnSendPc">Send to PC</button><button type="button" class="btn" id="btnPrint">Print / Save as PDF</button></div>
+      <p class="status" id="expMsg" role="status"></p>
+      <p class="hint"><b>Send to PC</b> sends every student scanned on this device as one file. Choose Mail, OneDrive, Teams or AirDrop and send it to yourself. On the computer, open this same assessment page and press <b>Open saved file</b> (left panel).</p>
       <p class="hint">The printout looks like the assessment paper: cover, the questions with the student's answers and marks, then the outcome page.</p>
       <p class="status" id="printMsg"></p>
     </section>
@@ -608,6 +610,19 @@ $("#btnRedoStop").addEventListener("click", stopScan);
 $("#btnRedoUp").addEventListener("click", () => { SCAN.where = "#redoMsg"; $("#inQr").click(); });
 
 /* ---------- save and open ---------- */
+function marksFile() {
+  return new File([JSON.stringify({a: ASMT.code, saved: new Date().toISOString(), recs: RECS}, null, 1)], ASMT.code + "_marking_" + today() + ".json", {type: "application/json"});
+}
+$("#btnSendPc").addEventListener("click", async () => {
+  if (!RECS.length) { setMsg("#expMsg", "There are no students to send yet. Scan students first.", "warn"); return; }
+  const f = marksFile(), n = RECS.length + " student" + (RECS.length > 1 ? "s" : "");
+  if (navigator.canShare && navigator.canShare({files: [f]})) {
+    try { await navigator.share({files: [f], title: ASMT.unit + " reading marks", text: ASMT.unit + " reading: " + n + ". Open this file on the computer with Open saved file."}); setMsg("#expMsg", "Sent " + n + ". On the computer, open this page and press Open saved file.", "ok"); return; }
+    catch (e) { if (e && e.name === "AbortError") { setMsg("#expMsg", "Not sent.", "warn"); return; } }
+  }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  setMsg("#expMsg", "This device cannot open the share menu, so the file (" + f.name + ", " + n + ") was saved to Downloads. Email it to yourself or put it in OneDrive, then open it on the computer with Open saved file.", "ok");
+});
 $("#btnSaveAll").addEventListener("click", () => {
   if (!RECS.length) { setMsg("#sideMsg", "There are no students to save.", "warn"); return; }
   const blob = new Blob([JSON.stringify({a: ASMT.code, saved: new Date().toISOString(), recs: RECS}, null, 1)], {type: "application/json"});
