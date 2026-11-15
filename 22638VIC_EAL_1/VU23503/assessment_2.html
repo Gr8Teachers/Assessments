@@ -618,7 +618,7 @@ function printQ(r, q) {
     h += "</table>";
   } else if (q.type === "match") {
     h += '<table class="p"><tr><th>' + esc((q.heads || [])[0] || "Feature") + '</th><th style="width:18mm">Answer</th><th>' + esc((q.heads || [])[1] || "Information written in the text") + '</th><th class="mkh"></th></tr>';
-    q.items.forEach((it, i) => { const v = itemAns(r, q, i); const o = q.opts[i]; h += "<tr><td>" + IT(q, i, "28mm") + '</td><td class="c"><b>' + esc(v) + "</b></td><td>" + o[0] + ". " + esc(o[1]) + '</td><td class="mk">' + MK(itemOk(r, q, i)) + "</td></tr>"; });
+    q.items.forEach((it, i) => { const v = itemAns(r, q, i); const o = q.opts.length === q.items.length ? q.opts[i] : q.opts.find(x => x[0] === v); h += "<tr><td>" + IT(q, i, "28mm") + '</td><td class="c"><b>' + esc(v) + "</b></td><td>" + (o ? o[0] + ". " + esc(o[1]) : "") + '</td><td class="mk">' + MK(itemOk(r, q, i)) + "</td></tr>"; });
     h += "</table>";
   } else if (q.type === "order") {
     h += '<table class="p"><tr><th>' + esc((q.heads || [])[0] || "Steps/Process") + '</th><th style="width:28mm">' + esc((q.heads || [])[1] || "Order") + '</th><th class="mkh"></th></tr>';
