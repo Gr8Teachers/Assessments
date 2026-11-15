@@ -150,11 +150,12 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
         <div class="qrs" id="linkQr"></div>
         <div style="flex:1;min-width:240px">
           <div class="give" id="giveBtns" role="group" aria-label="Which part to give out"><span class="hint">Give out:</span><button type="button" data-give="12">Both parts together</button><button type="button" data-give="1">Part 1 only</button><button type="button" data-give="2">Part 2 only</button></div>
-          <p class="hint" style="margin:.2rem 0 .5rem">Students scan this code (or open the link) to get the answer sheet. If you give the parts out at different times, scan each part when the student finishes it. The parts join together for each student.</p>
+          <p class="hint" style="margin:.2rem 0 .5rem">Students scan this code (or open the link) to get the answer sheet.<span id="partsHint"> If you give the parts out at different times, scan each part when the student finishes it. The parts join together for each student.</span></p>
           <div class="row"><button type="button" class="btn ghost small" id="btnBigLink">Show the code on the board</button><button type="button" class="btn ghost small" id="btnCopyLink">Copy the link</button></div>
           <p class="hint" id="linkText" style="word-break:break-all;margin:.4rem 0 0"></p>
         </div>
       </div>
+          <div id="mediaBox" hidden style="margin-top:.9rem;padding:.6rem .8rem;background:#E7F7F9;border-left:4px solid #2E808E;border-radius:6px"></div>
     </section>
 
     <section class="card" id="sec2">
@@ -416,7 +417,7 @@ async function addPictures(files) {
   if (!files.length) { setMsg(SCAN.where, "Choose a picture of a student's QR code.", "warn"); return; }
   const done = [], bad = [];
   for (let i = 0; i < files.length; i++) {
-    setMsg(SCAN.where, "Reading picture " + (i + 1) + " of " + files.length + " ...", "ok");
+    setMsg(SCAN.where, "Checking picture " + (i + 1) + " of " + files.length + " ...", "ok");
     const text = await decodeImage(files[i]);
     if (!text) { bad.push((files[i].name || "picture") + ": no QR code found"); continue; }
     const r = addFromCode(text);
@@ -703,6 +704,12 @@ load(); select(RECS[RECS.length - 1] || null);
   $("#readText").innerHTML = t.map(p => "<span><b>" + esc(p.textLabel || (t.length > 1 ? "Reading text " + p.id : "Reading text")) + ":</b> " + esc(p.text) + "</span>").join("");
   $("#readText").hidden = false;
 })();
+(function () {
+  if (!ASMT.media || !ASMT.media.length) return;
+  $("#mediaBox").innerHTML = '<b>' + esc(ASMT.mediaHead || "Play to the class") + ':</b><ul style="margin:.3rem 0 0;padding-left:1.2rem">' + ASMT.media.map(m => '<li><a href="' + esc(m.url) + '" target="_blank" rel="noopener">' + esc(m.label) + "</a></li>").join("") + "</ul>" + (ASMT.mediaNote ? '<p class="hint" style="margin:.3rem 0 0">' + esc(ASMT.mediaNote) + "</p>" : "");
+  $("#mediaBox").hidden = false;
+})();
+if (PARTS.length === 1) $("#partsHint").hidden = true;
 </script>
 </body>
 </html>
