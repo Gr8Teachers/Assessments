@@ -11,6 +11,8 @@
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:18px;line-height:1.45}
 [hidden]{display:none!important}
 .bar{background:var(--navy);color:#fff;padding:.7rem 16px;position:sticky;top:0;z-index:20;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.homebtn{position:absolute;top:.6rem;right:16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:10px;padding:.35rem .8rem;text-decoration:none;font-weight:400;font-size:.9rem}.homebtn:hover{background:rgba(255,255,255,.22)}
+@media print{.homebtn{display:none}}
 .bar .ey{color:var(--sky);font-weight:700;font-size:.78rem;letter-spacing:1.2px;text-transform:uppercase}
 .bar h1{margin:0;font-size:1.2rem}
 .steps{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
@@ -120,6 +122,7 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
 </head>
 <body>
 <div class="bar">
+  <a class="homebtn" href="../../" title="Back to the main assessments page">Home</a>
   <div class="ey">VU23525 | Assessment event 1 of 4</div>
   <h1>Listening: scan and mark</h1>
   <div class="rt" id="readText" hidden></div>
