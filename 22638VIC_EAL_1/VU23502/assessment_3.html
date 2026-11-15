@@ -502,6 +502,7 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
 .pd-rest .pr-note{font-size:8.5pt;margin-top:1.5mm}
 .pd-out .pd-box{min-height:8mm}
 .pd-out .pd-box.tall{min-height:11mm}
+aside .siderow{grid-template-columns:1fr 1fr !important;grid-auto-rows:1fr}aside .siderow .btn{height:100%}
 </style>
 </head>
 <body class="no-ipa">
@@ -540,8 +541,12 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
       <div class="siderow">
         <button type="button" class="btn b-teal" id="btnNewStudent">+ Next student</button>
         <button type="button" class="btn b-ghost" id="btnSaveAllSide">Save all students</button>
+        <button type="button" class="btn b-ghost" id="btnSendSide">Send to computer</button>
         <button type="button" class="btn b-red" id="btnClearAll">Clear all students</button>
       </div>
+      <button type="button" class="btn b-ghost" id="btnOpenSentSide" style="margin-top:.45rem">Open saved work</button>
+      <input type="file" id="inOpenSent" accept=".json,application/json" multiple hidden>
+      <p class="status" id="sendMsg" role="status" style="display:none"></p>
       <p class="hint" id="sessionNote">Save each student before you close this page.</p>
     </div>
   </aside>
@@ -727,6 +732,8 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
         <span class="ex-l">All students assessed in this session:</span>
         <button type="button" class="btn b-navy" id="btnPrintAll">Print / Save all as PDF</button>
         <button type="button" class="btn b-teal" id="btnSaveAll">Save all students</button>
+        <button type="button" class="btn b-teal" id="btnSend">Send to computer</button>
+        <button type="button" class="btn b-ghost" id="btnOpenSent">Open saved work</button>
       </div>
       </div>
       <div class="check" style="margin-top:.4rem" hidden><button type="button" class="ipasw" role="switch" aria-checked="false" title="Turn the IPA on or off"><span class="knob"></span><span class="lab">IPA off</span></button><span class="hint">When IPA is on, it is printed and saved in the report.</span></div>
@@ -3797,6 +3804,84 @@ async function saveAll() {
 $("#btnPrintAll").addEventListener("click", printAll);
 $("#btnSaveAll").addEventListener("click", saveAll);
 $("#btnSaveAllSide").addEventListener("click", saveAll);
+/* ---------- Send to computer (phone to computer) ---------- */
+const SEND = {next: false, msg: ""};
+function sendMsg(m, k) { SEND.msg = m; ["#saveStatus", "#sendMsg"].forEach(s => { if ($(s)) setStatus(s, m, k); }); }
+async function shareFile(f, n) {
+  const tail = " On the computer, open this same assessment page and press Open saved work.";
+  if (navigator.canShare && navigator.canShare({files: [f]})) {
+    try { await navigator.share({files: [f], title: f.name}); sendMsg("Sent " + n + "." + tail, "ok"); return; }
+    catch (e) {
+      if (e && e.name === "AbortError") { sendMsg("Not sent.", "warn"); return; }
+      if (e && e.name === "NotAllowedError") { askToShare(f, n); return; }
+    }
+  }
+  download(f, f.name);
+  sendMsg("This device cannot open the share menu, so the file (" + f.name + ") was saved to Downloads. Email it to yourself or put it in OneDrive." + tail, "ok");
+}
+function askToShare(f, n) {
+  let ov = document.getElementById("sendReady");
+  if (!ov) {
+    ov = document.createElement("div"); ov.id = "sendReady";
+    ov.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#0B3F47;color:#fff;padding:14px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;box-shadow:0 -2px 8px rgba(0,0,0,.3)";
+    document.body.appendChild(ov);
+  }
+  ov.innerHTML = '<span style="flex:1;min-width:200px;font-weight:700">The file is ready to send.</span><button type="button" class="btn b-teal" id="sendNow">Send now</button><button type="button" class="btn b-ghost" id="sendCancel" style="background:#fff;color:#0B3F47">Cancel</button>';
+  ov.hidden = false;
+  document.getElementById("sendNow").onclick = () => { ov.hidden = true; shareFile(f, n); };
+  document.getElementById("sendCancel").onclick = () => { ov.hidden = true; sendMsg("Not sent.", "warn"); };
+}
+
+function b64FromBlob(b) { return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(",")[1] || ""); fr.onerror = () => rej(fr.error); fr.readAsDataURL(b); }); }
+function blobFromB64(s, type) { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], {type: type || "application/octet-stream"}); }
+async function sendToComputer() {
+  syncFromUI();
+  if (REC.state !== "idle") { sendMsg("Stop the recording first.", "warn"); return; }
+  const list = records.filter(hasContent);
+  if (!list.length) { sendMsg("There are no students to send yet.", "warn"); return; }
+  sendMsg("Getting the file ready ...", "ok");
+  const out = [];
+  for (let i = 0; i < list.length; i++) {
+    const o = plainRecord(list[i], i);
+    if (o.audio && o.audio.blob) { const a = Object.assign({}, o.audio); a.type = a.blob.type; a.b64 = await b64FromBlob(a.blob); delete a.blob; o.audio = a; }
+    out.push(o);
+  }
+  const day = (($("#assessDate").value || todayISO()).replace(/-/g, ""));
+  const f = new File([JSON.stringify({kind: "eal-speaking", db: DB_NAME, saved: new Date().toISOString(), recs: out})], DB_NAME.replace(/^eal_speaking_/, "Speaking_") + "_to_computer_" + day + ".json", {type: "application/json"});
+  shareFile(f, list.length + " student" + (list.length > 1 ? "s" : ""));
+}
+async function openSentFiles(files) {
+  syncFromUI();
+  let n = 0, wrong = 0, bad = 0, last = null;
+  for (const file of Array.from(files || [])) {
+    let d = null;
+    try { d = JSON.parse(await file.text()); } catch (e) { d = null; }
+    if (!d || d.kind !== "eal-speaking" || !Array.isArray(d.recs)) { bad++; continue; }
+    if (d.db !== DB_NAME) { wrong++; continue; }
+    d.recs.forEach(o => {
+      const r = Object.assign(newRecord(), o);
+      ["levels", "levelSrc", "evidence", "evidenceSrc", "subs", "subSrc"].forEach(k => { if (!r[k]) r[k] = {}; });
+      if (!Array.isArray(r.conf)) r.conf = [];
+      delete r.order; delete r.updated;
+      if (o.audio && o.audio.b64) { const blob = blobFromB64(o.audio.b64, o.audio.type || o.audio.mime); r.audio = {blob, mime: o.audio.mime, ext: o.audio.ext, duration: o.audio.duration, at: o.audio.at, url: URL.createObjectURL(blob)}; }
+      else r.audio = null;
+      const i = records.findIndex(x => x.id === r.id);
+      if (i >= 0) records[i] = r; else records.push(r);
+      last = last || r; n++;
+    });
+  }
+  for (let i = records.length - 1; i >= 0; i--) if (!hasContent(records[i]) && records.length > 1) records.splice(i, 1);
+  if (last) { loadRecord(last); renderList(); persistSoon(); }
+  const m = [];
+  if (n) m.push("Opened " + n + " student" + (n > 1 ? "s" : "") + ", with recordings and marking.");
+  if (wrong) m.push("A file is from a different assessment. Open it on the same assessment page you used on the phone.");
+  if (bad) m.push("A file is not saved work from this page.");
+  sendMsg(m.join(" ") || "Nothing was opened.", n ? "ok" : "warn");
+}
+["#btnSend", "#btnSendSide"].forEach(id => $(id).addEventListener("click", sendToComputer));
+["#btnOpenSent", "#btnOpenSentSide"].forEach(id => $(id).addEventListener("click", () => $("#inOpenSent").click()));
+$("#inOpenSent").addEventListener("change", e => { openSentFiles(e.target.files); e.target.value = ""; });
+
 
 /* =========================================================
    14. SAVE PROGRESS ON THIS COMPUTER (IndexedDB)

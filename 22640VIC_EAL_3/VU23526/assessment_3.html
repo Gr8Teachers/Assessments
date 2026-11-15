@@ -742,6 +742,7 @@ svg .pml{cursor:pointer}
 .pr-parts{font-size:10pt;margin:1mm 0 2mm}
 .pr-parts span{display:inline-block;margin:0 4mm 1mm 0}
 
+aside .siderow{grid-template-columns:1fr 1fr !important;grid-auto-rows:1fr}aside .siderow .btn{height:100%}
 </style>
 </head>
 <body>
@@ -780,9 +781,11 @@ svg .pml{cursor:pointer}
       <div class="siderow">
         <button type="button" class="btn b-teal" id="btnNewStudent">+ Next student</button>
         <button type="button" class="btn b-ghost" id="btnSaveAllSide">Save all students</button>
+        <button type="button" class="btn b-ghost" id="btnSendSide">Send to computer</button>
         <button type="button" class="btn b-red" id="btnClearAll">Clear all students</button>
       </div>
       <button type="button" class="btn b-ghost" id="btnOpenSide" style="margin-top:.45rem">Open saved work</button>
+      <p class="status" id="sendMsg" role="status" style="display:none"></p>
       <p class="hint" id="sessionNote">Your work is kept on this computer while you work. Save each student to keep a copy you can open again later.</p>
     </div>
   </aside>
@@ -964,6 +967,7 @@ svg .pml{cursor:pointer}
           <span class="ex-l">All students assessed in this session:</span>
           <button type="button" class="btn b-navy" id="btnPrintAll">Print / Save all as PDF</button>
           <button type="button" class="btn b-teal" id="btnSaveAll">Save all students</button>
+        <button type="button" class="btn b-teal" id="btnSend">Send to computer</button>
         </div>
         <div class="exports">
           <span class="ex-l">Saved work:</span>
@@ -2477,6 +2481,46 @@ async function saveAll() {
 }
 $("#btnSaveAll").addEventListener("click", saveAll);
 $("#btnSaveAllSide").addEventListener("click", saveAll);
+/* ---------- Send to computer (phone to computer) ---------- */
+const SEND = {next: false, msg: ""};
+function sendMsg(m, k) { SEND.msg = m; ["#saveStatus", "#sendMsg"].forEach(s => { if ($(s)) setStatus(s, m, k); }); }
+async function shareFile(f, n) {
+  const tail = " On the computer, open this same assessment page and press Open saved work.";
+  if (navigator.canShare && navigator.canShare({files: [f]})) {
+    try { await navigator.share({files: [f], title: f.name}); sendMsg("Sent " + n + "." + tail, "ok"); return; }
+    catch (e) {
+      if (e && e.name === "AbortError") { sendMsg("Not sent.", "warn"); return; }
+      if (e && e.name === "NotAllowedError") { askToShare(f, n); return; }
+    }
+  }
+  download(f, f.name);
+  sendMsg("This device cannot open the share menu, so the file (" + f.name + ") was saved to Downloads. Email it to yourself or put it in OneDrive." + tail, "ok");
+}
+function askToShare(f, n) {
+  let ov = document.getElementById("sendReady");
+  if (!ov) {
+    ov = document.createElement("div"); ov.id = "sendReady";
+    ov.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#0B3F47;color:#fff;padding:14px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;box-shadow:0 -2px 8px rgba(0,0,0,.3)";
+    document.body.appendChild(ov);
+  }
+  ov.innerHTML = '<span style="flex:1;min-width:200px;font-weight:700">The file is ready to send.</span><button type="button" class="btn b-teal" id="sendNow">Send now</button><button type="button" class="btn b-ghost" id="sendCancel" style="background:#fff;color:#0B3F47">Cancel</button>';
+  ov.hidden = false;
+  document.getElementById("sendNow").onclick = () => { ov.hidden = true; shareFile(f, n); };
+  document.getElementById("sendCancel").onclick = () => { ov.hidden = true; sendMsg("Not sent.", "warn"); };
+}
+
+const _downloadPlain = download;
+download = function (blob, name) {
+  if (SEND.next) { SEND.next = false; shareFile(new File([blob], name, {type: blob.type || "application/zip"}), "all students"); return; }
+  return _downloadPlain(blob, name);
+};
+async function sendToComputer() {
+  SEND.msg = ""; SEND.next = true;
+  try { await saveAll(); } finally { SEND.next = false; }
+  if (SEND.msg) setTimeout(() => sendMsg(SEND.msg, "ok"), 50);
+}
+["#btnSend", "#btnSendSide"].forEach(id => $(id).addEventListener("click", sendToComputer));
+
 
 /* open saved work */
 function packToRecord(pack, files, pre) {
