@@ -27,6 +27,8 @@ main{max-width:760px;margin:0 auto;padding:16px 16px 6rem}
 .ph p{margin:.2rem 0 0;font-size:.95rem;color:#E7F7F9}
 label.f{display:block;font-weight:700;margin:.2rem 0 .3rem;color:var(--navy)}
 .dh{margin:0 0 .3rem;font-size:1.15rem;color:var(--navy)}
+.ta{width:100%;font:inherit;font-size:1.05rem;border:2px solid #2E808E;border-radius:10px;padding:.5rem .6rem;resize:vertical;background:#fff}.ta:focus{outline:3px solid #8CDBE5}.cnt{text-align:right;color:var(--grey,#495054);font-size:.85rem}
+.passage b{color:var(--navy)}
 .passage{border-left:6px solid #8CDBE5;line-height:1.55}.passage h3{margin:.1rem 0 .5rem;color:var(--navy)}.passage p{margin:.45rem 0}
 .player .row{display:flex;gap:.5rem;flex-wrap:wrap}.btn.small{width:auto;padding:.5rem 1rem;font-size:1rem}
 .res{margin:.8rem 0 0;padding:0;list-style:none}.res li{padding:.45rem .6rem;border-radius:8px;margin:.3rem 0;background:#F3F8F9}.res li.ok{border-left:5px solid #2E808E}.res li.no{border-left:5px solid #8B0000}.res .tag{font-weight:700}
@@ -215,18 +217,23 @@ function sigDecode(code) {
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 
 function IT(q, i, w) { return (q.imgs && q.imgs[i] ? '<img class="qimg" src="' + q.imgs[i] + '" alt="' + esc(q.items[i]) + '" style="display:block;width:' + w + ';max-width:100%;height:auto;border-radius:4px;margin:2px 0">' : "") + esc(q.items[i]); }
+function partName(id) { const p = PARTS.find(x => x.id === id); return p ? p.title.split(":")[0] : "Part " + id; }
 function qrLabel() {
+  if (ASMT.namedParts) return "Reading: " + (PARTS.length === 1 || GOT.length === PARTS.length ? PARTS.map(p => partName(p.id)).join(" and ") : partName(GOT));
   const one = id => { const p = PARTS.find(x => x.id === id); return p && p.text ? ": " + p.text : ""; };
   if (PARTS.length === 1) return "Reading" + one(PARTS[0].id);
   if (GOT.length > 1) return "Reading 1 and 2";
   return "Reading " + GOT + one(GOT);
 }
 function QQ(q) { return q.quote ? '<div class="qq">' + esc(q.quote).replace(/\n/g, "<br>").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>") + "</div>" : ""; }
+function splitPx(a) { const i = String(a || "").indexOf("|"); return i < 0 ? [String(a || ""), ""] : [a.slice(0, i), a.slice(i + 1)]; }
 function ansOf(q) { return S.ans[q.id] || ""; }
 function filled(q) {
   const a = ansOf(q);
   if (q.type === "one") return a ? 1 : 0;
   if (q.type === "two") return a.length >= (q.pick || 2) ? 1 : 0;
+  if (q.type === "text") return a.trim() ? 1 : 0;
+  if (q.type === "pickx") { const [l, t] = splitPx(a); return l.length >= (q.min || 0) && (!q.needText || t.trim()) && (l || t.trim()) ? 1 : 0; }
   return Array.from({length: slots(q)}, (x, i) => a[i] && a[i] !== "-" ? 1 : 0).every(Boolean) ? 1 : 0;
 }
 function render() {
@@ -234,6 +241,7 @@ function render() {
   SHOWN.forEach(p => {
     h += '<div class="ph"><h2>' + esc(p.title) + '</h2>' + (p.text ? '<p class="tx"><span>' + esc(p.textLabel || "Reading text") + ':</span> ' + esc(p.text) + "</p>" : "") + '<p>' + esc(p.intro1 || ASMT.intro1 || "Read the text. Then answer the questions.") + '</p></div>' +
       (p.passage ? '<div class="card passage" data-part="' + p.id + '">' + p.passage + "</div>" : "") +
+      (p.recorder ? '<div class="card player" id="practRec"><b>' + esc(p.recorderTitle || "Record yourself reading") + '</b><p class="hint" style="margin:.3rem 0 .5rem">' + esc(p.recorderHint || "Practise reading the text. Your recording stays on this phone. Play it back for the analysis.") + '</p><div class="row"><button type="button" class="btn small" id="prStart">Start recording</button><button type="button" class="btn small ghost" id="prStop" disabled>Stop</button><span id="prTime" style="align-self:center;font-weight:700"></span></div><audio id="prAudio" controls hidden style="width:100%;margin-top:.5rem"></audio><p class="hint" id="prMsg" style="margin:.4rem 0 0"></p></div>' : "") +
       (p.script ? '<div class="card player" data-part="' + p.id + '"><b>Recording</b><div class="row" style="margin-top:.5rem"><button type="button" class="btn small" data-play="' + p.id + '">Play the recording</button><button type="button" class="btn small ghost" data-stop="1">Stop</button></div><p class="hint" style="margin:.4rem 0 0">The computer voice reads the recording. Turn your sound on. You can play it again.</p></div>' : "");
     p.qs.forEach(q => {
       const a = ansOf(q);
@@ -242,6 +250,13 @@ function render() {
       if (q.type === "one" || q.type === "two") {
         if (q.type === "two") h += '<p class="hint" style="margin:-.3rem 0 .3rem">Choose ' + (q.pick || 2) + ' answers.</p>';
         h += q.opts.map(([k, t]) => '<button type="button" class="opt" data-k="' + k + '" aria-pressed="' + a.includes(k) + '"><span class="l">' + (/^[A-Z]$/.test(k) ? k + "." : k + ")") + '</span><span>' + esc(t) + "</span></button>").join("");
+      } else if (q.type === "text") {
+        h += '<textarea class="ta" data-ta="' + q.id + '" maxlength="' + (q.max || 160) + '" rows="3" placeholder="' + esc(q.ph || "Type your answer") + '">' + esc(a) + '</textarea><div class="cnt" data-cnt="' + q.id + '">' + a.length + " / " + (q.max || 160) + "</div>";
+      } else if (q.type === "pickx") {
+        const [l, t] = splitPx(a);
+        h += '<p class="hint" style="margin:-.3rem 0 .3rem">' + esc(q.pickHint || "Tap all that are true for you.") + "</p>";
+        h += q.opts.map(([k, tx]) => '<button type="button" class="opt" data-k="' + k + '" aria-pressed="' + l.includes(k) + '"><span class="l">' + (/^[A-Z]$/.test(k) ? k + "." : k + ")") + '</span><span>' + esc(tx) + "</span></button>").join("");
+        h += '<label class="f" style="margin-top:.6rem">' + esc(q.textLabel || "Example from my analysis") + '</label><textarea class="ta" data-ta="' + q.id + '" maxlength="' + (q.max || 90) + '" rows="2" placeholder="' + esc(q.ph || "Type an example") + '">' + esc(t) + '</textarea><div class="cnt" data-cnt="' + q.id + '">' + t.length + " / " + (q.max || 90) + "</div>";
       } else if (q.type === "match") {
         h += '<div class="key">' + q.opts.map(([k, t]) => "<div><b>" + k + ".</b>" + esc(t) + "</div>").join("") + "</div>";
         h += q.items.map((it, i) => '<div class="row"><div class="st"><b>' + IT(q, i, "150px") + "</b></div><div class=\"chips\">" + q.opts.map(([k]) => '<button type="button" class="chip" data-i="' + i + '" data-k="' + k + '" aria-pressed="' + (a[i] === k) + '">' + k + "</button>").join("") + "</div></div>").join("");
@@ -266,6 +281,7 @@ $("#qs").addEventListener("click", e => {
   const card = b.closest("[data-q]"), q = ALLQ.find(x => x.id === card.dataset.q), k = b.dataset.k;
   if (locked(q)) return;
   if (q.type === "one") S.ans[q.id] = ansOf(q) === k ? "" : k;
+  else if (q.type === "pickx") { let [l, t] = splitPx(ansOf(q)); l = l.includes(k) ? l.replace(k, "") : (l + k).split("").sort().join(""); S.ans[q.id] = l + (t ? "|" + t : ""); }
   else if (q.type === "two") {
     let a = ansOf(q).split("").filter(Boolean);
     if (a.includes(k)) a = a.filter(x => x !== k); else { a.push(k); if (a.length > (q.pick || 2)) a.shift(); }
@@ -273,11 +289,19 @@ $("#qs").addEventListener("click", e => {
   } else setSlot(q, +b.dataset.i, k);
   const a = ansOf(q);
   card.querySelectorAll("button").forEach(x => {
-    const on = q.type === "one" || q.type === "two" ? a.includes(x.dataset.k) : a[+x.dataset.i] === x.dataset.k;
+    const on = q.type === "pickx" ? splitPx(a)[0].includes(x.dataset.k) : q.type === "one" || q.type === "two" ? a.includes(x.dataset.k) : a[+x.dataset.i] === x.dataset.k;
     x.setAttribute("aria-pressed", on);
   });
   card.classList.remove("todo");
   save(); progress();
+});
+$("#qs").addEventListener("input", e => {
+  const ta = e.target.closest("[data-ta]"); if (!ta) return;
+  const q = ALLQ.find(x => x.id === ta.dataset.ta); if (!q || locked(q)) return;
+  const v = ta.value.replace(/\|/g, "/");
+  if (q.type === "text") S.ans[q.id] = v; else { const l = splitPx(ansOf(q))[0]; S.ans[q.id] = l + (v ? "|" + v : ""); }
+  const c = document.querySelector('[data-cnt="' + q.id + '"]'); if (c) c.textContent = v.length + " / " + (q.max || (q.type === "text" ? 160 : 90));
+  ta.closest(".card").classList.remove("todo"); save(); progress();
 });
 ["stName", "stNum"].forEach(id => $("#" + id).addEventListener("input", () => { S[id === "stName" ? "name" : "num"] = $("#" + id).value; $("#" + id).classList.remove("need"); save(); }));
 function progress() {
@@ -306,11 +330,22 @@ $("#btnFinish").addEventListener("click", () => {
   finishArmed = 0; $("#finishMsg").textContent = "";
   S.finished = new Date().toISOString(); save(); showDone();
 });
-function showDone() {
-  const qr = qrcode(0, "M"); qr.addData(payload(), "Byte"); qr.make();
+/* long answers: squeeze the code so the QR stays easy to scan (EALZ1 = compressed) */
+async function codeText() {
+  const p = payload();
+  if (new TextEncoder().encode(p).length < 450 || typeof CompressionStream === "undefined") return p;
+  try {
+    const buf = new Uint8Array(await new Response(new Blob([p.slice(5)]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer());
+    let bin = ""; buf.forEach(c => bin += String.fromCharCode(c));
+    const z = "EALZ1" + btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    return z.length < p.length ? z : p;
+  } catch (e) { return p; }
+}
+async function showDone() {
+  const qr = qrcode(0, "M"); qr.addData(await codeText(), "Byte"); qr.make();
   $("#qrBox").innerHTML = qr.createSvgTag({cellSize: 6, margin: 4, scalable: true}) + '<div class="qrname">' + esc(S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "")) + "</div>" + '<div class="qrpart">' + esc(ASMT.unit + " | " + (((ASMT.event || "").match(/(\d+) of (\d+)/) || []).slice(1).join("/") + " | ").replace(/^ \| $/, "") + qrLabel() + (RE ? ", 2nd attempt" : "")) + "</div>";
   $("#doneName").textContent = S.name.trim() + (S.num.trim() ? " (" + S.num.trim() + ")" : "");
-  $("#doneInfo").textContent = ACTQ.filter(filled).length + " of " + ACTQ.length + " questions answered" + (GOT.length < PARTS.length ? " (Part " + GOT + ")." : ".");
+  $("#doneInfo").textContent = ACTQ.filter(filled).length + " of " + ACTQ.length + " questions answered" + (GOT.length < PARTS.length ? " (" + partName(GOT) + ")." : ".");
   if (typeof SELF_KEY !== "undefined") selfCheck();
   $("#viewAnswer").hidden = true; $("#viewDone").hidden = false; window.scrollTo(0, 0);
 }
@@ -352,7 +387,7 @@ function otherName() {
   $("#readText").innerHTML = t.map(p => "<div><b>" + esc(p.textLabel || (t.length > 1 ? "Reading text " + p.id : "Reading text")) + ":</b> " + esc(p.text) + "</div>").join("");
   $("#readText").hidden = false;
 })();
-if (GOT.length < PARTS.length) { $("#title").textContent = "Reading: answer sheet, Part " + GOT; document.title += " Part " + GOT; }
+if (GOT.length < PARTS.length) { $("#title").textContent = "Reading: answer sheet, " + partName(GOT); document.title += " Part " + GOT; }
 load();
 if (RE) {
   if (S.re !== RE.k) S = {name: RE.n || "", num: RE.id || "", ans: Object.assign({}, RE.keep || {}), started: new Date().toISOString(), re: RE.k};
@@ -392,6 +427,21 @@ function sayPart(id) {
   speechSynthesis.speak(u);
 }
 document.addEventListener("click", e => { const b = e.target.closest("[data-play]"); if (b) sayPart(b.dataset.play); if (e.target.closest("[data-stop]")) sayStop(); });
+
+/* ---------- practice recorder on the student's phone (stays on the phone) ---------- */
+(function () {
+  let rec = null, ch = [], t0 = 0, tk = null, st = null;
+  document.addEventListener("click", async e => {
+    if (e.target.id === "prStart") {
+      try { st = await navigator.mediaDevices.getUserMedia({audio: true}); } catch (x) { $("#prMsg").textContent = "The microphone is blocked. Allow the microphone and try again."; return; }
+      ch = []; rec = new MediaRecorder(st); rec.ondataavailable = ev => { if (ev.data.size) ch.push(ev.data); };
+      rec.onstop = () => { st.getTracks().forEach(t => t.stop()); const b = new Blob(ch, {type: rec.mimeType || "audio/webm"}); $("#prAudio").src = URL.createObjectURL(b); $("#prAudio").hidden = false; $("#prMsg").textContent = "Play your recording and listen carefully."; };
+      rec.start(); t0 = Date.now(); $("#prStart").disabled = true; $("#prStop").disabled = false; $("#prMsg").textContent = "Recording ... read the text aloud.";
+      tk = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $("#prTime").textContent = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }, 300);
+    }
+    if (e.target.id === "prStop" && rec) { rec.stop(); clearInterval(tk); $("#prStart").disabled = false; $("#prStop").disabled = true; $("#prStart").textContent = "Record again"; }
+  });
+})();
 </script>
 </body>
 </html>
