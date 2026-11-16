@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EAL Assessments</title>
+  <title>Assessments</title>
   <style>
     :root { --bg:#f6f7f9; --card:#fff; --text:#1f2933; --muted:#616e7c; --accent:#2563eb; --border:#e4e7eb; }
     * { box-sizing:border-box; }
@@ -22,59 +22,22 @@
     .name { color:var(--muted); }
     .arrow { color:var(--accent); }
     footer { margin-top:40px; color:var(--muted); font-size:.875rem; text-align:center; }
+    .tiles { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .tile { display:block; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px 24px; color:var(--text); text-decoration:none; }
+    .tile:hover { border-color:var(--accent); box-shadow:0 2px 8px rgba(37,99,235,.12); }
+    .tile .t { font-size:1.6rem; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+    .tile .t span { color:var(--accent); font-weight:400; }
+    .tile .d { color:var(--muted); margin-top:6px; font-size:.95rem; }
+    @media (max-width:520px) { .tiles { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
   <main>
-    
-    <h1>EAL Assessments</h1>
-    <p class="intro">Choose your course.</p>
-    <section class="card">
-      <ul>
-        <!-- To add a course: copy one li block and change the folder path and name -->
-        <li>
-          <a href="22636VIC_Initial EAL/">
-            <span><span class="code">22636VIC</span> <span class="name">Initial EAL</span></span>
-            <span class="arrow">→</span>
-          </a>
-        </li>
-        <li>
-          <a href="22637VIC_EAL/">
-            <span><span class="code">22637VIC</span> <span class="name">EAL</span></span>
-            <span class="arrow">→</span>
-          </a>
-        </li>
-        <li>
-          <a href="22638VIC_EAL_1/">
-            <span><span class="code">22638VIC</span> <span class="name">EAL 1</span></span>
-            <span class="arrow">→</span>
-          </a>
-        </li>
-        <li>
-          <a href="22639VIC_EAL_2/">
-            <span><span class="code">22639VIC</span> <span class="name">EAL 2</span></span>
-            <span class="arrow">→</span>
-          </a>
-        </li>
-        <li>
-          <a href="22640VIC_EAL_3/">
-            <span><span class="code">22640VIC</span> <span class="name">EAL 3</span></span>
-            <span class="arrow">→</span>
-          </a>
-        </li>
-        <li>
-          <a href="10982NAT_FESOL/">
-            <span><span class="code">10982NAT</span> <span class="name">FESOL</span></span>
-            <span class="arrow">→</span>
-          </a>
-        </li>
-        <li>
-          <a href="11022NAT_EFS/">
-            <span><span class="code">11022NAT</span> <span class="name">EFS</span></span>
-            <span class="arrow">→</span>
-          </a>
-        </li>
-      </ul>
+    <h1>Assessments</h1>
+    <p class="intro">Choose EAL or ESOL.</p>
+    <section class="tiles">
+      <a class="tile" href="EAL/"><div class="t">EAL <span>→</span></div><div class="d">22636VIC, 22637VIC, 22638VIC, 22639VIC, 22640VIC</div></a>
+      <a class="tile" href="ESOL/"><div class="t">ESOL <span>→</span></div><div class="d">10982NAT FESOL, 11022NAT EFS</div></a>
     </section>
     <footer>Gr8Teachers</footer>
   </main>
