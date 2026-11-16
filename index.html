@@ -39,6 +39,19 @@
     .tile .d { color:var(--grey); margin-top:10px; font-size:.95rem; }
     footer { margin-top:36px; color:var(--grey); font-size:.9rem; text-align:center; }
     @media (max-width:560px) { .tiles { grid-template-columns:1fr; } li a { padding:14px 16px; } }
+    .tiles.main .tile { min-height:210px; padding:34px 30px 28px; display:flex; flex-direction:column; }
+    .tiles.main .tile .t { font-size:2.8rem; }
+    .tiles.main .tile .t span { width:52px; height:52px; font-size:1.5rem; }
+    .tiles.main .tile .d { margin-top:auto; font-size:1.02rem; }
+    .sect { margin:34px 0 12px; color:var(--grey); font-size:.85rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; display:flex; align-items:center; gap:12px; }
+    .sect::after { content:""; flex:1; height:1px; background:#CFE3E7; }
+    .ptile { display:flex; align-items:center; gap:18px; background:#FFF8E6; border:2px dashed #E0B44C; border-radius:14px; padding:18px 22px; color:var(--ink); text-decoration:none; transition:background .15s, border-color .15s; }
+    .ptile:hover, .ptile:focus-visible { background:#FFF1CC; border-color:#C9962A; outline:none; }
+    .ptile .ic { flex:none; width:48px; height:48px; border-radius:12px; background:#FFE7A8; color:#7A5300; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:700; }
+    .ptile .pt { font-size:1.35rem; font-weight:700; color:#5C4300; }
+    .ptile .pd { color:var(--grey); font-size:.95rem; }
+    .ptile .go { margin-left:auto; flex:none; color:#7A5300; font-weight:700; white-space:nowrap; }
+    @media (max-width:560px) { .ptile .go { display:none; } .tiles.main .tile { min-height:160px; } }
   </style>
 </head>
 <body>
@@ -48,11 +61,12 @@
     <p class="intro">Choose EAL or ESOL.</p>
   </div></header>
   <main>
-    <section class="tiles">
+    <section class="tiles main">
       <a class="tile" href="EAL/"><div class="t">EAL <span>→</span></div><div class="d">22636VIC, 22637VIC, 22638VIC, 22639VIC, 22640VIC</div></a>
       <a class="tile esol" href="ESOL/"><div class="t">ESOL <span>→</span></div><div class="d">10982NAT, 11022NAT</div></a>
-      <a class="tile practice" href="Practice/"><div class="t">Practice test <span>→</span></div><div class="full">Try it before the real assessment</div><div class="d">Speaking, reading and listening practice for teachers and students.</div></a>
     </section>
+    <div class="sect">Practice only</div>
+    <a class="ptile" href="Practice/"><span class="ic">✎</span><span><span class="pt">Practice test</span><br><span class="pd">Try it before the real assessment. Speaking, reading and listening practice for teachers and students. Not a real assessment.</span></span><span class="go">Open →</span></a>
     <footer>Gr8Teachers</footer>
   </main>
 </body>
