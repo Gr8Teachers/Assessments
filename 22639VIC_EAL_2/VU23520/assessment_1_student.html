@@ -26,6 +26,13 @@ main{max-width:760px;margin:0 auto;padding:16px 16px 6rem}
 .ph h2{margin:0;font-size:1.15rem}
 .ph p{margin:.2rem 0 0;font-size:.95rem;color:#E7F7F9}
 label.f{display:block;font-weight:700;margin:.2rem 0 .3rem;color:var(--navy)}
+.dh{margin:0 0 .3rem;font-size:1.15rem;color:var(--navy)}
+.sigwrap{position:relative;border:2px solid #2E808E;border-radius:10px;background:#fff;overflow:hidden}
+#sigPad{display:block;width:100%;aspect-ratio:3/1;touch-action:none;cursor:crosshair}
+.sigwrap::after{content:"";position:absolute;left:6%;right:6%;bottom:22%;border-bottom:1px dashed #8CDBE5;pointer-events:none}
+.sigclear{position:absolute;top:6px;right:6px;border:1px solid #2E808E;background:#E7F7F9;color:#0B3F47;border-radius:8px;padding:.2rem .6rem;font:inherit;font-size:.9rem}
+.sigdate{font-size:1.05rem;padding:.4rem .6rem;background:#E7F7F9;border-radius:8px;display:inline-block}
+#declCard.todo{outline:3px solid #8B0000}
 input[type=text]{width:100%;min-height:48px;border:2px solid var(--line);border-radius:10px;padding:.4rem .7rem;font:inherit;background:#fff}
 input[type=text]:focus{outline:none;border-color:var(--teal)}
 .need{border-color:var(--red)!important}
@@ -86,6 +93,16 @@ input[readonly]{background:#E7F7F9}
       <p class="hint" id="introHint" style="margin:.7rem 0 0">Listen to the recording your teacher plays. Then answer the questions here. Your answers are kept on this device until you finish.</p>
     </div>
     <div id="qs"></div>
+    <div class="card" id="declCard">
+      <h2 class="dh">Student assessment declaration</h2>
+      <p style="margin:.2rem 0 .3rem">This assessment is my original work and has not been:</p>
+      <ul style="margin:0 0 .8rem;padding-left:1.2rem"><li>copied from any source without proper referencing</li><li>written for me by any other person except where such collaboration has been approved by a teacher or assessor.</li></ul>
+      <label class="f">Student signature</label>
+      <div class="sigwrap"><canvas id="sigPad" aria-label="Signature box. Sign with your finger."></canvas><button type="button" class="sigclear" id="sigClear">Clear</button></div>
+      <p class="hint" style="margin:.3rem 0 .7rem">Sign in the box with your finger.</p>
+      <label class="f">Date</label>
+      <div class="sigdate" id="sigDate"></div>
+    </div>
     <button type="button" class="btn big" id="btnFinish">Finish</button>
     <p class="msg" id="finishMsg" role="status"></p>
   </section>
@@ -184,6 +201,28 @@ const locked = q => !!RE && !RE.redo.includes(q.id);
 const KEY = "eal_read_" + ASMT.code + "_student_v2" + (GOT.length < PARTS.length ? "_p" + GOT : "") + (RE ? "_a2_" + RE.k : "");
 let S = {name: "", num: "", ans: {}, started: new Date().toISOString()};
 function load() { try { const v = JSON.parse(localStorage.getItem(KEY) || "null"); if (v && v.ans) S = v; } catch (e) {} }
+
+/* ---------- signature: strokes kept on a 150 x 50 grid so they fit in the QR code ---------- */
+function sigEncode(strokes) {
+  const dist = (p, a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy; if (!L) return Math.hypot(p[0] - a[0], p[1] - a[1]); const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L)); return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy); };
+  const rdp = (pts, e) => { if (pts.length < 3) return pts; let m = 0, k = 0; for (let i = 1; i < pts.length - 1; i++) { const d = dist(pts[i], pts[0], pts[pts.length - 1]); if (d > m) { m = d; k = i; } } return m > e ? rdp(pts.slice(0, k + 1), e).slice(0, -1).concat(rdp(pts.slice(k), e)) : [pts[0], pts[pts.length - 1]]; };
+  let e = 0.6, out;
+  do {
+    out = strokes.filter(st => st.length).map(st => rdp(st.map(q => [Math.max(0, Math.min(149, Math.round(q[0] / 2))), Math.max(0, Math.min(49, Math.round(q[1] / 2)))]), e));
+    e += 0.4;
+  } while (out.reduce((n, st) => n + st.length, 0) > 170 && e < 8);
+  const bytes = [];
+  out.forEach((st, i) => { if (i) bytes.push(255); st.forEach(q => bytes.push(q[0], q[1])); });
+  if (!bytes.length) return "";
+  return btoa(String.fromCharCode.apply(null, bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function sigDecode(code) {
+  try {
+    const bin = atob(String(code).replace(/-/g, "+").replace(/_/g, "/")), st = [[]];
+    for (let i = 0; i < bin.length; i++) { const c = bin.charCodeAt(i); if (c === 255) { st.push([]); continue; } st[st.length - 1].push([c * 2, bin.charCodeAt(++i) * 2]); }
+    return st.filter(x => x.length);
+  } catch (e) { return []; }
+}
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 
 function IT(q, i, w) { return (q.imgs && q.imgs[i] ? '<img class="qimg" src="' + q.imgs[i] + '" alt="' + esc(q.items[i]) + '" style="display:block;width:' + w + ';max-width:100%;height:auto;border-radius:4px;margin:2px 0">' : "") + esc(q.items[i]); }
@@ -258,11 +297,12 @@ function progress() {
 /* the answers as a short text for the QR code (no answers to the questions are in this page) */
 function payload() {
   const x = {}; ACTQ.forEach(q => { if (S.ans[q.id]) x[q.id] = S.ans[q.id]; });
-  return "EALR1" + JSON.stringify(Object.assign(RE ? {t: 2, k: RE.k} : {}, {a: ASMT.code, v: 2, p: GOT, n: S.name.trim(), id: S.num.trim(), f: String(S.finished || "").slice(0, 16), x: x}));
+  return "EALR1" + JSON.stringify(Object.assign(RE ? {t: 2, k: RE.k} : {}, {a: ASMT.code, v: 2, p: GOT, n: S.name.trim(), id: S.num.trim(), f: String(S.finished || "").slice(0, 16), x: x}, !RE && S.sig ? {g: S.sig} : {}));
 }
 let finishArmed = 0;
 $("#btnFinish").addEventListener("click", () => {
   if (!S.name.trim()) { $("#stName").classList.add("need"); $("#stName").focus(); $("#finishMsg").className = "msg warn"; $("#finishMsg").textContent = "Type your name first."; return; }
+  if (!RE && !S.sig) { const c = $("#declCard"); c.classList.add("todo"); c.scrollIntoView({behavior: "smooth", block: "center"}); $("#finishMsg").className = "msg warn"; $("#finishMsg").textContent = "Sign the declaration first."; return; }
   const missing = ACTQ.filter(q => !filled(q));
   if (missing.length && Date.now() - finishArmed > 6000) {
     finishArmed = Date.now();
@@ -289,7 +329,7 @@ $("#btnNew").addEventListener("click", () => {
   try { localStorage.removeItem(KEY); } catch (e) {}
   if (RE) { location.replace(location.href.split("#")[0]); return; }
   S = {name: "", num: "", ans: {}, started: new Date().toISOString()};
-  $("#stName").value = ""; $("#stNum").value = ""; render();
+  $("#stName").value = ""; $("#stNum").value = ""; render(); sigLoad();
   $("#btnNew").textContent = "New student on this device";
   $("#viewDone").hidden = true; $("#viewAnswer").hidden = false; window.scrollTo(0, 0);
 });
@@ -312,10 +352,28 @@ if (RE) {
   $("#stName").readOnly = true; $("#stNum").readOnly = true;
   $("#introHint").textContent = "Second attempt. Your correct answers are kept. Answer the questions marked Try this question again, then press Finish.";
   save();
-} else if (!S.name) { const o = otherName(); if (o) { S.name = o.name; S.num = o.num || ""; } }
+} else if (!S.name) { const o = otherName(); if (o) { S.name = o.name; S.num = o.num || ""; if (o.sig && !S.sig) S.sig = o.sig; } }
 $("#stName").value = S.name || ""; $("#stNum").value = S.num || "";
 render();
 if (S.finished) showDone();
+
+/* ---------- signature pad ---------- */
+const PAD = {strokes: [], cur: null};
+function padSize() { const c = $("#sigPad"), r = c.getBoundingClientRect(), d = window.devicePixelRatio || 1; c.width = Math.max(1, Math.round(r.width * d)); c.height = Math.max(1, Math.round(r.width / 3 * d)); padDraw(); }
+function padDraw() {
+  const c = $("#sigPad"), g = c.getContext("2d"), k = c.width / 300;
+  g.clearRect(0, 0, c.width, c.height); g.lineCap = "round"; g.lineJoin = "round"; g.strokeStyle = "#22272B"; g.lineWidth = 2.6 * k;
+  PAD.strokes.forEach(st => { g.beginPath(); st.forEach((q, i) => i ? g.lineTo(q[0] * k, q[1] * k) : g.moveTo(q[0] * k, q[1] * k)); if (st.length === 1) g.lineTo(st[0][0] * k + .5, st[0][1] * k + .5); g.stroke(); });
+}
+function padPt(e) { const r = $("#sigPad").getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 300, (e.clientY - r.top) / r.height * 100]; }
+function sigLoad() { PAD.strokes = S.sig ? sigDecode(S.sig) : []; padDraw(); $("#sigDate").textContent = new Date(S.finished || Date.now()).toLocaleDateString("en-AU"); }
+$("#sigPad").addEventListener("pointerdown", e => { if (S.finished && !RE) return; e.preventDefault(); $("#sigPad").setPointerCapture(e.pointerId); PAD.cur = [padPt(e)]; PAD.strokes.push(PAD.cur); padDraw(); });
+$("#sigPad").addEventListener("pointermove", e => { if (!PAD.cur) return; e.preventDefault(); const p = padPt(e), l = PAD.cur[PAD.cur.length - 1]; if (Math.hypot(p[0] - l[0], p[1] - l[1]) > 1.2) { PAD.cur.push(p); padDraw(); } });
+["pointerup", "pointercancel"].forEach(t => $("#sigPad").addEventListener(t, () => { if (!PAD.cur) return; PAD.cur = null; S.sig = sigEncode(PAD.strokes); save(); $("#declCard").classList.remove("todo"); }));
+$("#sigClear").addEventListener("click", () => { PAD.strokes = []; S.sig = ""; save(); padDraw(); });
+window.addEventListener("resize", padSize);
+if (RE) $("#declCard").hidden = true;
+padSize(); sigLoad();
 </script>
 </body>
 </html>

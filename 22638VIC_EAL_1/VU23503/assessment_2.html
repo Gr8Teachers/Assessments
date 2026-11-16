@@ -118,6 +118,7 @@ table.m td{border-bottom:1px solid #E3E6E8;padding:.35rem .4rem;vertical-align:t
 }
 .sbtns{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:.5rem;margin-top:.5rem}.sbtns .btn{width:100%;height:100%;margin:0;justify-content:center;text-align:center;white-space:normal;line-height:1.2;min-height:2.6rem;padding-left:.4rem;padding-right:.4rem}
 @media (min-width:901px){.sbtns{grid-template-columns:1fr;grid-auto-rows:auto}.sbtns .btn{min-height:2.4rem}}
+.p-sigrow{display:flex;align-items:center;gap:10mm}.p-sig{height:13mm;width:39mm;display:block}
 </style>
 </head>
 <body>
@@ -314,7 +315,7 @@ function addFromCode(text) {
   }
   const got = String(d.p || ALLP);
   if (!r) { r = {rid: "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), over: {}, result: "", comments: "", commentsAuto: true, ra: false, raText: "", assessor: "", date: today(), x: {}, parts: ""}; RECS.push(r); }
-  r.n = d.n; r.id = d.id; r.finished = d.f; r.scanned = new Date().toISOString();
+  r.n = d.n; r.id = d.id; r.finished = d.f; r.scanned = new Date().toISOString(); if (d.g) r.sig = d.g;
   r.x = r.x || {}; r.over = r.over || {};
   /* only replace the answers (and your changed marks) for the part or parts in this code */
   ALLQ.filter(q => got.includes(partOfQ(q))).forEach(q => {
@@ -608,6 +609,17 @@ $("#inOpen").addEventListener("change", async e => {
 });
 
 /* ---------- printout ---------- */
+function sigSvg(code) {
+  if (!code) return "";
+  let st = [];
+  try { const bin = atob(String(code).replace(/-/g, "+").replace(/_/g, "/")); st = [[]]; for (let i = 0; i < bin.length; i++) { const c = bin.charCodeAt(i); if (c === 255) { st.push([]); continue; } st[st.length - 1].push(c + "," + bin.charCodeAt(++i)); } } catch (e) { return ""; }
+  return '<svg class="p-sig" viewBox="0 0 150 50" preserveAspectRatio="xMinYMid meet">' + st.filter(x => x.length).map(x => '<polyline fill="none" stroke="#000" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" points="' + (x.length === 1 ? x[0] + " " + x[0] : x.join(" ")) + '"/>').join("") + "</svg>";
+}
+function sigRow(name, r) {
+  const d = r.finished ? fmtDate(String(r.finished).slice(0, 10)) : "";
+  if (!r.sig) return name || "";
+  return '<span class="p-sigrow">' + (name ? '<span>' + name + "</span>" : "") + sigSvg(r.sig) + (d ? "<span>" + esc(d) + "</span>" : "") + "</span>";
+}
 function pBox(v, cls) { return '<div class="p-box' + (cls ? " " + cls : "") + '">' + (v || "") + "</div>"; }
 const TK = on => '<span class="tk">' + (on ? "☑" : "☐") + "</span>";
 const MK0 = ok => '<span class="' + (ok ? "mok" : "mno") + '">' + (ok ? "✓" : "✗") + "</span>";
@@ -645,14 +657,14 @@ function reportHTML(r) {
     h += '<section class="pg"><div class="p-h">' + esc(p.title) + '</div>' + (partDone(r, p.id) ? "" : '<div class="p-p"><b>Not completed yet.</b></div>') + '<div class="p-p">' + esc(p.intro1 || ASMT.intro1 || "Read the text. Then answer the questions.") + '</div><div class="p-p">' + esc(ASMT.intro2 || "Read each question carefully and answer by selecting the appropriate response.") + '</div>' + p.qs.map(q => printQ(r, q)).join("") + "</section>";
   });
   h += '<section class="pg last"><div class="p-h">Student assessment declaration</div><div class="p-p">This assessment is my original work and has not been:</div><ul class="p-ul"><li>copied from any source without proper referencing</li><li>written for me by any other person except where such collaboration has been approved by a teacher or assessor.</li></ul>' +
-    '<div class="p-lab">Student signature and date</div>' + pBox("", "tall") +
+    '<div class="p-lab">Student signature and date</div>' + pBox(sigRow("", r), "tall") +
     '<div class="p-h">Reasonable adjustment</div><div class="p-p">' + TK(r.ra) + " Reasonable adjustment was in place for this assessment event.</div><div class=\"p-p\">If so, please provide details of any reasonable adjustment strategies that were implemented:</div>" + pBox(esc(r.ra ? r.raText : ""), "tall") +
     '<div class="p-h">Assessment outcome</div><div class="p-p">' + TK(o === "s") + " Satisfactory &nbsp;&nbsp; " + TK(o === "u") + " Unsatisfactory</div>" +
     (r.att2At ? '<div class="p-p">Second attempt on ' + esc(fmtDate(r.att2At.slice(0, 10))) + ": " + esc(Object.keys(r.x2 || {}).map(qLabel).join("; ")) + ".</div>" : "") +
     '<div class="p-lab">Comments</div>' + pBox(esc(r.comments || autoComments(r)).replace(/\n/g, "<br>"), "tall") +
     '<div class="p-lab">Assessor name, signature and date</div>' + pBox(esc(r.assessor || "") + (r.date ? " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " + fmtDate(r.date) : ""), "tall") +
     '<div class="p-h">Student acknowledgement of assessment outcome</div><div class="p-p">Would you like to make any comments about this assessment?</div>' + pBox("", "tall") +
-    '<div class="p-lab">Student name, signature and date</div>' + pBox(esc(r.n), "tall") + "</section>";
+    '<div class="p-lab">Student name, signature and date</div>' + pBox(sigRow(esc(r.n), r) || esc(r.n), "tall") + "</section>";
   return h;
 }
 function setPageStyle(r) {
