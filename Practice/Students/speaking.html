@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Practice Speaking</title>
+<style>
+:root{--navy:#0B3F47;--teal:#2E808E;--sky:#8CDBE5;--light:#E7F7F9;--red:#8B0000;--grey:#495054;--ink:#22272B}
+*{box-sizing:border-box}
+body{margin:0;font-family:Calibri,"Segoe UI",Carlito,Arial,sans-serif;background:#F1F9FA;color:var(--ink);font-size:18px;line-height:1.5}
+.bar{background:var(--navy);color:#fff;padding:.8rem 16px;position:sticky;top:0;z-index:20}
+.bar .ey{color:var(--sky);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.bar h1{margin:0;font-size:1.2rem}
+main{max-width:720px;margin:0 auto;padding:16px 16px 90px}
+.card{background:#fff;border-radius:14px;padding:1rem 1rem 1.1rem;margin:0 0 1rem;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+h2{margin:0 0 .4rem;color:var(--navy);font-size:1.2rem}
+.phr{margin:.4rem 0 0;padding-left:1.2rem}.phr li{margin:.2rem 0}
+.btn{display:inline-block;font:inherit;font-weight:700;border-radius:12px;padding:.7rem 1.2rem;border:0;background:var(--teal);color:#fff;cursor:pointer;margin:.2rem .3rem .2rem 0}
+.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--teal)}
+.btn.red{background:var(--red)}
+.btn[disabled]{opacity:.45;cursor:default}
+.status{margin:.6rem 0 0;font-weight:700;color:var(--teal)}
+.status.warn{color:var(--red)}
+.timer{font-size:1.6rem;font-weight:700;color:var(--navy);margin:.3rem 0}
+audio{width:100%;margin-top:.5rem}
+.chk label{display:flex;gap:.6rem;align-items:flex-start;padding:.35rem 0}
+.chk input{width:22px;height:22px;margin-top:.15rem;accent-color:var(--teal)}
+.hint{color:var(--grey);font-size:.95rem}
+.home{position:absolute;top:.7rem;right:16px;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:.3rem .7rem;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="bar"><a class="home" href="../">Back</a><div class="ey">Practice | Speaking</div><h1>Speaking practice: role play</h1></div>
+<main>
+  <section class="card" id="task">
+    <h2>The task</h2>
+    <p>Role play: a new student joins your English class. Your teacher plays the new student. You:</p>
+    <ul class="phr"><li>greet the new student and say your name</li><li>ask and answer questions about where you are from, your family, work or study, and what you like to do</li><li>explain your ideas with <b>because</b></li><li>ask your teacher to repeat or explain if you do not understand</li><li>finish the conversation politely</li></ul>
+    <p style="margin:.7rem 0 .2rem"><b>Useful phrases</b></p>
+    <ul class="phr"><li>Hi, welcome to our class. My name is ...</li><li>Where are you from? What do you do on the weekend?</li><li>I like Sydney because the people are friendly.</li><li>Sorry, can you say that again? What does ... mean?</li><li>Nice to meet you. See you in class. Bye.</li></ul>
+  </section>
+  <section class="card" id="qsList">
+    <h2>Questions to practise</h2>
+    <ol class="phr"><li>Where are you from?</li><li>How long have you been in Australia?</li><li>What did you do last weekend?</li><li>What do you like to do in your free time? Why?</li><li>What are you going to do after this course?</li></ol>
+    <p class="hint">Say your answers out loud. Give 2 or 3 sentences for each answer.</p>
+  </section>
+  <section class="card" id="recCard">
+    <h2>Record yourself</h2>
+    <div class="timer" id="timer">0:00</div>
+    <button type="button" class="btn" id="btnStart">Start recording</button>
+    <button type="button" class="btn red" id="btnStop" disabled>Stop</button>
+    <p class="status" id="recMsg" role="status"></p>
+    <p class="hint">Your recording stays on this device. Nothing is sent anywhere.</p>
+  </section>
+  <section class="card" id="playCard">
+    <h2>Listen to yourself</h2>
+    <p class="hint" id="noRec">Record yourself first.</p>
+    <audio id="player" controls hidden></audio>
+    <div class="chk" style="margin-top:.6rem">
+      <label><input type="checkbox"> I greeted and said my name.</label>
+      <label><input type="checkbox"> I asked questions.</label>
+      <label><input type="checkbox"> I answered with 2 or 3 sentences.</label>
+      <label><input type="checkbox"> I used <b>because</b>.</label>
+      <label><input type="checkbox"> I asked to repeat or explain.</label>
+      <label><input type="checkbox"> I finished politely.</label>
+    </div>
+  </section>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+let rec = null, chunks = [], t0 = 0, tick = null, stream = null;
+function msg(m, warn) { $("#recMsg").textContent = m; $("#recMsg").className = "status" + (warn ? " warn" : ""); }
+$("#btnStart").addEventListener("click", async () => {
+  try { stream = await navigator.mediaDevices.getUserMedia({audio: true}); }
+  catch (e) { msg("The microphone is blocked. Allow the microphone in your browser and try again.", true); return; }
+  chunks = []; rec = new MediaRecorder(stream);
+  rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  rec.onstop = () => {
+    stream.getTracks().forEach(t => t.stop());
+    const blob = new Blob(chunks, {type: rec.mimeType || "audio/webm"});
+    $("#player").src = URL.createObjectURL(blob); $("#player").hidden = false; $("#noRec").hidden = true;
+    msg("Done. Listen to your recording below.");
+    $("#playCard").scrollIntoView({behavior: "smooth", block: "start"});
+  };
+  rec.start(); t0 = Date.now(); msg("Recording ... speak now.");
+  $("#btnStart").disabled = true; $("#btnStop").disabled = false;
+  tick = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $("#timer").textContent = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }, 250);
+});
+$("#btnStop").addEventListener("click", () => {
+  if (rec && rec.state !== "inactive") rec.stop();
+  clearInterval(tick); $("#btnStart").disabled = false; $("#btnStop").disabled = true; $("#btnStart").textContent = "Record again";
+});
+</script>
+<script>
+const TOUR = [{"title": "Practice speaking", "text": "Practise for your speaking assessment. Read the task, record yourself, then listen. Nothing is sent anywhere. You can open these instructions again with the button at the bottom left."}, {"sel": "#task", "title": "Read the task", "text": "Read what you will do in the role play and the useful phrases."}, {"sel": "#qsList", "title": "Questions to practise", "text": "Your teacher may ask questions like these. Say your answers out loud."}, {"sel": "#recCard", "title": "Record yourself", "text": "Press Start recording and allow the microphone. Speak, then press Stop."}, {"sel": "#playCard", "title": "Listen to yourself", "text": "Play your recording. Did you greet, ask and answer questions, use because, and say goodbye? Record again if you like."}];
+/* ---------- practice: step-by-step pop-up instructions ---------- */
+(function () {
+  const css = document.createElement("style");
+  css.textContent = '#tourBox{position:fixed;z-index:10000;right:16px;bottom:16px;width:min(380px,calc(100vw - 32px));background:#fff;color:#22272B;border-radius:14px;box-shadow:0 10px 30px rgba(11,63,71,.35);border-top:6px solid #2E808E;padding:16px 16px 12px;font-family:Calibri,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.45}' +
+    '#tourBox .tn{color:#2E808E;font-weight:700;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase}#tourBox h3{margin:.15rem 0 .35rem;color:#0B3F47;font-size:1.2rem}#tourBox p{margin:0 0 .7rem}' +
+    '#tourBox .tb{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}#tourBox button{font:inherit;font-size:1rem;border-radius:9px;padding:.45rem .9rem;cursor:pointer;border:1px solid #2E808E;background:#fff;color:#0B3F47}#tourBox button.go{background:#2E808E;color:#fff}' +
+    '.tourOn{outline:4px solid #FFD54F !important;outline-offset:4px;border-radius:10px;transition:outline-color .2s}' +
+    '#tourBtn{position:fixed;z-index:9999;left:16px;bottom:16px;background:#0B3F47;color:#fff;border:0;border-radius:999px;padding:.55rem 1rem;font:700 16px Calibri,"Segoe UI",Arial,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer}' +
+    '@media print{#tourBox,#tourBtn{display:none!important}}';
+  document.head.appendChild(css);
+  let i = 0, box = null, on = null;
+  const vis = el => el && el.offsetParent !== null && !el.closest("[hidden]");
+  const steps = () => TOUR.filter(s => !s.sel || vis(document.querySelector(s.sel)));
+  function clear() { if (on) on.classList.remove("tourOn"); on = null; }
+  function close() { clear(); if (box) box.remove(); box = null; $tb.hidden = false; }
+  function show() {
+    const L = steps(); if (!L.length) return close();
+    i = Math.max(0, Math.min(i, L.length - 1)); const s = L[i];
+    clear();
+    if (s.sel) { on = document.querySelector(s.sel); on.classList.add("tourOn"); on.scrollIntoView({behavior: "smooth", block: "center"}); }
+    if (!box) { box = document.createElement("div"); box.id = "tourBox"; box.setAttribute("role", "dialog"); document.body.appendChild(box); }
+    box.innerHTML = '<div class="tn">Step ' + (i + 1) + " of " + L.length + "</div><h3>" + s.title + "</h3><p>" + s.text + '</p><div class="tb">' +
+      (i ? '<button type="button" data-t="back">Back</button>' : "") + '<button type="button" data-t="close">Close</button>' +
+      '<button type="button" class="go" data-t="next">' + (i === L.length - 1 ? "Finish" : "Next") + "</button></div>";
+    $tb.hidden = true;
+  }
+  const $tb = document.createElement("button"); $tb.id = "tourBtn"; $tb.type = "button"; $tb.textContent = "? Instructions"; document.body.appendChild($tb);
+  $tb.addEventListener("click", () => { i = 0; show(); });
+  document.addEventListener("click", e => {
+    const b = e.target.closest("#tourBox [data-t]"); if (!b) return;
+    const t = b.dataset.t, L = steps();
+    if (t === "close") return close();
+    if (t === "back") { i--; return show(); }
+    if (i >= L.length - 1) return close();
+    i++; show();
+  });
+  window.startTour = () => { i = 0; show(); };
+  setTimeout(() => { i = 0; show(); }, 600);
+})();
+</script>
+</body>
+</html>

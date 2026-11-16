@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice for students</title>
+  <style>
+    :root { --navy:#0B3F47; --teal:#2E808E; --sky:#8CDBE5; --light:#E7F7F9; --red:#8B0000; --grey:#495054; --ink:#22272B; --line:#EBEBEB; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Calibri,"Segoe UI",Carlito,Arial,sans-serif; background:#F3F8F9; color:var(--ink); line-height:1.5; font-size:17px; }
+    .hero { background:linear-gradient(135deg,var(--navy) 0%,#145A63 60%,var(--teal) 100%); color:#fff; padding:34px 0 64px; }
+    .wrap { max-width:860px; margin:0 auto; padding:0 16px; }
+    .back { display:inline-block; color:var(--sky); text-decoration:none; font-size:.95rem; margin-bottom:10px; }
+    .back:hover { color:#fff; text-decoration:underline; }
+    .eyebrow { color:var(--sky); letter-spacing:.12em; text-transform:uppercase; font-size:.8rem; font-weight:700; }
+    h1 { margin:4px 0 6px; font-size:clamp(1.6rem,4vw,2.4rem); line-height:1.2; font-weight:700; }
+    .intro { margin:0; color:#D7F2F6; font-size:1.05rem; }
+    main { max-width:860px; margin:-40px auto 0; padding:0 16px 40px; }
+    .card { background:#fff; border-radius:14px; padding:6px 0; box-shadow:0 6px 18px rgba(11,63,71,.10); border:1px solid #DCEBEE; overflow:hidden; }
+    ul { list-style:none; margin:0; padding:0; }
+    li + li { border-top:1px solid var(--line); }
+    li a { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:15px 22px; color:var(--ink); text-decoration:none; border-left:4px solid transparent; transition:background .15s,border-color .15s; }
+    li a:hover, li a:focus-visible { background:var(--light); border-left-color:var(--teal); outline:none; }
+    .code { font-weight:700; color:var(--navy); }
+    .name { color:var(--grey); }
+    .arrow { flex:none; width:32px; height:32px; border-radius:50%; background:var(--light); color:var(--teal); display:flex; align-items:center; justify-content:center; font-weight:700; transition:background .15s,color .15s; }
+    li a:hover .arrow { background:var(--teal); color:#fff; }
+    .tiles { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .tile { position:relative; display:block; background:#fff; border-radius:14px; padding:26px 24px 22px; color:var(--ink); text-decoration:none; box-shadow:0 6px 18px rgba(11,63,71,.10); border:1px solid #DCEBEE; overflow:hidden; transition:transform .15s,box-shadow .15s; }
+    .tile::before { content:""; position:absolute; left:0; top:0; right:0; height:6px; background:var(--teal); }
+    .tile.esol::before { background:var(--navy); }
+    .tile.practice { grid-column:1 / -1; }
+    .tile.practice::before { background:var(--sky); }
+    .tile:hover, .tile:focus-visible { transform:translateY(-2px); box-shadow:0 10px 24px rgba(11,63,71,.16); outline:none; }
+    .tile .t { font-size:2rem; font-weight:700; color:var(--navy); display:flex; justify-content:space-between; align-items:center; }
+    .tile .t span { width:40px; height:40px; border-radius:50%; background:var(--light); color:var(--teal); display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+    .tile:hover .t span { background:var(--teal); color:#fff; }
+    .tile .full { color:var(--teal); font-weight:700; margin-top:2px; }
+    .tile .d { color:var(--grey); margin-top:10px; font-size:.95rem; }
+    footer { margin-top:36px; color:var(--grey); font-size:.9rem; text-align:center; }
+    @media (max-width:560px) { .tiles { grid-template-columns:1fr; } li a { padding:14px 16px; } }
+  </style>
+</head>
+<body>
+  <header class="hero"><div class="wrap">
+    <a class="back" href="../">← Practice test</a>
+    <h1>Practice for students</h1>
+    <p class="intro">Choose a practice test. Pop-up instructions show each step.</p>
+  </div></header>
+  <main>
+    <section class="card">
+      <ul>
+        <li>
+          <a href="speaking.html">
+            <span><span class="code">Speaking</span> <span class="name">- Role play (meeting a new student)</span></span>
+            <span class="arrow">→</span>
+          </a>
+        </li>
+        <li>
+          <a href="reading.html">
+            <span><span class="code">Reading</span> <span class="name">- A library notice and an email</span></span>
+            <span class="arrow">→</span>
+          </a>
+        </li>
+        <li>
+          <a href="listening.html">
+            <span><span class="code">Listening</span> <span class="name">- A phone message</span></span>
+            <span class="arrow">→</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+    <footer>Gr8Teachers</footer>
+  </main>
+</body>
+</html>

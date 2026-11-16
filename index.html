@@ -29,6 +29,8 @@
     .tile { position:relative; display:block; background:#fff; border-radius:14px; padding:26px 24px 22px; color:var(--ink); text-decoration:none; box-shadow:0 6px 18px rgba(11,63,71,.10); border:1px solid #DCEBEE; overflow:hidden; transition:transform .15s,box-shadow .15s; }
     .tile::before { content:""; position:absolute; left:0; top:0; right:0; height:6px; background:var(--teal); }
     .tile.esol::before { background:var(--navy); }
+    .tile.practice { grid-column:1 / -1; }
+    .tile.practice::before { background:var(--sky); }
     .tile:hover, .tile:focus-visible { transform:translateY(-2px); box-shadow:0 10px 24px rgba(11,63,71,.16); outline:none; }
     .tile .t { font-size:2rem; font-weight:700; color:var(--navy); display:flex; justify-content:space-between; align-items:center; }
     .tile .t span { width:40px; height:40px; border-radius:50%; background:var(--light); color:var(--teal); display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
@@ -49,6 +51,7 @@
     <section class="tiles">
       <a class="tile" href="EAL/"><div class="t">EAL <span>→</span></div><div class="full">English as an Additional Language</div><div class="d">22636VIC, 22637VIC, 22638VIC, 22639VIC, 22640VIC</div></a>
       <a class="tile esol" href="ESOL/"><div class="t">ESOL <span>→</span></div><div class="full">English for Speakers of Other Languages</div><div class="d">10982NAT FESOL, 11022NAT EFS</div></a>
+      <a class="tile practice" href="Practice/"><div class="t">Practice test <span>→</span></div><div class="full">Try it before the real assessment</div><div class="d">Speaking, reading and listening practice for teachers and students.</div></a>
     </section>
     <footer>Gr8Teachers</footer>
   </main>

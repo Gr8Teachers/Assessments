@@ -722,6 +722,20 @@ load(); select(RECS[RECS.length - 1] || null);
   $("#mediaBox").innerHTML = '<b>' + esc(ASMT.mediaHead || "Play to the class") + ':</b><ul style="margin:.3rem 0 0;padding-left:1.2rem">' + ASMT.media.map(m => '<li><a href="' + esc(m.url) + '" target="_blank" rel="noopener">' + esc(m.label) + "</a></li>").join("") + "</ul>" + (ASMT.mediaNote ? '<p class="hint" style="margin:.3rem 0 0">' + esc(ASMT.mediaNote) + "</p>" : "");
   $("#mediaBox").hidden = false;
 })();
+(function () {
+  const sp = PARTS.filter(p => p.script); if (!sp.length) return;
+  $("#mediaBox").innerHTML = "<b>Play to the class:</b>" + sp.map(p => '<div style="margin:.5rem 0"><button type="button" class="btn teal" data-play="' + p.id + '">Play the recording' + (sp.length > 1 ? " (" + esc(p.title.split(":")[0]) + ")" : "") + '</button> <button type="button" class="btn ghost" data-stop="1">Stop</button><details style="margin-top:.4rem"><summary>Show the transcript</summary><p class="hint" style="white-space:pre-wrap">' + esc(p.script) + "</p></details></div>").join("") + '<p class="hint" style="margin:.3rem 0 0">Practice only: the computer voice reads the recording. Turn the sound up.</p>';
+  $("#mediaBox").hidden = false;
+  const stop = () => { try { speechSynthesis.cancel(); } catch (e) {} };
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-play]"); if (e.target.closest("[data-stop]")) stop();
+    if (!b || !window.speechSynthesis) return;
+    const p = PARTS.find(x => x.id === b.dataset.play); stop();
+    const u = new SpeechSynthesisUtterance(p.script); u.rate = 0.9; u.lang = "en-AU";
+    const v = speechSynthesis.getVoices().find(x => /en[-_]AU/i.test(x.lang)) || speechSynthesis.getVoices().find(x => /^en/i.test(x.lang)); if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  });
+})();
 if (PARTS.length === 1) $("#partsHint").hidden = true;
 </script>
 </body>
