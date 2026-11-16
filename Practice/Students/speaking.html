@@ -31,19 +31,18 @@ audio{width:100%;margin-top:.5rem}
 </style>
 </head>
 <body>
-<div class="bar"><a class="home" href="../">Back</a><div class="ey">Practice | Speaking</div><h1>Speaking practice: role play</h1></div>
+<div class="bar"><a class="home" href="../">Back</a><div class="ey">Practice | Speaking</div><h1>Speaking practice: talk about yourself</h1></div>
 <main>
   <section class="card" id="task">
-    <h2>The task</h2>
-    <p>Role play: a new student joins your English class. Your teacher plays the new student. You:</p>
-    <ul class="phr"><li>greet the new student and say your name</li><li>ask and answer questions about where you are from, your family, work or study, and what you like to do</li><li>explain your ideas with <b>because</b></li><li>ask your teacher to repeat or explain if you do not understand</li><li>finish the conversation politely</li></ul>
+    <h2>The task 🎤</h2>
+    <p>Talk about yourself for about 1 minute. There is no right or wrong answer. Have fun!</p>
     <p style="margin:.7rem 0 .2rem"><b>Useful phrases</b></p>
-    <ul class="phr"><li>Hi, welcome to our class. My name is ...</li><li>Where are you from? What do you do on the weekend?</li><li>I like Sydney because the people are friendly.</li><li>Sorry, can you say that again? What does ... mean?</li><li>Nice to meet you. See you in class. Bye.</li></ul>
+    <ul class="phr"><li>Hi, my name is ... I’m from ...</li><li>My favourite ... is ... because ...</li><li>Last weekend I ...</li><li>I would like to visit ... because ...</li><li>Sorry, can you say that again?</li></ul>
   </section>
   <section class="card" id="qsList">
     <h2>Questions to practise</h2>
-    <ol class="phr"><li>Where are you from?</li><li>How long have you been in Australia?</li><li>What did you do last weekend?</li><li>What do you like to do in your free time? Why?</li><li>What are you going to do after this course?</li></ol>
-    <p class="hint">Say your answers out loud. Give 2 or 3 sentences for each answer.</p>
+    <ol class="phr"><li>What is your favourite food? Why? 🍜</li><li>If you could visit any country, where would you go? ✈️</li><li>What did you do last weekend?</li><li>What animal do you like? Why? 🐶</li><li>What makes you happy? 😊</li></ol>
+    <p class="hint">Say your answers out loud. Try to give 2 or 3 sentences for each one.</p>
   </section>
   <section class="card" id="recCard">
     <h2>Record yourself</h2>
@@ -58,12 +57,11 @@ audio{width:100%;margin-top:.5rem}
     <p class="hint" id="noRec">Record yourself first.</p>
     <audio id="player" controls hidden></audio>
     <div class="chk" style="margin-top:.6rem">
-      <label><input type="checkbox"> I greeted and said my name.</label>
-      <label><input type="checkbox"> I asked questions.</label>
+      <label><input type="checkbox"> I said hello and my name.</label>
       <label><input type="checkbox"> I answered with 2 or 3 sentences.</label>
       <label><input type="checkbox"> I used <b>because</b>.</label>
-      <label><input type="checkbox"> I asked to repeat or explain.</label>
-      <label><input type="checkbox"> I finished politely.</label>
+      <label><input type="checkbox"> I talked about the past (last weekend).</label>
+      <label><input type="checkbox"> I spoke clearly and not too fast.</label>
     </div>
   </section>
 </main>
@@ -93,7 +91,7 @@ $("#btnStop").addEventListener("click", () => {
 });
 </script>
 <script>
-const TOUR = [{"title": "Practice speaking", "text": "Practise for your speaking assessment. Read the task, record yourself, then listen. Nothing is sent anywhere. You can open these instructions again with the button at the bottom left."}, {"sel": "#task", "title": "Read the task", "text": "Read what you will do in the role play and the useful phrases."}, {"sel": "#qsList", "title": "Questions to practise", "text": "Your teacher may ask questions like these. Say your answers out loud."}, {"sel": "#recCard", "title": "Record yourself", "text": "Press Start recording and allow the microphone. Speak, then press Stop."}, {"sel": "#playCard", "title": "Listen to yourself", "text": "Play your recording. Did you greet, ask and answer questions, use because, and say goodbye? Record again if you like."}];
+const TOUR = [{"title": "Practice speaking", "text": "Practise for your speaking assessment. Read the task, record yourself, then listen. Nothing is sent anywhere. You can open these instructions again with the button at the bottom left."}, {"sel": "#task", "title": "Read the task", "text": "You will talk about yourself for about 1 minute. Look at the useful phrases."}, {"sel": "#qsList", "title": "Questions to practise", "text": "Choose some questions and say your answers out loud."}, {"sel": "#recCard", "title": "Record yourself", "text": "Press Start recording and allow the microphone. Speak, then press Stop."}, {"sel": "#playCard", "title": "Listen to yourself", "text": "Play your recording and tick what you did. Record again if you like."}];
 /* ---------- practice: step-by-step pop-up instructions ---------- */
 (function () {
   const css = document.createElement("style");
@@ -102,7 +100,7 @@ const TOUR = [{"title": "Practice speaking", "text": "Practise for your speaking
     '#tourBox .tb{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}#tourBox button{font:inherit;font-size:1rem;border-radius:9px;padding:.45rem .9rem;cursor:pointer;border:1px solid #2E808E;background:#fff;color:#0B3F47}#tourBox button.go{background:#2E808E;color:#fff}' +
     '.tourOn{outline:4px solid #FFD54F !important;outline-offset:4px;border-radius:10px;transition:outline-color .2s}' +
     '#tourBtn{position:fixed;z-index:9999;left:16px;bottom:16px;background:#0B3F47;color:#fff;border:0;border-radius:999px;padding:.55rem 1rem;font:700 16px Calibri,"Segoe UI",Arial,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer}' +
-    '@media print{#tourBox,#tourBtn{display:none!important}}';
+    '@media print{#tourBox,#tourBtn{display:none!important}}@media (max-width:560px){#tourBtn{padding:0;width:46px;height:46px;font-size:22px;opacity:.9}#tourBtn span{display:none}}';
   document.head.appendChild(css);
   let i = 0, box = null, on = null;
   const vis = el => el && el.offsetParent !== null && !el.closest("[hidden]");
@@ -120,7 +118,7 @@ const TOUR = [{"title": "Practice speaking", "text": "Practise for your speaking
       '<button type="button" class="go" data-t="next">' + (i === L.length - 1 ? "Finish" : "Next") + "</button></div>";
     $tb.hidden = true;
   }
-  const $tb = document.createElement("button"); $tb.id = "tourBtn"; $tb.type = "button"; $tb.textContent = "? Instructions"; document.body.appendChild($tb);
+  const $tb = document.createElement("button"); $tb.id = "tourBtn"; $tb.type = "button"; $tb.innerHTML = "?<span> Instructions</span>"; $tb.setAttribute("aria-label", "Instructions"); document.body.appendChild($tb);
   $tb.addEventListener("click", () => { i = 0; show(); });
   document.addEventListener("click", e => {
     const b = e.target.closest("#tourBox [data-t]"); if (!b) return;

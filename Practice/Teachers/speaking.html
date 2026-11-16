@@ -4128,7 +4128,7 @@ const TOUR = [{"title": "Welcome to the practice", "text": "This is a practice s
     '#tourBox .tb{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}#tourBox button{font:inherit;font-size:1rem;border-radius:9px;padding:.45rem .9rem;cursor:pointer;border:1px solid #2E808E;background:#fff;color:#0B3F47}#tourBox button.go{background:#2E808E;color:#fff}' +
     '.tourOn{outline:4px solid #FFD54F !important;outline-offset:4px;border-radius:10px;transition:outline-color .2s}' +
     '#tourBtn{position:fixed;z-index:9999;left:16px;bottom:16px;background:#0B3F47;color:#fff;border:0;border-radius:999px;padding:.55rem 1rem;font:700 16px Calibri,"Segoe UI",Arial,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer}' +
-    '@media print{#tourBox,#tourBtn{display:none!important}}';
+    '@media print{#tourBox,#tourBtn{display:none!important}}@media (max-width:560px){#tourBtn{padding:0;width:46px;height:46px;font-size:22px;opacity:.9}#tourBtn span{display:none}}';
   document.head.appendChild(css);
   let i = 0, box = null, on = null;
   const vis = el => el && el.offsetParent !== null && !el.closest("[hidden]");
@@ -4146,7 +4146,7 @@ const TOUR = [{"title": "Welcome to the practice", "text": "This is a practice s
       '<button type="button" class="go" data-t="next">' + (i === L.length - 1 ? "Finish" : "Next") + "</button></div>";
     $tb.hidden = true;
   }
-  const $tb = document.createElement("button"); $tb.id = "tourBtn"; $tb.type = "button"; $tb.textContent = "? Instructions"; document.body.appendChild($tb);
+  const $tb = document.createElement("button"); $tb.id = "tourBtn"; $tb.type = "button"; $tb.innerHTML = "?<span> Instructions</span>"; $tb.setAttribute("aria-label", "Instructions"); document.body.appendChild($tb);
   $tb.addEventListener("click", () => { i = 0; show(); });
   document.addEventListener("click", e => {
     const b = e.target.closest("#tourBox [data-t]"); if (!b) return;
