@@ -810,7 +810,7 @@ load(); select(RECS[RECS.length - 1] || null);
 })();
 (function () {
   if (!ASMT.media || !ASMT.media.length) return;
-  $("#mediaBox").innerHTML = '<b>' + esc(ASMT.mediaHead || "Play to the class") + ':</b><ul style="margin:.3rem 0 0;padding-left:1.2rem">' + ASMT.media.map(m => '<li><a href="' + esc(m.url) + '" target="_blank" rel="noopener">' + esc(m.label) + "</a></li>").join("") + "</ul>" + (ASMT.mediaNote ? '<p class="hint" style="margin:.3rem 0 0">' + esc(ASMT.mediaNote) + "</p>" : "");
+  $("#mediaBox").innerHTML = '<b>' + esc(ASMT.mediaHead || "Play to the class") + ':</b><ul style="margin:.3rem 0 0;padding-left:1.2rem">' + ASMT.media.map(m => '<li>' + (m.url ? '<a href="' + esc(m.url) + '" target="_blank" rel="noopener">' + esc(m.label) + "</a>" : "<b>" + esc(m.label) + "</b>") + "</li>").join("") + "</ul>" + (ASMT.mediaNote ? '<p class="hint" style="margin:.3rem 0 0">' + esc(ASMT.mediaNote) + "</p>" : "");
   $("#mediaBox").hidden = false;
 })();
 (function () {
