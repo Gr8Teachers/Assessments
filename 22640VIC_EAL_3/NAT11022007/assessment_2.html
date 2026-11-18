@@ -234,7 +234,7 @@ const ASMT = {
  "twoHead": "Select the correct answer/s",
  "teacherRec": {
   "title": "Part 1, Task 1: Read and record (teacher recording)",
-  "hint": "Record the student reading Exploring Australia on this device, or upload their audio or video. The recording is kept with the student and goes into Save all students and Send to computer.",
+  "hint": "Record the student reading Exploring Australia on this device, or press Upload a recording to add the file the student sent you (Save / send my recording on their phone). The student's recording is not in the QR code. The recording is kept with the student and goes into Save all students and Send to computer.",
   "printTitle": "Part 1: English pronunciation features in spoken texts",
   "printText": "Task 1: Read and record reading of text (Exploring Australia)."
  },
@@ -300,7 +300,7 @@ const PARTS = [
   "passage": "<h3>Exploring Australia</h3>\n<p><b>Welcome</b> to our cultural tour of <b>Australia</b>! In this presentation today we will look at many aspects of Australian life, including its distinctive <b>wildlife</b>, stunning beaches, and exciting cities. Do you know what Australia is famous for?</p>\n<p>Australia is well known for its <b>breathtaking</b> scenery, which ranges from the untamed beauty of the Outback to the sandy beaches of Bondi. Australia has an abundance of natural wonders to <b>explore</b> and take in due to its large and diverse <b>geography</b>.</p>\n<p>One of the most loved icons of Australia is the <b>kangaroo</b>. These marsupials can be seen wandering freely throughout the country and are a symbol of Australian <b>identity</b> due to their unusual hopping movement.</p>\n<p>Australians are renowned for their love of nature, the outdoors and their laid-back character. They are <b>also</b> known for their love of sport, as well as <b>barbecues</b> with friends or a day at the beach.</p>\n<p>Australian food is as varied as its people, combining elements from all around the world to produce a <b>distinctive</b> taste experience. With options ranging from classic meat pies and lamingtons to <b>contemporary</b> fusion cuisine, there’s something to suit every taste.</p>\n<p>As one of the world’s most multicultural nations, Australia celebrates diversity and inclusivity. With people from over 200 different countries calling Australia home, it’s a melting pot of cultures, languages, and traditions.</p>\n<p class=\"hint\" style=\"margin-top:.8rem\"><b>Part 1, Task 1.</b> Read clearly. Try to: say sounds correctly; use correct word stress on the key words in <b>bold</b>; use sentence stress for focus, contrast and emphasis; use pausing to organise thought groups; use rising and falling intonation; use connected speech such as consonant-vowel linking; use stressed and unstressed words to create rhythm. Your teacher will also record you reading.</p>",
   "recorder": true,
   "recorderTitle": "Part 1: Record yourself reading",
-  "recorderHint": "Practise reading the text aloud and record it. The recording stays on this phone. Play it back for the analysis below.",
+  "recorderHint": "Practise reading the text aloud and record it. Play it back for the analysis below. Your recording is not kept when you close this page: press Save / send my recording to send it to your teacher (for example by AirDrop or Nearby Share) or save it on this phone.",
   "qs": [
    {
     "id": "1.1",
@@ -867,7 +867,9 @@ $("#btnDel").addEventListener("click", () => {
 
 /* ---------- answers and marks ---------- */
 function optText(q, k) { const o = (q.opts || []).find(x => x[0] === k); return o ? o[1] : ""; }
-function showAns(q, a) {
+function gapOpts(it) { const m = String(it).match(/\[([^\]]+)\]/); return m ? m[1].split("/").map(x => x.trim()) : []; }
+function gapWord(q, i, a) { return gapOpts(q.items[i])[+a - 1] || ""; }
+function showAns(q, a, i) {
   if (!a) return '<span class="hint">no answer</span>';
   if (a === "*") return '<span class="hint">Any answer is accepted (reflective question).</span>';
   if (q.type === "text") return esc(a).replace(/\n/g, "<br>");
@@ -876,6 +878,7 @@ function showAns(q, a) {
   if (q.type === "two") return a.split("").map(k => "<b>" + optLab(k) + "</b> " + esc(optText(q, k))).join("<br>");
   if (q.type === "tf") return a === "T" ? "True" : "False";
   if (q.type === "order") return "<b>" + esc(a) + "</b>";
+  if (q.type === "gap") return "<b>" + esc(gapWord(q, i, a)) + "</b>";
   return "<b>" + a + ".</b> " + esc(optText(q, a));
 }
 function mkBtns(q, i) {
@@ -892,9 +895,9 @@ function renderMarks() {
     p.qs.forEach(q => {
       const ok = qOk(cur, q);
       h += '<div class="q"><div class="qt"><b>' + q.n + ".</b> " + esc(q.text) + ' <span class="' + (ok ? "ok" : "no") + '">' + (ok ? "✓ correct" : "✗ not correct") + "</span>" + (redone(cur, q) ? ' <span class="tag n">2nd attempt</span>' : "") + QQ(q) + "</div>";
-      h += '<table class="m"><tr>' + (slots(q) > 1 ? "<th>" + esc(q.heads ? q.heads[0] : q.type === "tf" ? "Statement" : q.type === "order" ? "Steps/Process" : "Feature") + "</th>" : "") + "<th>Student's answer</th><th>Correct answer</th><th>Mark</th></tr>";
+      h += '<table class="m"><tr>' + (slots(q) > 1 ? "<th>" + esc(q.heads ? q.heads[0] : q.type === "tf" ? "Statement" : q.type === "order" ? "Steps/Process" : q.type === "gap" ? "Sentence" : "Feature") + "</th>" : "") + "<th>Student's answer</th><th>Correct answer</th><th>Mark</th></tr>";
       for (let i = 0; i < slots(q); i++) {
-        h += "<tr>" + (slots(q) > 1 ? "<td>" + IT(q, i, "90px") + "</td>" : "") + "<td>" + showAns(q, itemAns(cur, q, i)) + (redone(cur, q) ? '<div class="chg">1st attempt: ' + (firstAns(cur, q, i) ? showAns(q, firstAns(cur, q, i)).replace(/<[^>]+>/g, "") : "no answer") + "</div>" : "") + "</td><td>" + showAns(q, itemKey(q, i)) + (KEY_NOTES[q.id] && i === 0 ? '<div class="chg">' + esc(KEY_NOTES[q.id]) + "</div>" : "") + (KEY_NOTES[q.id + ":" + i] ? '<div class="chg">Clue: ' + esc(KEY_NOTES[q.id + ":" + i]) + "</div>" : "") + "</td><td>" + mkBtns(q, i) + "</td></tr>";
+        h += "<tr>" + (slots(q) > 1 ? "<td>" + IT(q, i, "90px") + "</td>" : "") + "<td>" + showAns(q, itemAns(cur, q, i), i) + (redone(cur, q) ? '<div class="chg">1st attempt: ' + (firstAns(cur, q, i) ? showAns(q, firstAns(cur, q, i), i).replace(/<[^>]+>/g, "") : "no answer") + "</div>" : "") + "</td><td>" + showAns(q, itemKey(q, i), i) + (KEY_NOTES[q.id] && i === 0 ? '<div class="chg">' + esc(KEY_NOTES[q.id]) + "</div>" : "") + (KEY_NOTES[q.id + ":" + i] ? '<div class="chg">Clue: ' + esc(KEY_NOTES[q.id + ":" + i]) + "</div>" : "") + "</td><td>" + mkBtns(q, i) + "</td></tr>";
       }
       h += "</table></div>";
     });
@@ -1125,6 +1128,10 @@ function printQ(r, q) {
     h += '<table class="p"><tr><th>' + esc((q.heads || [])[0] || "Feature") + '</th><th style="width:18mm">Answer</th><th>' + esc((q.heads || [])[1] || "Information written in the text") + '</th><th class="mkh"></th></tr>';
     q.items.forEach((it, i) => { const v = itemAns(r, q, i); const o = q.opts.length === q.items.length ? q.opts[i] : q.opts.find(x => x[0] === v); h += "<tr><td>" + IT(q, i, "28mm") + '</td><td class="c"><b>' + esc(v) + "</b></td><td>" + (o ? o[0] + ". " + esc(o[1]) : "") + '</td><td class="mk">' + MK(itemOk(r, q, i)) + "</td></tr>"; });
     h += "</table>";
+  } else if (q.type === "gap") {
+    h += '<table class="p"><tr><th>' + esc((q.heads || [])[0] || "Sentence") + '</th><th style="width:34mm">' + esc((q.heads || [])[1] || "Answer") + '</th><th class="mkh"></th></tr>';
+    q.items.forEach((it, i) => { const v = itemAns(r, q, i); h += "<tr><td>" + esc(it) + '</td><td class="c"><b>' + esc(v ? gapWord(q, i, v) : "") + '</b></td><td class="mk">' + MK(itemOk(r, q, i)) + "</td></tr>"; });
+    h += "</table>";
   } else if (q.type === "order") {
     h += '<table class="p"><tr><th>' + esc((q.heads || [])[0] || "Steps/Process") + '</th><th style="width:28mm">' + esc((q.heads || [])[1] || "Order") + '</th><th class="mkh"></th></tr>';
     q.items.forEach((it, i) => { const v = itemAns(r, q, i); h += "<tr><td>" + esc(it) + '</td><td class="c"><b>' + esc(v) + '</b></td><td class="mk">' + MK(itemOk(r, q, i)) + "</td></tr>"; });
@@ -1188,7 +1195,7 @@ load(); select(RECS[RECS.length - 1] || null);
 })();
 (function () {
   if (!ASMT.media || !ASMT.media.length) return;
-  $("#mediaBox").innerHTML = '<b>' + esc(ASMT.mediaHead || "Play to the class") + ':</b><ul style="margin:.3rem 0 0;padding-left:1.2rem">' + ASMT.media.map(m => '<li><a href="' + esc(m.url) + '" target="_blank" rel="noopener">' + esc(m.label) + "</a></li>").join("") + "</ul>" + (ASMT.mediaNote ? '<p class="hint" style="margin:.3rem 0 0">' + esc(ASMT.mediaNote) + "</p>" : "");
+  $("#mediaBox").innerHTML = '<b>' + esc(ASMT.mediaHead || "Play to the class") + ':</b><ul style="margin:.3rem 0 0;padding-left:1.2rem">' + ASMT.media.map(m => '<li>' + (m.url ? '<a href="' + esc(m.url) + '" target="_blank" rel="noopener">' + esc(m.label) + "</a>" : "<b>" + esc(m.label) + "</b>") + "</li>").join("") + "</ul>" + (ASMT.mediaNote ? '<p class="hint" style="margin:.3rem 0 0">' + esc(ASMT.mediaNote) + "</p>" : "");
   $("#mediaBox").hidden = false;
 })();
 (function () {
