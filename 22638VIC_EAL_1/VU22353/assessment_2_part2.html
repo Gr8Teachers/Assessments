@@ -521,6 +521,17 @@ details.more[open] > summary::before{transform:rotate(-135deg) translate(-2px,-2
 .pd-out .pd-box{min-height:8mm}
 .pd-out .pd-box.tall{min-height:11mm}
 aside .siderow{grid-template-columns:1fr 1fr !important;grid-auto-rows:1fr}aside .siderow .btn{height:100%}
+
+/* ---------- photos of the student's written work ---------- */
+.wwBox{border:1px solid #8CDBE5;background:#E7F7F9;border-radius:10px;padding:10px 12px;margin:0 0 12px}
+.wwBox h3{margin:0 0 4px;font-size:1.05rem;color:#0B3F47}
+.wwThumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.wwThumbs figure{margin:0;width:140px;text-align:center;font-size:.85rem;color:#495054}
+.wwThumbs img{width:140px;height:180px;object-fit:cover;border:1px solid #495054;border-radius:6px;background:#fff;cursor:zoom-in}
+.wwThumbs button{margin-top:4px;font-size:.8rem;padding:3px 8px;border-radius:6px;border:1px solid #8B0000;color:#8B0000;background:#fff;cursor:pointer}
+.pd-ww .pd-wwp{break-inside:avoid;page-break-inside:avoid;margin:0 0 6mm}
+.pd-ww img{display:block;max-width:100%;max-height:225mm;margin:2mm auto 1mm;border:1px solid #495054}
+.pd-ww .cap{font-size:9pt;color:#495054;text-align:center}
 </style>
 </head>
 <body class="no-ipa">
@@ -717,6 +728,7 @@ aside .siderow{grid-template-columns:1fr 1fr !important;grid-auto-rows:1fr}aside
 
     <section class="card" id="sec4">
       <div class="sec-h"><span class="stepn">4</span><h2>Checklist</h2></div>
+      <div class="wwBox" id="wwBox"><h3>Student's written work (photos)</h3><div class="hint">Take a photo of the student's Part 1, Task 1 answers (Location questions on the map). The photos are kept with the student and go into Save all students, Send to computer and the printout.</div><div class="row" style="margin-top:8px"><button type="button" class="btn b-teal" id="wwAdd">Take or add photos</button><input type="file" id="wwFile" accept="image/*" multiple hidden><span class="hint" id="wwMsg"></span></div><div class="wwThumbs" id="wwThumbs"></div></div>
       <div class="row" style="align-items:center">
         <button type="button" class="btn b-amber" id="btnEvaluate">Check against criteria</button>
         <span class="hint">Levels are suggested from the transcript. Review and adjust each criterion as required.</span>
@@ -3432,7 +3444,7 @@ function pdOne(g, r, D, gi) {
     lb("Student acknowledgement of assessment outcome") + box("", "tall") +
     lb("Student name, signature and date") + box(esc(r.name || ""), "tall") +
     "</section>";
-  return '<div class="pd-doc">' + cover + ck + after + out + "</div>";
+  return '<div class="pd-doc">' + cover + ck + after + wwPrint(r, pg) + out + "</div>";
 }
 function reportHTML(r) { return pdReshape(reportHTML0(r), r); }
 /* footer and page numbers in the page margins, like the assessment document */
@@ -3768,6 +3780,7 @@ async function saveAll() {
       setStatus("#saveStatus", "Getting student " + (i + 1) + " of " + list.length + " ready ...");
       const aud = r.audio ? await audioForSave(r) : null;
       if (aud) files.push({name: folder + "/" + audioFileName(r), data: new Uint8Array(await aud.arrayBuffer())});
+      (r.photos || []).forEach((p, j) => files.push({name: folder + "/" + safeName(r.name || "Student") + "_written_work_" + (j + 1) + ".jpg", data: wwBytes(p.d)}));
       files.push({name: folder + "/" + safeName(r.name) + "_Assessment_Report.txt", data: enc.encode("﻿" + toTXT(r))});
     }
     const day = (($("#assessDate").value || todayISO()).replace(/-/g, ""));
@@ -4071,6 +4084,59 @@ $("#btnDelOneYes").addEventListener("click", () => {
 });
 updateDeleteOne();
 restoreSession();
+
+/* ---------- photos of the student's written work (plan, notes, review) ---------- */
+(function () {
+  const _nr = newRecord; newRecord = function () { const r = _nr(); r.photos = []; return r; };
+  const _hc = hasContent; hasContent = function (r) { return _hc(r) || !!(r.photos && r.photos.length); };
+  const _sg = signature; signature = function () { return _sg() + "|" + records.map(r => (r.photos || []).map(p => p.at).join(",")).join(";"); };
+  const _lr = loadRecord; loadRecord = function (r) { if (r && !Array.isArray(r.photos)) r.photos = []; _lr(r); wwRender(); };
+  const _tx = toTXT; toTXT = function (r) { const n = (r.photos || []).length; return _tx(r) + "\r\n\r\nPhotos of the student's written work: " + (n ? n + " (in this folder)" : "none"); };
+  records.forEach(r => { if (!Array.isArray(r.photos)) r.photos = []; });
+})();
+function wwMsg(t) { const m = document.getElementById("wwMsg"); if (m) m.textContent = t || ""; }
+function wwRender() {
+  const box = document.getElementById("wwThumbs"); if (!box) return;
+  const ph = (cur && cur.photos) || [];
+  box.innerHTML = ph.map((p, i) => '<figure><img src="' + p.d + '" alt="Photo ' + (i + 1) + '" data-ww="' + i + '"><figcaption>Photo ' + (i + 1) + '</figcaption><button type="button" data-wwdel="' + i + '">Remove</button></figure>').join("");
+  document.getElementById("wwAdd").textContent = ph.length ? "Add more photos" : "Take or add photos";
+}
+function wwShrink(file) {
+  return new Promise((res, rej) => {
+    const u = URL.createObjectURL(file), im = new Image();
+    im.onload = () => { const k = Math.min(1, 1800 / Math.max(im.width, im.height)); const c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); res(c.toDataURL("image/jpeg", 0.82)); };
+    im.onerror = () => { URL.revokeObjectURL(u); rej(new Error("not a picture")); };
+    im.src = u;
+  });
+}
+document.addEventListener("click", e => {
+  const t = e.target;
+  if (t.id === "wwAdd") { if (!cur) return; document.getElementById("wwFile").click(); }
+  if (t.dataset && t.dataset.wwdel !== undefined && cur) {
+    const i = +t.dataset.wwdel;
+    if (t.dataset.armed) { cur.photos.splice(i, 1); wwRender(); wwMsg("Photo removed."); persistSoon(); renderList(); }
+    else { t.dataset.armed = "1"; t.textContent = "Press again"; setTimeout(() => { if (t.isConnected) { delete t.dataset.armed; t.textContent = "Remove"; } }, 4000); }
+  }
+  if (t.dataset && t.dataset.ww !== undefined && cur) { const p = cur.photos[+t.dataset.ww]; if (p) { const w = window.open(); if (w) w.document.write('<title>Photo</title><img src="' + p.d + '" style="max-width:100%">'); } }
+});
+document.addEventListener("change", async e => {
+  if (e.target.id !== "wwFile" || !cur) return;
+  const files = Array.from(e.target.files || []); e.target.value = "";
+  if (!files.length) return;
+  let n = 0, bad = 0;
+  wwMsg("Adding " + files.length + " photo" + (files.length > 1 ? "s" : "") + " ...");
+  for (const f of files) { try { cur.photos.push({d: await wwShrink(f), at: new Date().toISOString(), name: f.name || ""}); n++; } catch (x) { bad++; } }
+  wwRender(); persistSoon(); renderList();
+  wwMsg((n ? "Added " + n + " photo" + (n > 1 ? "s" : "") + " for " + (cur.name || "this student") + "." : "") + (bad ? " " + bad + " file" + (bad > 1 ? "s were" : " was") + " not a picture." : ""));
+});
+function wwBytes(d) { const s = atob(String(d).split(",")[1] || ""); const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u; }
+function wwPrint(r, pg) {
+  const ph = (r && r.photos) || [];
+  if (!ph.length) return "";
+  return '<section class="pd pd-rest pd-ww" style="page:' + pg + '">' +
+    ph.map((p, i) => '<div class="pd-wwp">' + (i ? "" : '<div class="pd-h3">Student’s written work</div>') + '<img src="' + p.d + '" alt=""><div class="cap">Photo ' + (i + 1) + " of " + ph.length + " (added " + esc(fmtDateAU(String(p.at).slice(0, 10))) + ")</div></div>").join("") + "</section>";
+}
+setTimeout(wwRender, 0);
 </script>
 </body>
 </html>
