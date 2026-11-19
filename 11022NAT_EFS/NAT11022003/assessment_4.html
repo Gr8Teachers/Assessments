@@ -655,7 +655,7 @@ function score(rec) {
   QS.forEach(q => { const n = slots(q); items += n; for (let i = 0; i < n; i++) if (itemOk(rec, q, i)) itemsOk++; if (qOk(rec, q)) qs++; });
   return {items, itemsOk, qs, qn: QS.length};
 }
-function clRows(rec) { return (ASMT.checklist || []).map(c => ({c, ok: rec.cl && rec.cl[c.id] !== undefined ? rec.cl[c.id] : (c.rec ? !!(rec.audio || rec.heard) : ALLQ.filter(q => c.qs.includes(q.id)).every(q => partDone(rec, partOfQ(q)) && qOk(rec, q)))})); }
+function clRows(rec) { return (ASMT.checklist || []).map(c => ({c, ok: rec.cl && rec.cl[c.id] !== undefined ? rec.cl[c.id] : (c.rec ? !!(rec.audio && rec.heard) : ALLQ.filter(q => c.qs.includes(q.id)).every(q => partDone(rec, partOfQ(q)) && qOk(rec, q)))})); }
 function suggested(rec) { if (!allDone(rec)) return "n"; if (ASMT.checklist) return clRows(rec).every(x => x.ok) ? "s" : "u"; const s = score(rec); return PASS_RULE === "all" ? (s.qs === s.qn ? "s" : "u") : (s.itemsOk / s.items >= PASS_RULE ? "s" : "u"); }
 function outcome(rec) { return rec.result || suggested(rec); }
 
@@ -721,11 +721,11 @@ function scanFrame() {
   const w = Math.min(800, v.videoWidth), h = Math.round(v.videoHeight * w / v.videoWidth), c = SCAN.canvas;
   c.width = w; c.height = h; const ctx = c.getContext("2d", {willReadFrequently: true}); ctx.drawImage(v, 0, 0, w, h);
   const img = ctx.getImageData(0, 0, w, h);
-  const code = jsQR(img.data, w, h, {inversionAttempts: "dontInvert"});
-  if (!code || !code.data) return;
-  if (code.data === SCAN.last && Date.now() - SCAN.lastAt < 4000) return;
-  SCAN.last = code.data; SCAN.lastAt = Date.now();
-  gotCode(code.data);
+  const got = qrData(jsQR(img.data, w, h, {inversionAttempts: "dontInvert"}));
+  if (!got) return;
+  if (got.text === SCAN.last && Date.now() - SCAN.lastAt < 4000) return;
+  SCAN.last = got.text; SCAN.lastAt = Date.now();
+  gotCode(got.text, got.old);
 }
 async function expandCode(t) {
   t = String(t || "").trim();
@@ -737,11 +737,26 @@ async function expandCode(t) {
     return "EALR1" + out;
   } catch (e) { return "EALR1{bad"; }
 }
-async function gotCode(text) {
+/* read the text of a QR code; codes from older student pages wrote some letters (accents, other alphabets, curly apostrophes) as single bytes, so read those back as well as we can */
+function qrData(code) {
+  if (!code) return null;
+  if (code.data && /^EAL[RZ]1/.test(code.data)) { const bad = /[\u0000-\u001f]/.test(code.data); return {text: bad ? code.data.replace(/[\u0018\u0019\u001c\u001d]/g, "'").replace(/[\u0000-\u001f]/g, "?") : code.data, old: bad}; }
+  const b = code.binaryData || [];
+  if (!b.length) return code.data ? {text: code.data, old: false} : null;
+  let t = "";
+  try { t = new TextDecoder("utf-8", {fatal: true}).decode(new Uint8Array(b)); } catch (e) { t = ""; }
+  if (/^EAL[RZ]1/.test(t)) return {text: t, old: false};
+  t = ""; for (let i = 0; i < b.length; i++) t += String.fromCharCode(b[i]);
+  t = t.replace(/[\u0018\u0019\u001c\u001d]/g, "'").replace(/[\u0000-\u001f]/g, "?");
+  if (/^EAL[RZ]1/.test(t)) return {text: t, old: true};
+  return code.data ? {text: code.data, old: false} : null;
+}
+const OLDNOTE = " Some letters in the name may not show correctly. Ask the student to open their answer sheet again and show you the new code.";
+async function gotCode(text, old) {
   const r = addFromCode(await expandCode(text));
   if (r.err) { setMsg(SCAN.where, r.err.replace(/([^.])$/, "$1."), "warn"); return; }
   const s = score(r.rec);
-  setMsg(SCAN.where, (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got, r.second) + (allDone(r.rec) ? ": " + s.qs + " of " + s.qn + " questions correct." : ": waiting for " + missingParts(r.rec).join(" and ") + ".") + (SCAN.where === "#redoMsg" ? "" : " Scan the next student, or press Stop scanning."), "ok");
+  setMsg(SCAN.where, (r.updated ? "Updated " : "Added ") + r.rec.n + gotLabel(r.got, r.second) + (allDone(r.rec) ? ": " + s.qs + " of " + s.qn + " questions correct." : ": waiting for " + missingParts(r.rec).join(" and ") + ".") + (old ? OLDNOTE : "") + (SCAN.where === "#redoMsg" ? "" : " Scan the next student, or press Stop scanning."), "ok");
   if (SCAN.where === "#redoMsg" && r.second) stopScan();
   const box = $("#camBox"); box.classList.remove("flash"); void box.offsetWidth; box.classList.add("flash");
   try { const ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = 880; g.gain.value = .08; o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .15); } catch (e) {}
@@ -754,8 +769,7 @@ function decodeCanvas(img, maxW, crop) {
   const k = Math.min(1, maxW / sw), w = Math.max(1, Math.round(sw * k)), h = Math.max(1, Math.round(sh * k));
   const c = document.createElement("canvas"); c.width = w; c.height = h;
   const ctx = c.getContext("2d", {willReadFrequently: true}); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h); ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
-  const r = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, {inversionAttempts: "attemptBoth"});
-  return r && r.data ? r.data : null;
+  return qrData(jsQR(ctx.getImageData(0, 0, w, h).data, w, h, {inversionAttempts: "attemptBoth"}));
 }
 async function decodeImage(file) {
   const url = URL.createObjectURL(file);
@@ -770,17 +784,18 @@ async function decodeImage(file) {
 async function addPictures(files) {
   files = Array.from(files || []).filter(f => /^image\//.test(f.type) || /\.(png|jpe?g|gif|webp|bmp|heic)$/i.test(f.name || ""));
   if (!files.length) { setMsg(SCAN.where, "Choose a picture of a student's QR code.", "warn"); return; }
-  const done = [], bad = [];
+  const done = [], bad = []; let oldEnc = 0;
   for (let i = 0; i < files.length; i++) {
     setMsg(SCAN.where, "Checking picture " + (i + 1) + " of " + files.length + " ...", "ok");
-    const text = await decodeImage(files[i]);
-    if (!text) { bad.push((files[i].name || "picture") + ": no QR code found"); continue; }
-    const r = addFromCode(await expandCode(text));
+    const got = await decodeImage(files[i]);
+    if (!got) { bad.push((files[i].name || "picture") + ": no QR code found"); continue; }
+    const r = addFromCode(await expandCode(got.text));
+    if (!r.err && got.old) oldEnc++;
     if (r.err) bad.push((files[i].name || "picture") + ": " + r.err.replace(/\.$/, "")); else done.push((r.updated ? "updated " : "added ") + r.rec.n + gotLabel(r.got, r.second));
   }
   const names = k => Array.from(new Set(done.filter(x => x.startsWith(k + " ")).map(x => x.slice(k.length + 1))));
   const add = names("added"), upd = names("updated").filter(n => !add.includes(n));
-  setMsg(SCAN.where, (add.length ? "Added: " + add.join(", ") + ". " : "") + (upd.length ? "Updated: " + upd.join(", ") + ". " : "") + (bad.length ? "Could not read: " + bad.join("; ") + "." + (bad.some(x => x.includes("no QR code found")) ? " Ask the student for a clearer screenshot of the whole code." : "") : ""), bad.length ? "warn" : "ok");
+  setMsg(SCAN.where, (add.length ? "Added: " + add.join(", ") + ". " : "") + (upd.length ? "Updated: " + upd.join(", ") + ". " : "") + (bad.length ? "Could not read: " + bad.join("; ") + "." + (bad.some(x => x.includes("no QR code found")) ? " Ask the student for a clearer screenshot of the whole code." : "") : "") + (oldEnc ? OLDNOTE : ""), bad.length ? "warn" : "ok");
 }
 $("#btnUpQr").addEventListener("click", () => { SCAN.where = "#scanMsg"; $("#inQr").click(); });
 $("#inQr").addEventListener("change", e => { const f = e.target.files; addPictures(f).then(() => { e.target.value = ""; }); });
@@ -1025,7 +1040,7 @@ async function renderRec() {
     (blob ? '<audio controls src="' + TR.url + '" style="width:100%"></audio><p class="hint" style="margin:.3rem 0">Recorded ' + esc(fmtDate(String(cur.audio.at).slice(0, 10))) + (cur.audio.dur ? ", " + mmss(cur.audio.dur) : "") + ".</p>" : (cur.audio ? '<p class="status warn">The recording is not on this device. Open the saved file that has it, or record again.</p>' : "")) +
     '<div class="row">' + (recording ? '<button type="button" class="btn red" id="trStop">Stop recording</button><b id="trTime" style="align-self:center"></b>' : '<button type="button" class="btn teal" id="trStart">' + (blob ? "Record again" : "Start recording") + '</button><button type="button" class="btn ghost" id="trUp">Upload a recording</button>' + (blob ? '<button type="button" class="btn ghost" id="trDel">Delete recording</button>' : "")) + "</div>" +
     '<input type="file" id="trFile" accept="audio/*,video/*" hidden>' +
-    '<label style="display:flex;gap:.5rem;align-items:center;margin-top:.6rem"><input type="checkbox" id="trHeard"' + (cur.heard ? " checked" : "") + '> I heard the student read the text in class.</label><p class="status" id="trMsg"></p>';
+    '<label style="display:flex;gap:.5rem;align-items:center;margin-top:.6rem"><input type="checkbox" id="trHeard"' + (cur.heard ? " checked" : "") + '> Recording checked: the student’s voice is clear enough to analyse.</label>' + (cur.audio ? "" : '<p class="hint" style="margin:.2rem 0 0">The marking guide asks for a recording as evidence. Record the student or upload their file first.</p>') + '<p class="status" id="trMsg"></p>';
 }
 async function trSave(blob, dur) {
   await MDB.put(ASMT.code + ":" + cur.rid, blob);
@@ -1107,11 +1122,11 @@ function printQ(r, q) {
 function reportHTML(r) {
   const s = score(r), o = outcome(r);
   let h = '<section class="pg"><div class="p-t1">' + esc(ASMT.event + (ASMT.partDocs && partsOf(r).length === 1 ? " – Part " + partsOf(r) : "")) + '</div>' + (ASMT.sub ? '<div class="p-h2" style="margin-top:-4mm">' + esc(ASMT.sub) + "</div>" : "") + '<div class="p-h">Criteria</div>' +
-    '<div class="p-lab">Unit code and name</div>' + pBox(esc(ASMT.unitName)) +
+    '<div class="p-lab">Unit code and name</div>' + pBox(esc(ASMT.unitName).replace(/\n/g, "<br>")) +
     '<div class="p-lab">' + esc(ASMT.qualLabel || "Qualification/Course code and name") + '</div>' + pBox(esc(ASMT.qual)) +
     '<div class="p-h">Student details</div><div class="p-lab">Student name</div>' + pBox(esc(r.n), "tall") +
     '<div class="p-lab">Student number</div>' + pBox(esc(r.id), "tall") + '</section>';
-  if (ASMT.teacherRec) h += '<section class="pg"><div class="p-h">' + esc(ASMT.teacherRec.printTitle) + '</div><div class="p-p">' + esc(ASMT.teacherRec.printText) + '</div>' + pBox((r.audio ? "Recording made on " + esc(fmtDate(String(r.audio.at).slice(0, 10))) + (r.audio.dur ? " (" + mmss(r.audio.dur) + ")" : "") + ". Kept with the student's saved work." : "No recording saved.") + (r.heard ? "<br>The assessor heard the student read the text in class." : ""), "tall") + "</section>";
+  if (ASMT.teacherRec) h += '<section class="pg"><div class="p-h">' + esc(ASMT.teacherRec.printTitle) + '</div><div class="p-p">' + esc(ASMT.teacherRec.printText) + '</div>' + pBox((r.audio ? "Recording made on " + esc(fmtDate(String(r.audio.at).slice(0, 10))) + (r.audio.dur ? " (" + mmss(r.audio.dur) + ")" : "") + ". Kept with the student's saved work." : "No recording saved.") + (r.heard ? "<br>Recording checked by the assessor: the student’s voice is clear enough to analyse." : ""), "tall") + "</section>";
   PARTS.forEach(p => {
     h += '<section class="pg"><div class="p-h">' + esc(p.title) + '</div>' + (partDone(r, p.id) ? "" : '<div class="p-p"><b>Not completed yet.</b></div>') + '<div class="p-p">' + esc(p.intro1 || ASMT.intro1 || "Read the text. Then answer the questions.") + '</div><div class="p-p">' + esc(ASMT.intro2 || "Read each question carefully and answer by selecting the appropriate response.") + '</div>' + p.qs.map(q => printQ(r, q)).join("") + "</section>";
   });
