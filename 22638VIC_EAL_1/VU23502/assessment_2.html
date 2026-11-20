@@ -434,13 +434,20 @@ async function gotCode(text, old) {
 }
 $("#btnScan").addEventListener("click", () => startScan(false));
 /* ---------- QR pictures (screenshots sent by students) ---------- */
-function decodeCanvas(img, maxW, crop) {
+/* o.up: enlarge small pictures (dense codes need about 6 pixels a square); o.sharp: no smoothing; o.bw: make it black and white */
+function decodeCanvas(img, maxW, crop, o) {
+  o = o || {};
   const sw = crop ? img.width * crop.w : img.width, sh = crop ? img.height * crop.h : img.height;
   const sx = crop ? img.width * crop.x : 0, sy = crop ? img.height * crop.y : 0;
-  const k = Math.min(1, maxW / sw), w = Math.max(1, Math.round(sw * k)), h = Math.max(1, Math.round(sh * k));
-  const c = document.createElement("canvas"); c.width = w; c.height = h;
-  const ctx = c.getContext("2d", {willReadFrequently: true}); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h); ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
-  return qrData(jsQR(ctx.getImageData(0, 0, w, h).data, w, h, {inversionAttempts: "attemptBoth"}));
+  const k = o.up ? o.up : Math.min(1, maxW / sw), w = Math.max(1, Math.round(sw * k)), h = Math.max(1, Math.round(sh * k));
+  const pad = o.up ? 24 : 0;
+  const c = document.createElement("canvas"); c.width = w + 2 * pad; c.height = h + 2 * pad;
+  const ctx = c.getContext("2d", {willReadFrequently: true}); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+  ctx.imageSmoothingEnabled = !o.sharp; ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(img, sx, sy, sw, sh, pad, pad, w, h);
+  const d = ctx.getImageData(0, 0, c.width, c.height);
+  if (o.bw) { const px = d.data; for (let i = 0; i < px.length; i += 4) { const g = px[i] * .3 + px[i + 1] * .59 + px[i + 2] * .11 < 140 ? 0 : 255; px[i] = px[i + 1] = px[i + 2] = g; } }
+  return qrData(jsQR(d.data, c.width, c.height, {inversionAttempts: "attemptBoth"}));
 }
 async function decodeImage(file) {
   const url = URL.createObjectURL(file);
@@ -449,6 +456,11 @@ async function decodeImage(file) {
     /* try a few sizes and the middle of the picture: phone screenshots are tall and large */
     const tries = [[1000], [1600], [2400], [1000, {x: 0, y: .15, w: 1, h: .7}], [1400, {x: 0, y: .25, w: 1, h: .5}], [700], [4000, {x: .02, y: .1, w: .96, h: .6}], [4000, {x: .02, y: .2, w: .96, h: .55}], [4000, {x: .05, y: .05, w: .9, h: .5}], [1200, {x: .05, y: .1, w: .9, h: .6}]];
     for (const [w, crop] of tries) { const d = decodeCanvas(img, w, crop); if (d) return d; }
+    /* small or blurry pictures of dense codes: enlarge first */
+    const big = Math.max(img.width, img.height), ups = [];
+    [2, 3, 4, 1.5].forEach(f => { if (big * f <= 3000) ups.push({up: f}, {up: f, sharp: true}, {up: f, bw: true}); });
+    ups.push({up: 1, bw: true});
+    for (const o of ups) { const d = decodeCanvas(img, 0, null, o); if (d) return d; }
     return null;
   } catch (e) { return null; } finally { URL.revokeObjectURL(url); }
 }
