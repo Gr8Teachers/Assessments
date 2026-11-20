@@ -316,11 +316,28 @@ function suggested(rec) { if (!allDone(rec)) return "n"; if (ASMT.checklist) ret
 function outcome(rec) { return rec.result || suggested(rec); }
 
 /* ---------- adding a scanned student ---------- */
+/* JSON.parse, but repair codes from older student pages, where some letters became control characters or stray quote marks */
+let CODEINFO = "";
+function lenientJSON(t) {
+  try { return JSON.parse(t); } catch (e) {}
+  t = t.replace(/[\u0018\u0019\u001c\u001d]/g, "'").replace(/[\u0000-\u001f]/g, "?");
+  for (let k = 0; k < 40; k++) {
+    try { return JSON.parse(t); } catch (e) {
+      const m = String(e.message).match(/position (\d+)/); if (!m) break;
+      const pos = +m[1]; let q = -1;
+      for (let i = Math.min(pos, t.length - 1); i > 0; i--) if (t[i] === '"' || t[i] === "\\") { q = i; break; }
+      if (q < 1) break;
+      t = t.slice(0, q) + "'" + t.slice(q + 1);
+    }
+  }
+  return null;
+}
 function addFromCode(text) {
   text = String(text || "").trim();
   if (text.includes("#re=")) return {err: "This is a second attempt code. The student scans it with their phone"};
   if (!text.startsWith("EALR1")) return {err: "This is not a student answer code"};
-  let d; try { d = JSON.parse(text.slice(5)); } catch (e) { return {err: "The code could not be read. Ask the student to show it again."}; }
+  const d = lenientJSON(text.slice(5));
+  if (!d) return {err: "The code could not be read. Ask the student to open their answer sheet again and show you the new code. (" + CODEINFO + ")"};
   if (d.a !== ASMT.code) return {err: "This code is for a different assessment (" + d.a + ")."};
   if ((d.v || 1) < 2) return {err: "This code is from an older answer sheet. Ask the student to open the link again, check their answers and press Finish."};
   const keyOf = r => (String(r.n || "").trim().toLowerCase() + "|" + String(r.id || "").trim());
@@ -385,13 +402,14 @@ function scanFrame() {
 }
 async function expandCode(t) {
   t = String(t || "").trim();
+  CODEINFO = "code " + t.slice(0, 5) + ", " + t.length + " characters";
   if (!t.startsWith("EALZ1")) return t;
   try {
     let b = t.slice(5).replace(/-/g, "+").replace(/_/g, "/"); while (b.length % 4) b += "=";
     const bin = atob(b), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
     const out = await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
     return "EALR1" + out;
-  } catch (e) { return "EALR1{bad"; }
+  } catch (e) { CODEINFO += ", unpack failed: " + (e && e.name || "error") + (typeof DecompressionStream === "undefined" ? ", this browser is too old: use Chrome or Edge" : ""); return "EALR1{bad"; }
 }
 /* read the text of a QR code; codes from older student pages wrote some letters (accents, other alphabets, curly apostrophes) as single bytes, so read those back as well as we can */
 function qrData(code) {
@@ -407,7 +425,7 @@ function qrData(code) {
   if (/^EAL[RZ]1/.test(t)) return {text: t, old: true};
   return code.data ? {text: code.data, old: false} : null;
 }
-const OLDNOTE = " Some letters in the name may not show correctly. Ask the student to open their answer sheet again and show you the new code.";
+const OLDNOTE = " Some letters in the name or typed answers may not show correctly. Ask the student to open their answer sheet again and show you the new code.";
 async function gotCode(text, old) {
   const r = addFromCode(await expandCode(text));
   if (r.err) { setMsg(SCAN.where, r.err.replace(/([^.])$/, "$1."), "warn"); return; }
